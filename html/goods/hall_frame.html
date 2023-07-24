@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>货源大厅</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+
+</head>
+<style>
+    .fontSize {
+        font-size: 0.26rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.4rem !important;
+    }
+
+    .fontSize2 {
+        font-size: 0.3rem !important;
+    }
+
+    .typeImgStyle {
+        width: 20px;
+        height: 20px;
+    }
+
+    .connectType {
+        font-size: 15px;
+        display: flex;
+    }
+
+    .fontSizewaybill {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .cardList {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        width: 100%;
+        height: 20px;
+        font-size: 14px;
+        line-height: 40px;
+        margin-top: 6px;
+    }
+
+    .cardList img {
+        width: 20px;
+        margin-right: 2px;
+    }
+
+    .marginRghrtico {
+        margin-left: 8px;
+    }
+
+    .colorText1 {
+        color: #8cc540;
+    }
+
+    .rowdiv {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        width: 50%;
+        height: 20px;
+    }
+
+    .checkLink {
+        color: #1f529a;
+        font-size: 15px;
+        margin-right: 15px;
+    }
+
+    .footerBotton {
+        display: flex;
+        padding-bottom: 10px;
+    }
+
+    .headerLeft {
+        width: 20%;
+    }
+
+    .headerRight {
+        width: 80%;
+        color: #BFBFBF;
+        font-size: 13px;
+    }
+
+    .headerRight img {
+        margin-left: 5px;
+    }
+
+    .headerIocn {
+        width: 66px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        font-size: 15px;
+        background: rgba(0, 126, 245, 0.16);
+        border-radius: 4px;
+        color: #007EF5;
+    }
+
+    .headerIocnColor {
+        color: #FA8C16;
+        background: rgba(250, 140, 22, 0.16);
+    }
+
+    .BottonDivColor1 {
+        border: 1px solid #d9d9d9;
+        color: #5C5F66;
+    }
+
+    .BottonDivColor2 {
+        border: 1px solid #fa8c16;
+        color: #FA8C16;
+    }
+
+    .addreText {
+        position: relative;
+    }
+
+    .amoutStyle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .moneyStyle {
+        font-size: 15px;
+        line-height: 12px;
+        height: 2px;
+        text-align: right;
+    }
+
+    .moneyType {
+        font-size: 12px;
+        text-align: right;
+        color: #BFBFBF;
+    }
+
+    .typeClass {
+        width: 100%;
+        height: 37px;
+        display: flex;
+        padding-top: 10px;
+        background: #fff;
+    }
+
+    .headerName {
+        height: auto;
+        padding: 0 0.32rem;
+        padding-top: 10px;
+    }
+
+    .headerButton {
+        width: 66px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        font-size: 15px;
+        /* background: rgba(0, 126, 245, 0.16); */
+        border-radius: 4px;
+        border: 1px #5C5F66 solid;
+        margin-left: 20px;
+    }
+
+    .actionHeader1 {
+        border-radius: 4px;
+        border: 1px rgba(250, 140, 22, 0.16) solid;
+        color: #FA8C16;
+        background: rgba(250, 140, 22, 0.16);
+    }
+
+    .actionHeader {
+        background: rgba(0, 126, 245, 0.16);
+        border-radius: 4px;
+        border: 1px rgba(0, 126, 245, 0.16) solid;
+        color: #007EF5;
+    }
+
+    .requirementTitle {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .timeText {
+        font-size: 15px;
+        padding-left: 10px;
+    }
+
+    .typeClassDiv {
+        padding-left: 21px
+    }
+
+    .typeClassDiv input {
+        width: 20px !important;
+
+    }
+
+    .typeClassDiv label {
+        font-size: 18px;
+        font-weight: 500;
+    }
+</style>
+
+<body>
+    <!--隐藏值 -->
+    <input type="hidden" value="1" id="page" />
+
+    <!-- 运单模块 -->
+    <div class="jinxingzhong">
+        <div class="headerName">
+            <div class="typeClass">
+                <div class="typeClassDiv">
+                    <input type="radio" checked onclick="clickHeaderFn(2,this)" name="radioArr" id="1"><label
+                        for="1"><span>全部</span></label>
+                </div>
+                <div class="typeClassDiv">
+                    <input type="radio" onclick="clickHeaderFn(0,this)" name="radioArr" id="2"><label
+                        for="2"><span>秒杀单</span></label>
+                </div>
+                <div class="typeClassDiv">
+                    <input type="radio" onclick="clickHeaderFn(1,this)" name="radioArr" id="3"><label
+                        for="3"><span>竞价单</span></label>
+                </div>
+            </div>
+        </div>
+        <div class='wrap'>
+            <div class="box waybillDetails" data-id="{{val.id}}">
+                <div class="waybillCardHeader">
+                </div>
+            </div>
+        </div>
+        <div class="pullUp">
+            <span class="pullUpLabel">正在加载...</span>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="listTemplate">
+    {{each tData as val k}}
+    <div class="box waybillDetails" data-id="{{val.id}}">
+            <div class="waybillCardHeader">
+                <div class="headerLeft">
+                {{if val.type === 0 }}
+                <div class="headerIocn headerIocnColor">秒杀单</div>
+                {{else if val.type === 1 }}
+                <div class="headerIocn">竞价单</div>
+                {{else}}
+                <div class="headerIocn">无</div>
+                {{/if}}
+                    <!-- <div class="headerText">发布时间：{{val.createDate}}</div> -->
+                </div>
+                <div class="headerRight goodsHeaderRight" >
+                    订单号：{{val.goodsCode}}<br />
+                    货源截止时间：{{val.endDate}} 
+                    <img src="../../image/rightImg.png" />
+                </div>
+        </div>
+        <div class="addreText">
+            {{if val.startCity === "市辖区" }}
+            {{val.startProvince}} 
+        {{else if val.startCity === "县" }}
+           {{val.startProvince}}  
+        {{else}}
+           {{val.startCity}}  
+        {{/if}}
+        &nbsp;→&nbsp; 
+        {{if val.endCity === "市辖区" }}
+            {{val.endProvince}} 
+        {{else if val.endCity === "县" }}
+           {{val.endProvince}}  
+        {{else}}
+           {{val.endCity}}  
+        {{/if}}
+        {{ if val.type === 0 }}
+        <div class="amoutStyle">
+            <div class="moneyStyle">￥{{val.ratioAmountCount}} 元</div>
+            <div class="moneyType">
+                {{if val.balanceMode === 0 }}
+                    包车价 
+                {{else}}
+                    按量总价  
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
+            
+        </div>
+        <div class="addressDiv">
+            <div class="addressDiv_span"></div>
+            <div class="addressText">{{val.startProvince}}{{val.startCity}}{{val.startDistrict?val.startDistrict:""}} </div>
+        </div>
+        <div class="addressDiv">
+            <div class="addressDiv_span bg2"></div>
+            <div class="addressText">{{val.endProvince}}{{val.endCity}}{{val.endDistrict?val.endDistrict:""}}</div>
+        </div>
+        <div class="requirement">
+            <p class="requirementTitle">运输要求：</p>
+            <!-- <div class="timeText">运输距离：{{val.howFar}} 公里</div> -->
+            <div class="timeText">要求起运时间：{{val.shipmentTime}}</div>
+            <div class="timeText">期望收货时间：{{val.receiptDate}}</div>
+            <div class="timeText">车厢类型：
+                {{if val.carRiage }}
+                {{val.carRiage}} 
+                {{else}}
+                    无
+                {{/if}}
+            </div>
+            <div class="timeText">车长(米)：
+                {{if val.carLength }}
+                {{val.carLength}} 
+                {{else}}
+                    无
+                {{/if}}
+            </div>
+            <div class="timeText">建议车型：
+                {{if val.carType }}
+                {{val.carType}} 
+                {{else}}
+                    无
+                {{/if}}
+            </div>
+            <p class="requirementTitle">距装货地距离(公里)：{{val.howFar}}</p>
+        </div>
+        {{if val.type === 1}}
+            <div class="BottonDiv" onclick="offerFn({{val.id}})"> 我要报价</div>
+        {{/if}}
+        {{ if val.type === 0 }}
+        <div class="BottonDiv BottonDivColor2" onclick="snatchOrdersFn({{val.id}})"> 立即抢单</div>
+        {{/if}}
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    //1时表示当前无数据可以加载了
+    var isnodata = 0;
+    //当前页面的每次加载条目数
+    var size = 10;
+    var searchNum, searchID, searchParms;
+    var valueType0 = true;
+    var valueType1 = true;
+    var valueType = null;
+    apiready = function () {
+
+        fnReady();
+        //给首次定位留点处理时间  不然算不出来距离
+        setTimeout(reload, 3000)
+        //起运之前获取定位
+        resultlocation();
+        //获取定位数据
+        api.startLocation({
+            accuracy: '100m',
+            filter: 1,
+            autoStop: true
+        }, function (ret, err) {
+            if (ret && ret.status) {
+                //获取位置信息成功
+                localStorage.setItem("firstLocalLat", ret.latitude);
+                localStorage.setItem("firstLocalLon", ret.longitude);
+            } else {
+                api.alert({
+                    msg: "定位获取失败！"
+                });
+            }
+        });
+        //监听下拉加载数据
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function (ret, err) {
+            jumpPage();
+        });
+        //监听下拉刷新数据
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            searchNum = '';
+            searchID = '';
+            reload();
+        });
+
+
+        api.addEventListener({
+            name: 'screenGoods'
+        }, function (ret, err) {
+            if (ret.value.deliveryDatestartTime) {
+                ret.value.deliveryDatestartTime = Date.parse(ret.value.deliveryDatestartTime);
+                searchParms = {
+                    GTE_deliveryDate: ret.value.deliveryDatestartTime
+                }
+            }
+            if (ret.value.deliveryDateendTime) {
+                ret.value.deliveryDateendTime = Date.parse(ret.value.deliveryDateendTime);
+                searchParms = {
+                    ...searchParms,
+                    LT_deliveryDate: ret.value.deliveryDateendTime
+                }
+            }
+            if (ret.value.receiptDatestartTime) {
+                ret.value.receiptDatestartTime = Date.parse(ret.value.receiptDatestartTime);
+                searchParms = {
+                    ...searchParms,
+                    GTE_receiptDate: ret.value.receiptDatestartTime
+                }
+            }
+            if (ret.value.receiptDateendTime) {
+                ret.value.receiptDateendTime = Date.parse(ret.value.receiptDateendTime);
+                searchParms = {
+                    ...searchParms,
+                    LT_receiptDate: ret.value.receiptDateendTime
+                }
+            }
+            if (ret.value.startCity) {
+                searchParms = {
+                    ...searchParms,
+                    LIKE_startCity: ret.value.startCity
+                }
+            }
+            if (ret.value.endCity) {
+                searchParms = {
+                    ...searchParms,
+                    LIKE_endCity: ret.value.endCity
+                }
+            }
+            if (ret.value.carType) {
+                searchParms = {
+                    ...searchParms,
+                    LIKE_carType: ret.value.carType
+                }
+            }
+            if (ret.value.LTE_distance) {
+                searchParms = {
+                    ...searchParms,
+                    LTE_distance: ret.value.LTE_distance
+                }
+            }
+            if (ret.value.deliveryDatestartTime === null &&
+                ret.value.deliveryDateendTime === null &&
+                ret.value.receiptDatestartTime === null &&
+                ret.value.receiptDateendTime === null &&
+                ret.value.startCity === null &&
+                ret.value.endCity === null &&
+                ret.value.carType === null &&
+                ret.value.LTE_distance === null
+            ) {
+                searchParms = {}
+            }
+            console.log("searchParms:" + JSON.stringify(searchParms));
+            reload();
+        });
+        //监听值的变化
+        api.addEventListener({
+            name: 'orders_frame'
+        }, function (ret, err) {
+            reload();
+        });
+
+        //刷新页面数据
+        function reload() {
+            isnodata = 0;
+            $("#page").val(1);
+            api.showProgress({
+                title: '加载中...',
+                modal: true
+            });
+            var lat = localStorage.getItem("firstLocalLat");
+            var lon = localStorage.getItem("firstLocalLon");
+            searchParms = {
+                ...searchParms,
+                "EQ_lat": lat ? lat : "",
+                "EQ_lon": lon ? lon : "",
+            }
+
+            var parm = {
+                "page": 0,
+                "size": size,
+                "sort": "id,desc",
+                searchParms: searchParms
+            };
+            // console.log(JSON.stringify(parm))
+            dealData("driver/tsgoodssource/toc/list", 'POST', JSON.stringify(parm), function (ret) {
+                if (ret.code === 0) {
+                    // console.log(JSON.stringify(ret));
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                        item.endDate = timeStampTurnTime(item.endDate).slice(0, 16);
+                        item.shipmentTime = timeStampTurnTime(item.shipmentTime).slice(0, 16);
+                        item.receiptDate = timeStampTurnTime(item.receiptDate).slice(0, 16);
+                    });
+                    for (var i = 0; i < list.length; i++) {
+                        var timer = timeStampTurnTime(transformationDate(list[i].createDate)).slice(0, 16);
+                        // list[i].createDate = timer;
+                    }
+                    if (list == '') {
+                        var html = '<div class="aui-tips-title">暂无数据</div>';
+                        $('.wrap').html(html);
+                    } else {
+                        var htmlContent = template('listTemplate', {
+                            tData: list
+                        });
+                        $('.wrap').html(htmlContent);
+                        if (list.length > 0) {
+                            api.sendEvent({
+                                name: 'orderRefresh',
+                                extra: {}
+                            });
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    // console.log(JSON.stringify(ret));
+                }
+                api.refreshHeaderLoadDone();
+            }, function (err) {
+                // console.log(JSON.stringify(err));
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+            setTimeout('api.refreshHeaderLoadDone()', '500');
+        };
+        //上拉加载下一页数据
+        function jumpPage() {
+            if (isnodata == 1) {
+                return;
+            }
+            var page = parseInt($("#page").val());
+            var lat = localStorage.getItem("firstLocalLat");
+            var lon = localStorage.getItem("firstLocalLon");
+            searchParms = {
+                ...searchParms,
+                "EQ_lat": lat ? lat : "",
+                "EQ_lon": lon ? lon : "",
+            }
+            var parm = {
+                "page": page,
+                "size": size,
+                "sort": "id,desc",
+                searchParms: searchParms
+            };
+            $(".pullUp").show();
+            dealData("driver/tsgoodssource/toc/list", 'POST', JSON.stringify(parm), function (ret) {
+                if (ret.code === 0) {
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                        item.endDate = timeStampTurnTime(item.endDate).slice(0, 16);
+                        item.shipmentTime = timeStampTurnTime(item.shipmentTime).slice(0, 16);
+                        item.receiptDate = timeStampTurnTime(item.receiptDate).slice(0, 16);
+                        item.ratioAmount = format(item.ratioAmount);
+                        item.balancePriceCount = format(item.balancePriceCount);
+                    });
+                    var htmlContent = template('listTemplate', {
+                        tData: list
+                    });
+                    if (list.length == 0) {
+                        api.toast({
+                            msg: "无更多数据",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        $(".pullUp").hide();
+                        isnodata = 1;
+                        return;
+                    }
+                    $("#page").val(page + 1);
+                    $('.wrap').html($('.wrap').html() + htmlContent);
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+                setTimeout('api.refreshHeaderLoadDone()', '500');
+            },
+                function (err) {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: err.body.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                })
+        };
+
+        // 时间转换
+        function transformationDate(date) {
+            var time = new Date(date)
+            var M = datetime(time.getMonth(time))
+            var D = datetime(time.getDay(time))
+            var H = datetime(time.getHours(time))
+            var Minutes = datetime(time.getMinutes(time))
+            var S = datetime(time.getSeconds(time))
+            return `${M}月${D}日 ${M}:${Minutes}:${S}`;
+        }
+        // 时间补0
+        function datetime(num) {
+            if (num < 10) {
+                return '0' + num;
+            }
+            return num;
+        }
+        return reload;
+    };
+    //抢单接口
+    function snatchOrdersFn(id) {
+        api.openWin({
+            name: 'orders_win',
+            url: './orders_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+        });
+    }
+    //刷新页面数据
+    function reload() {
+        isnodata = 0;
+        $("#page").val(1);
+        api.showProgress({
+            title: '加载中...',
+            modal: true
+        });
+        var lat = localStorage.getItem("firstLocalLat");
+        var lon = localStorage.getItem("firstLocalLon");
+        searchParms = {
+            ...searchParms,
+            "EQ_lat": lat ? lat : "",
+            "EQ_lon": lon ? lon : "",
+        }
+        var parm = {
+            "page": 0,
+            "size": size,
+            "sort": "id,desc",
+            searchParms: searchParms
+        };
+        dealData("driver/tsgoodssource/toc/list", 'POST', JSON.stringify(parm), function (ret) {
+            if (ret.code === 0) {
+                var list = ret.data.resultList;
+                list.map((item) => {
+                    item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                    item.endDate = timeStampTurnTime(item.endDate).slice(0, 16);
+                    item.shipmentTime = timeStampTurnTime(item.shipmentTime).slice(0, 16);
+                    item.receiptDate = timeStampTurnTime(item.receiptDate).slice(0, 16);
+                });
+                if (list == '') {
+                    var html = '<div class="aui-tips-title">暂无数据</div>';
+                    $('.wrap').html(html);
+                } else {
+                    var htmlContent = template('listTemplate', {
+                        tData: list
+                    });
+                    $('.wrap').html(htmlContent);
+                    if (list.length > 0) {
+                        api.sendEvent({
+                            name: 'orderRefresh',
+                            extra: {}
+                        });
+                    }
+                }
+            } else {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });;
+            }
+        }, function (err) {
+            api.toast({
+                msg: err.body.msg,
+                duration: 5000,
+                location: 'middle'
+            });
+        })
+        setTimeout('api.refreshHeaderLoadDone()', '500');
+    };
+    //报价函数
+    function offerFn(id) {
+        api.openWin({
+            name: 'offer_win',
+            url: './offer_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id,
+                myStatus: 0
+            },
+        });
+    }
+    //查看详情
+    function operationFn(id) {
+        api.openWin({
+            name: 'goodsInfo_win',
+            url: './goodsInfo_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+        });
+    }
+    function clickHeaderFn(data, that) {
+        if (data === 1) {
+            searchParms = {
+                ...searchParms,
+                EQ_type: 1
+            }
+        }
+        if (data === 0) {
+            searchParms = {
+                ...searchParms,
+                EQ_type: 0
+            }
+        }
+        if (data === 2) {
+            searchParms = {
+                ...searchParms,
+                EQ_type: null
+            }
+        }
+        reload();
+    }
+</script>
+
+</html>

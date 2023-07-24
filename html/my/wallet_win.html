@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>资金账户</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .positionStyle {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        color: #0080ff;
+        font-size: 16px;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWins();">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title">资金账户 </div>
+        <!-- <div class="aui-pull-right aui-btn-right positionStyle" onclick="search()">
+            本年度
+        </div> -->
+    </header>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+
+            name: 'wallet_frame',
+            url: 'wallet_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            }
+        }
+        );
+
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+    function search() {
+        var arrInfo = ['全部', '当月', "本季度", "全年"];
+        if (!this.readonlyFalge) {
+            api.actionSheet({
+                cancelTitle: '取消',
+                buttons: arrInfo
+            }, function (ret, err) {
+                if (ret.buttonIndex === 1) {
+                    checkLinkFn(id);
+                } else if (ret.buttonIndex === 2) {
+                    addAbnormalFn(id);
+                } else if (ret.buttonIndex === 3) {
+                    openWillList(id);
+                } else if (ret.buttonIndex === 4) {
+                    openWillList(id);
+                }
+            });
+        }
+    }
+</script>
+
+</html>

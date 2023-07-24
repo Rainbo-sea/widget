@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>绑卡</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+</head>
+<style>
+    .buttonStyle {
+        border: 0;
+        background: #007ef5;
+        color: #fff;
+        width: 90px;
+        height: 30px;
+        border-radius: 0.1rem;
+        font-weight: bold;
+        padding: 0 5px;
+        font-size: 14px;
+    }
+
+    .tipStyle {
+        padding: 0 20px;
+        color: red;
+        font-size: 14px;
+    }
+
+    .newPwd {
+        display: flex;
+    }
+
+    .passwordDiv {
+        position: relative;
+    }
+
+    .passwordImg {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 36%;
+        right: 20px;
+    }
+
+    .displayNone {
+        display: none;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="my_msg">
+        <div class="my_box">
+            <div class="newPwd">
+                <span class="password">开户名:</span>
+                <span class="right">
+                    <input type="text" placeholder="请输入开户名" class="bankAccountName" readonly>
+                </span>
+            </div>
+            <div class="newPwd">
+                <span class="password">身份证号:</span>
+                <span class="right">
+                    <input type="text" placeholder="请输入身份证号" class="idCard" readonly>
+                </span>
+            </div>
+            <div class="newPwd">
+                <span class="password">手机号:</span>
+                <span class="right">
+                    <input type="text" placeholder="请输入银行预留手机号" class="phone">
+                </span>
+            </div>
+            <div class="oldPwd">
+                <span class="password">银行卡号:</span>
+                <span class="phone">
+                    <input type="text" placeholder="请输入银行卡号" class="yhkh"></span>
+            </div>
+            <div class="confirmNewPwd passwordDiv">
+                <span class="password">提现密码:</span>
+                <span class="right">
+                    <input id="password1" type="password" placeholder="请设置本平台的提现密码" maxlength="6" class="txmm"
+                        onkeyup="value=value.replace(/[\D]/g,'')">
+                    <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(0)" />
+                    <img class="passwordImg displayNone" src="../../image/passwordOn.png" onclick="passwordOnFn(0)" />
+                </span>
+            </div>
+            <div class="confirmNewPwd passwordDiv">
+                <span class="password">提现密码:</span>
+                <span class="right">
+                    <input id="password2" type="password" placeholder="请再次输入本平台的提现密码" maxlength="6" class="erctxmm"
+                        onkeyup="value=value.replace(/[\D]/g,'')">
+                    <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(1)" />
+                    <img class="passwordImg displayNone" src="../../image/passwordOn.png" onclick="passwordOnFn(1)" />
+                </span>
+            </div>
+            <div class="confirmNewPwd">
+                <span class="password">开户行名称:</span>
+                <span class="right">
+                    <input type="text" placeholder="请选择开户行名称" class="khhmc" onclick="selectBankName()" readonly>
+                </span>
+            </div>
+            <!-- <div class="confirmNewPwd">
+                <span class="password">开户行号:</span>
+                <span class="right">
+                    <input type="text" placeholder="请输入开户行号" class="khhh">
+                </span>
+            </div> -->
+            <div class="confirmNewPwd">
+                <button class="buttonStyle" onclick="fnShowAction(this)">识别银行卡</button>
+            </div>
+        </div>
+    </div>
+    <div class="tipStyle">提示：银行卡号必须是所选的开户行卡号，否则可能导致无法提现，请慎重填写;提现密码用于本平台的提现功能,与银行无关</div>
+    <div class="button">
+        <button class="bangkaStyle" id="submit">确认绑卡</button>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+        if (api.pageParam.isBind) {
+            document.getElementById("submit").innerHTML = "确认更新绑卡";
+        }
+        //监听值的变化
+        api.addEventListener({
+            name: 'selectBank_frame'
+        }, function (ret, err) {
+            $('.khhmc').val(ret.value.bankName)
+        });
+
+        // 绑卡
+        $('#submit').on('click', function () {
+            var bankAccountName = $('.bankAccountName').val()
+            var yhkh = $('.yhkh').val()
+            var idCard = $('.idCard').val()
+            var phone = $('.phone').val()
+            var txmm = $('.txmm').val()
+            var erctxmm = $('.erctxmm').val()
+            var khhmc = $('.khhmc').val()
+            // var khhh = $('.khhh').val()
+            if (!bankAccountName) {
+                $.mvalidateTip("开户名不能为空");
+                return;
+            }
+            if (!idCard) {
+                $.mvalidateTip("身份证号不能为空");
+                return;
+            }
+            if (!phone) {
+                $.mvalidateTip("银行预留手机号不能为空");
+                return;
+            }
+            if (!yhkh) {
+                $.mvalidateTip("银行卡号不能为空");
+                return;
+            }
+            if (!(txmm.length === 6)) {
+                $.mvalidateTip("提现密码必须是6位数字");
+                return;
+            }
+            if (!txmm) {
+                $.mvalidateTip("提现密码不能为空");
+                return;
+            }
+            if (!erctxmm) {
+                $.mvalidateTip("提现密码不能为空");
+                return;
+            }
+            if (txmm != erctxmm) {
+                $.mvalidateTip('两次输入的提现密码不一致');
+                return;
+            }
+            if (!khhmc) {
+                $.mvalidateTip("开户行名称不能为空");
+                return;
+            }
+            // if (!khhh) {
+            //     $.mvalidateTip("开户行号不能为空");
+            //     return;
+            // }
+            api.showProgress({
+                title: '加载中...',
+                modal: false
+            });
+            var parm = {
+                bankAccountName: bankAccountName,
+                bankAccount: yhkh,
+                idCard: idCard,
+                phone: phone,
+                outPwd: txmm,
+                bankName: khhmc,
+                // bankNumber: khhh
+            }
+            console.log(JSON.stringify(parm))
+            dealData('finance/bind', 'post', parm, function (ret) {
+                if (ret.code === 0) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                    api.sendEvent({
+                        name: 'getStatusFn',
+                        extra: {}
+                    });
+                    setTimeout(function () {
+                        api.closeWin();
+                        api.setStatusBarStyle({
+                            style: 'dark',
+                            color: '#007ef5',
+                        });
+                    }, 1500)
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }, function (err) {
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+            setTimeout('api.refreshHeaderLoadDone()', '500');
+        })
+        sijiId();
+        function sijiId() {
+            dealData('user/membermsg', 'GET', {}, function (ret, err) {
+                if (ret.code === 0) {
+                    console.log("司机：" + JSON.stringify(ret));
+                    $('.bankAccountName').val(ret.data.username);
+                    $('.idCard').val(ret.data.icCard);
+                    // $('.phone').html(ret.data.phone);
+                    // $('.sex').html(ret.data.sex ? '男' : '女');
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+                if (err) {
+                    console.log(JSON.stringify(err))
+                }
+            })
+        }
+    };
+
+    // 拍照
+    function fnShowAction(obj) {
+        var resultList = api.hasPermission({
+            list: ['camera']
+        });
+        if (!resultList[0].granted) {
+            api.requestPermission({
+                list: ["camera"],
+            }, function (res) {
+                if (res.list[0].granted) {
+                }
+            });
+        }
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['拍照', '相册']
+        }, function (ret, err) {
+            if (ret.buttonIndex != 3) {
+                sourceTypes = ['camera', 'album'];
+                api.getPicture({
+                    sourceType: sourceTypes[ret.buttonIndex - 1],
+                    allowEdit: false,
+                    saveToPhotoAlbum: false
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.data != '') {
+                            var pathArr = [];
+                            var path = ret.data;
+                            photograph(0, path);
+
+                        }
+                    }
+                });
+            }
+        });
+    };
+
+    //图片压缩
+    var imgArr = [];
+    var httpimgArr;
+    //图片压缩
+    //i ->压缩次数 0开始    
+    //path ->图片路径
+    function photograph(i, path) {
+        //鉴于税务接口的限制 图片不能大于400kb
+        var minSize = 50 * 1024;
+        var maxSize = 400 * 1024;
+        var imageCachePath = api.cacheDir;
+
+        var quality = 1;
+        var scale = 1;
+
+        if (i >= 2) {
+            quality = quality / i;
+        }
+        if (i > 5) {
+            scale = 0.9;
+        }
+        console.log("i:" + i + ",quality:" + quality + ",scale:" + scale);
+        var imageFilter = api.require("imageFilter");
+        imageFilter.getAttr({
+            path: path
+        }, function (ret, err) {
+            if (ret.size < minSize) {
+                alert("图片大小小于50kb，请重新上传图片！");
+                return;
+            }
+            if (ret.size > maxSize) {//如果图片大于1M就进行压缩处理
+                var imgName = new Date().getTime() + ".jpg";
+                imageFilter.compress({
+                    img: path,
+                    quality: quality,
+                    //压缩比例,
+                    scale: scale,
+                    save: {
+                        imgPath: imageCachePath,
+                        imgName: imgName
+                    }
+                }, function (ret, err) {
+                    var compressedImgPath = imageCachePath + '/' + imgName;
+                    imageFilter.getAttr({
+                        path: compressedImgPath
+                    }, function (ret1, err) {
+                        console.log("ret1:" + ret1.size);
+
+                        if (ret1.size > maxSize) {//如果图片大于1M就进行压缩处理
+                            //循环压缩
+                            i++;
+                            photograph(i, compressedImgPath);
+                        }
+                        else {
+                            imgArr.push(compressedImgPath);
+                            console.log("上传图片地址：" + JSON.stringify(compressedImgPath));
+                            // 上传图片
+                            upImg(imgArr);
+                        }
+                    })
+                })
+            }
+            else {
+                // console.log("fina:" + ret1.size);
+                console.log("上传图片地址：" + JSON.stringify(compressedImgPath));
+                //选择图片预览
+                imgArr.push(path);
+                upImg(imgArr);
+            }
+        })
+    }
+
+
+    //提交图片
+    function upImg(imgArr) {
+        //方法
+        api.showProgress({
+            title: '上传中...',
+            modal: false
+        });
+        var accessToken = $api.getStorage('accessToken');
+        api.ajax({
+            url: getBaseRootPath() + "/app/tswaybill/importequery/2/2",
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            },
+            data: {
+                files: {
+                    imgFiles: imgArr
+                }
+            }
+        }, function (ret, err) {
+            if (ret.code === 0) {
+                alert(JSON.stringify(ret));
+                console.log("图片识别返回数据:" + JSON.stringify(ret));
+                $.mvalidateTip(ret.data.bankCardType)
+                $('.yhkh').val(ret.data.bankCardNo);
+            } else {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (ret.code !== 0) {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (err) {
+                $.mvalidateTip('图片上传失败')
+            }
+            api.hideProgress();
+        });
+    }
+    //选择银行
+    function selectBankName() {
+        api.openWin({
+            name: 'selectBank_win',
+            url: 'selectBank_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //密码关闭
+    function passwordOffFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[0].style.display = "none";
+            document.getElementsByClassName("passwordImg")[1].style.display = "block";
+            document.getElementById("password1").type = "text";
+        } else {
+            document.getElementsByClassName("passwordImg")[2].style.display = "none";
+            document.getElementsByClassName("passwordImg")[3].style.display = "block";
+            document.getElementById("password2").type = "text";
+        }
+    }
+    //密码打开
+    function passwordOnFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[1].style.display = "none";
+            document.getElementsByClassName("passwordImg")[0].style.display = "block";
+            document.getElementById("password1").type = "password";
+        } else {
+            document.getElementsByClassName("passwordImg")[3].style.display = "none";
+            document.getElementsByClassName("passwordImg")[2].style.display = "block";
+            document.getElementById("password2").type = "password";
+        }
+    }
+</script>
+
+</html>

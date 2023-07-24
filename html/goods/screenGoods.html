@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="../../commonUi/H5TimeSelector/libs/iosselect.css">
+    <style>
+        html,
+        body {
+            background-color: transparent;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFangSC;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, .2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            background-color: transparent;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .rt {
+            width: 60%;
+            height: 100%;
+            overflow: auto;
+            background-color: #fff;
+            float: right;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(245, 245, 245, 1);
+            padding: 10px;
+            background: #fff;
+            position: relative;
+            padding-bottom: 55px;
+        }
+
+        h4 {
+            font-weight: 500;
+            color: rgba(50, 50, 51, 1);
+            line-height: 15px;
+            padding: 10px
+        }
+
+        .time {
+            width: 100%;
+            height: 33px;
+            background: rgba(245, 245, 245, 1);
+            border-radius: 2px;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 33px
+        }
+
+        .btnBox {
+            width: 60%;
+            height: 40px;
+            line-height: 40px;
+            background: #F5F5F5;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .btn {
+            width: 50%;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #8F929A;
+        }
+
+        .active {
+            background: #0590FF;
+            color: #fff
+        }
+
+        .mt_10 {
+            margin-top: 10px;
+        }
+
+        .widthScreen {
+            width: 90%;
+        }
+
+        .closeFrame {
+            width: 30%;
+            height: 100%;
+            float: left;
+        }
+
+        .searchInput {
+            width: 100%;
+            height: 33px;
+            background: rgba(245, 245, 245, 1);
+            border: 0;
+            line-height: 33px;
+            text-align: center;
+        }
+
+        .marginBottom {
+            margin-bottom: 120px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" id="app">
+        <div class="closeFrame" @click="closeFn()"></div>
+        <div class=" rt">
+            <div class="mt_10 widthScreen">
+                <h4>发货时间</h4>
+                <div>
+                    <div class="time startTime" tapmode @click="beginTimeFn()"
+                        v-text="deliveryDatestartTime ? deliveryDatestartTime : '开始日期'">
+                    </div>
+                    <div class="time entime" tapmode @click="endTimeFn()"
+                        v-text="deliveryDateendTime ? deliveryDateendTime : '结束日期'"></div>
+                </div>
+            </div>
+            <div class="mt_10 widthScreen ">
+                <h4>距装货地距离（公里）</h4>
+                <input type="text" placeholder="输入距装货地距离" οninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                    v-model="LTE_distance" class="searchInput">
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>发货城市</h4>
+                <input type="text" placeholder="输入发货城市" v-model="startCity" class="searchInput">
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>收货时间</h4>
+                <div>
+                    <div class="time startTime" tapmode @click="receiptDatebeginTimeFn()"
+                        v-text="receiptDatestartTime ? receiptDatestartTime : '开始日期'">
+                    </div>
+                    <div class="time entime" tapmode @click="receiptDateendTimeFn()"
+                        v-text="receiptDateendTime ? receiptDateendTime : '结束日期'"></div>
+                </div>
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>收货城市</h4>
+                <input type="text" placeholder="输入收货城市" v-model="endCity" class="searchInput">
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>车型</h4>
+                <input type="text" placeholder="输入车型" v-model="carType" class="searchInput">
+            </div>
+            <div class="mt_10 widthScreen marginBottom">
+                <h4>距装货地距离（公里）</h4>
+                <input type="text" placeholder="输入车型" οninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                    v-model="LTE_distance" class="searchInput">
+            </div>
+            <div class="btnBox">
+                <div class="btn" tapmode @click="rotate()">重置</div>
+                <div class="btn active" tapmode @click="submit()">确定</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script>
+    apiready = function () {
+        $api.fixStatusBar($api.byId('app'));
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                deliveryDatestartTime: null,//筛选开始时间
+                deliveryDateendTime: null,//筛选结束时间
+                receiptDatestartTime: null,//筛选开始时间
+                receiptDateendTime: null,//筛选结束时间
+                startCity: null,
+                endCity: null,
+                carType: null,
+                LTE_distance: null,
+            },
+            created: function () {
+                // console.log("prames" + JSON.stringify(api.pageParam));
+                this.deliveryDatestartTime = api.pageParam.prames.deliveryDatestartTime;
+                this.deliveryDateendTime = api.pageParam.prames.deliveryDateendTime;
+                this.receiptDatestartTime = api.pageParam.prames.receiptDatestartTime;
+                this.receiptDateendTime = api.pageParam.prames.receiptDateendTime;
+                this.startCity = api.pageParam.prames.startCity;
+                this.endCity = api.pageParam.prames.endCity;
+                this.carType = api.pageParam.prames.carType;
+                this.LTE_distance = api.pageParam.prames.LTE_distance;
+            },
+            methods: {
+                //重置按钮
+                rotate: function () {
+                    this.deliveryDatestartTime = null;
+                    this.deliveryDateendTime = null;
+                    this.receiptDatestartTime = null;
+                    this.receiptDateendTime = null;
+                    this.startCity = null;
+                    this.endCity = null;
+                    this.carType = null;
+                    this.LTE_distance = null;
+                },
+                submit: function () {
+                    var that = this;
+                    api.sendEvent({
+                        name: 'screenGoods',
+                        extra: {
+                            deliveryDatestartTime: this.deliveryDatestartTime,
+                            deliveryDateendTime: this.deliveryDateendTime,
+                            receiptDatestartTime: this.receiptDatestartTime,
+                            receiptDateendTime: this.receiptDateendTime,
+                            startCity: this.startCity,
+                            endCity: this.endCity,
+                            carType: this.carType,
+                            LTE_distance: this.LTE_distance,
+                        }
+                    });
+                    setTimeout(function () {
+                        api.closeFrame();
+                    }, 500)
+                },
+                starttimeFn: function () {
+                    var d = new Date();
+                    var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + '00' + ':' + '00' + ':' + '00';
+                    vm.deliveryDatestartTime = time;
+                },
+                beginTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var seconds = d.getSeconds() + '';
+                            seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                            var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                            that.deliveryDatestartTime = time;
+                        }
+                    })
+                },
+                endTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var currenD = new Date(vm.deliveryDatestartTime).getTime()
+                            if (currenD > selectTime) {
+                                api.toast({
+                                    msg: '选择不能小于当前日期',
+                                    duration: 3000,
+                                    location: 'bottom'
+                                });
+                                // vm.deliveryDateendTime = null
+                            } else {
+                                var seconds = d.getSeconds() + '';
+                                seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                                var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                                that.deliveryDateendTime = time;
+                            }
+                        }
+                    })
+                },
+                receiptDatebeginTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var seconds = d.getSeconds() + '';
+                            seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                            var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                            that.receiptDatestartTime = time;
+                        }
+                    })
+                },
+                receiptDateendTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var currenD = new Date(vm.deliveryDatestartTime).getTime()
+                            if (currenD > selectTime) {
+                                api.toast({
+                                    msg: '选择不能小于当前日期',
+                                    duration: 3000,
+                                    location: 'bottom'
+                                });
+                                // vm.deliveryDateendTime = null
+                            } else {
+                                var seconds = d.getSeconds() + '';
+                                seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                                var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                                that.receiptDateendTime = time;
+                            }
+                        }
+                    })
+                },
+                openactionSheet: function (content) {
+
+                },
+                selctdevice: function () {
+
+                },
+                closeFn: function () {
+                    api.closeFrame()
+                }
+
+            }
+        })
+    }
+</script>
+
+</html>

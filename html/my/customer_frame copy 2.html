@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+
+    <head>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            /* 防止闪烁 */
+            [v-cloak] {
+                display: none;
+            }
+
+            .wrap {
+                height: 100%;
+                width: 100%;
+                position: relative;
+            }
+
+            .touxiang {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .areaBox {
+                height: 30px;
+                width: 80%;
+                border: none;
+                resize: none;
+                outline: none;
+                padding: 5px;
+            }
+
+            .title {
+                height: 40px;
+                width: 100%;
+                background-color: #eaeaea;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .bottom {
+                min-height: 40px;
+                width: 100%;
+                border-top: 1px solid #eaeaea;
+                background-color: #F1F1F1;
+                position: fixed;
+                bottom: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 5px;
+                border-radius: 10px;
+            }
+
+            .fasong {
+                height: 30px;
+                padding: 2px 7px;
+                border-radius: 5px;
+                text-align: center;
+                color: #58df4d;
+                background-color: #eaeaea;
+                font-size: 14px;
+                line-height: 30px;
+                border: none;
+                resize: none;
+                outline: none;
+                margin-right: 15px;
+            }
+
+            .content_box {
+                height: calc(100% - 95px);
+                overflow: auto;
+                padding: 10px 10px 20px 10px;
+            }
+
+            .timer {
+                text-align: center;
+                color: #c2c2c2;
+            }
+
+
+            .userbox {
+                width: 100%;
+                display: flex;
+                margin-bottom: 10px;
+            }
+
+            .nameInfo {
+                /* 用flex：1把盒子撑开 */
+                flex: 1;
+                margin-right: 10px;
+                /* 用align-items把元素靠右对齐 */
+                display: flex;
+                align-items: baseline;
+                flex-direction: row-reverse;
+            }
+
+            .contentText {
+                background-color: #9eea6a;
+                display: inline-block;
+                /* 这四句是圆角 */
+                border-top-left-radius: 10px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+                /* 最大宽度限定内容输入到百分61换行 */
+                max-width: 61%;
+                padding: 5px 10px;
+                /* 忽略多余的空白，只保留一个空白 */
+                white-space: normal;
+                /* 换行显示全部字符 */
+                word-break: break-all;
+                margin-top: 3px;
+                font-size: 14px;
+                margin-left: 10px;
+                margin-top: 15px;
+            }
+
+            .userbox2 {
+                width: 100%;
+                display: flex;
+                flex-direction: row-reverse;
+                margin-bottom: 10px;
+            }
+
+            .nameInfo2 {
+                /* 用flex：1把盒子撑开 */
+                flex: 1;
+                margin-left: 10px;
+            }
+
+            .contentText2 {
+                background-color: #9eea6a;
+                display: inline-block;
+                /* 这四句是圆角 */
+                border-top-left-radius: 0px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+                /* 最大宽度限定内容输入到百分61换行 */
+                max-width: 61%;
+                padding: 5px 10px;
+                /* 忽略多余的空白，只保留一个空白 */
+                white-space: normal;
+                /* 换行显示全部字符 */
+                word-break: break-all;
+                margin-top: 3px;
+                font-size: 14px;
+                margin-right: 10px;
+                margin-top: 15px;
+            }
+
+            .headimg {
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+    </head>
+
+<body>
+    <div id="app">
+        <div class="wrap">
+            <div class="content_box" id="box" ref="scrollBox">
+                <div class="timer">2022-08-02 11:08:07</div>
+                <div :class="item.position == 'left' ? 'userbox2' : 'userbox'" v-for="(item, index) in chatList"
+                    :key="index">
+                    <div :class="item.position == 'left' ? 'nameInfo2' : 'nameInfo'">
+                        <div style="font-size: 14px">{{ item.username }}</div>
+                        <div :class="item.position == 'left' ? 'contentText2' : 'contentText'">
+                            {{ item.content }}
+                        </div>
+                    </div>
+                    <div>
+                        <img class="headimg" :src="item.url" />
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <input v-model="inputValue" center type="textarea" :autosize="{ maxHeight: 100, minHeight: 25 }"
+                    placeholder="请输入内容" rows="1" />
+                <div>
+                    <button size="small" type="primary" @click="sendOut">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    page: 1, //聊天历史记录分页
+                    chatList: [
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123模拟数据123模拟数据123模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据123模拟数据123模拟数据123模拟数据123",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                        {
+                            url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+                            username: "张三",
+                            content: "模拟数据123",
+                            position: "left",
+                        },
+                        {
+                            url: "https://img01.yzcdn.cn/vant/cat.jpeg",
+                            username: "李四",
+                            content: "模拟数据123模拟数据",
+                            position: "right",
+                        },
+                    ],
+                    userName: "", //用户名
+                    inputValue: "", //输入内容
+                    scrollTop: 0, //滚动条距离顶部距离
+                    infoList: null, //用户信息
+                    kfInfo: [], //客服信息
+                    wechatInfo: '', //双方用户信息
+                    add_time: '',
+                    jzshow: 0, //加载图标icon
+                    jzshowtimer: null, //加载图标定时器
+                    chatShow: 2, //加载图标显示
+
+                    path: "wss://test.123456.com/msg", //websocket链接地址（这里地址都是乱写的，自行修改）
+                    ws: null, //建立的连接
+                    lockReconnect: false, //是否真正建立连接
+                    timeout: 10 * 1000, //30秒一次心跳
+                    timeoutObj: null, //心跳心跳倒计时
+                    serverTimeoutObj: null, //心跳倒计时
+                    timeoutnum: null, //断开 重连倒计时
+                    closeType: 1, //断开判断：0代表不重连，1代表重连
+                };
+            },
+            created() {
+                // this.closeType = 1 //进入改为1，代表如果断开链接自动重连
+                // let type = sessionStorage.getItem('wechatInfo')
+                // //本地如果有值就获取，没有值就微信授权后获取
+                // if (type && type !== 'undefined') {
+                // this.wechatInfo = JSON.parse(sessionStorage.getItem('wechatInfo')) //双方用户信息
+                // console.log('用户信息', this.wechatInfo);
+                // this.initWebpack(); //ws链接
+                // this.getList() //客服列表
+                // } else {
+                //     this.oAuth() //微信授权
+                // }
+            },
+            mounted() {
+                this.$refs.scrollBox.removeEventListener("scroll", this.srTop);
+            },
+            methods: {
+                //H5授权
+                oAuth() {
+                    // snsapi_userinfo (授权页面)
+                    location.href =
+                        `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3cbfddebd1123021&redirect_uri=https://test.123456.com/model/chat/loading.html&response_type=code&scope=snsapi_userinfo&state=wx3cbfddebd1123021#wechat_redirect`;
+                },
+
+                // 初始化websocket链接
+                initWebpack() {
+                    if (typeof WebSocket === "undefined") {
+                        alert("您的浏览器不支持socket");
+                    } else {
+                        this.ws = new WebSocket(this.path); //实例
+                        this.ws.onopen = this.onopen; //监听链接成功
+                        this.ws.onmessage = this.onmessage; //监听后台返回消息
+                        this.ws.onclose = this.onclose; //监听链接关闭
+                        this.ws.onerror = this.onerror; //监听链接异常
+                    }
+                },
+                //重新连接
+                reconnect() {
+                    var that = this;
+                    //防止重复链接
+                    if (that.lockReconnect) {
+                        return;
+                    }
+                    that.lockReconnect = true;
+                    //没连接上会一直重连，设置延迟避免请求过多
+                    that.timeoutnum && clearTimeout(that.timeoutnum);
+                    that.timeoutnum = setTimeout(function () {
+                        that.initWebpack(); //新连接
+                        that.lockReconnect = false;
+                    }, 5000);
+                },
+                //重置心跳
+                reset() {
+                    var that = this;
+                    clearTimeout(that.timeoutObj); //清除心跳倒计时
+                    clearTimeout(that.serverTimeoutObj); //清除超时关闭倒计时
+                    that.start(); //重启心跳
+                },
+                //开启心跳
+                start() {
+                    var self = this;
+                    self.timeoutObj && clearTimeout(self.timeoutObj); //心跳倒计时如果有值就清除掉，防止重复
+                    self.serverTimeoutObj && clearTimeout(self.serverTimeoutObj); //超时关闭倒计时如果有值就清除掉，防止重复
+                    self.timeoutObj = setTimeout(function () {
+                        if (self.ws.readyState == 1) {
+                            self.ws.send(JSON.stringify({
+                                type: "ping"
+                            }));
+                        } else {
+                            self.reconnect();
+                        }
+
+                        //如果超时了就关闭连接
+                        self.serverTimeoutObj = setTimeout(function () {
+                            self.ws.close();
+                        }, self.timeout);
+                    }, self.timeout);
+                },
+                //连接成功
+                onopen() {
+                    let that = this
+                    console.log("连接成功");
+                    if (that.ws.readyState == 1) {
+                        that.ws.send(JSON.stringify({ //发送消息到后台，和send一样，这是微信的写法
+                            type: "login",
+                            data: {
+                                token: this.wechatInfo.token,
+                                id: this.wechatInfo.id,
+                                channel_type: 'wechat',
+                                uid: this.wechatInfo.uid,
+                                openid: this.wechatInfo.openid
+                            }
+                        }))
+                        that.ws.send(JSON.stringify({
+                            type: "online",
+                            data: {
+                                online: 1,
+                                user_type: 'user',
+                                is_tourist: this.wechatInfo.uid ? 0 : 1
+                            }
+                        }))
+                    }
+                    this.start(); //链接成功后开启心跳
+                },
+                //接受后台信息回调
+                onmessage(res) {
+                    let type = JSON.parse(res.data)
+                    //后台返回消息，通过type字段判断是不是别人发送给我的消息
+                    if (type.type == 'chat') {
+                        clearTimeout(this.jzshowtimer);
+                        this.chatShow = 1
+                        //this.chatList.push(type.data) //把消息添加到信息列表渲染
+                        this.jzshow = 0 //隐藏加载icon
+                        this.$nextTick(() => { // 一定要用nextTick
+                            this.setPageScrollTo();
+                            //页面滚动条距离顶部高度等于这个盒子的高度
+                            this.$refs.scrollBox.scrollTop = this.$refs.scrollBox.scrollHeight;
+                        })
+                        console.log("收到后台信息：", JSON.parse(res.data));
+                    } else if (type.type == 'reply') {
+                        this.chatList.push(type.data)
+                    }
+                    this.reset(); //收到服务器信息，心跳重置
+                },
+                //关闭连接回调
+                onclose(e) {
+                    console.log("连接关闭");
+                    //断开链接时判断
+                    if (this.closeType == 0) {
+                        return
+                    }
+                    this.reconnect(); //重连
+                },
+                //连接异常回调
+                onerror(e) {
+                    console.log("出现错误");
+                    this.reconnect(); //重连
+                },
+
+                // 重新发送
+                resend(msn) {
+                    this.inputValue = msn
+                    this.jzshow = 1
+                    let parms = {
+                        msn: this.inputValue,
+                        to_uid: this.kfInfo[0].kf_id,
+                        type: 1,
+                        form_type: 'wechat',
+                        is_tourist: 0
+                    }
+                    //通过websocket发送信息到后台
+                    this.ws.send(JSON.stringify({
+                        type: "chat",
+                        data: parms
+
+                    }))
+                    this.jzshowtimer = setTimeout((res) => {
+                        this.jzshow = 2
+                    }, 3000);
+                    this.inputValue = '' //点击发送后清空输入框
+                },
+                //客服列表信息
+                getList() {
+                    axios.post('/gzh/crmebchat/chatUserList', {
+                        type: 'user',
+                        tag_uid: this.wechatInfo.tag_uid || 0,
+                        wechat_user_id: this.wechatInfo.id || 0,
+                        avatar: this.wechatInfo.headimgurl,
+                        nickname: this.wechatInfo.nickname
+                    }).then(res => {
+                        // console.log('客服信息:', res);
+                        this.kfInfo = res.data.data //客服信息
+                        this.ws.send(JSON.stringify({
+                            type: "to_chat",
+                            data: {
+                                id: this.kfInfo
+                            }
+                        }));
+                        this.getlishiList()
+                    }).catch(error => {
+                        console.log(error, '请求失败');
+                    })
+                },
+                //获取历史记录
+                getlishiList(type) {
+                    axios.post('/gzh/crmebchat/chatMessageList', {
+                        to_uid: this.kfInfo,
+                        uid: this.wechatInfo.tag_uid,
+                        page: this.page,
+                        limit: 10,
+                    }).then(res => {
+                        // console.log('历史记录:', res);
+                        this.add_time = res.data.data[0]._add_time || '-'
+                        let a = res.data.data
+                        this.chatList = a.concat(this.chatList) //用拿到的数据合并现有的数据，这样当加载第二页历史记录时，顺序不会乱
+                        if (type == 1) { //滚动到顶部触发方法会传入1，此时不需要调用滚动到最底部的方法
+                            return
+                        }
+                        this.$nextTick(() => { // 一定要用nextTick
+                            this.setPageScrollTo();
+                            //页面滚动条距离顶部高度等于这个盒子的高度
+                            this.$refs.scrollBox.scrollTop = this.$refs.scrollBox.scrollHeight;
+                        })
+                    }).catch(error => {
+                        console.log(error, '请求失败');
+                    })
+                },
+                //发送
+                sendOut() {
+                    this.chatList.push({
+                        msn: this.inputValue,
+                        uid: this.wechatInfo.tag_uid,
+                        avatar: this.wechatInfo.headimgurl,
+                        nickname: this.wechatInfo.nickname,
+                        chatShow: 2
+                    })
+                    this.jzshow = 1
+                    let parms = {
+                        msn: this.inputValue,
+                        to_uid: this.kfInfo,
+                        type: 1,
+                        form_type: 'wechat',
+                        is_tourist: 0
+                    }
+                    //通过websocket发送信息到后台
+                    this.ws.send(JSON.stringify({
+                        type: "chat",
+                        data: parms
+                    }))
+                    this.jzshowtimer = setTimeout((res) => {
+                        this.jzshow = 2
+                    }, 3000);
+                    this.inputValue = '' //点击发送后清空输入框
+                    console.log('发送成功', this.inputValue);
+                    // 页面滚动到底部
+                    this.$nextTick(() => { // 一定要用nextTick
+                        this.setPageScrollTo();
+                        //页面滚动条距离顶部高度等于这个盒子的高度
+                        this.$refs.scrollBox.scrollTop = this.$refs.scrollBox.scrollHeight;
+                    })
+                },
+                //滚动条默认滚动到最底部
+                setPageScrollTo(s, c) {
+                    //获取中间内容盒子的可见区域高度
+                    this.scrollTop = document.querySelector("#box").offsetHeight;
+                    setTimeout((res) => {
+                        //加个定时器，防止上面高度没获取到，再获取一遍。
+                        if (this.scrollTop != this.$refs.scrollBox.offsetHeight) {
+                            this.scrollTop = document.querySelector("#box").offsetHeight;
+                        }
+                    }, 100);
+                    console.log('滚动', this.scrollTop);
+                    //scrollTop：滚动条距离顶部的距离。
+                    //把上面获取到的高度座位距离，把滚动条顶到最底部
+                    this.$refs.scrollBox.scrollTop = this.scrollTop;
+                    //判断是否有滚动条,有滚动条就创建一个监听滚动事件，滚动到顶部触发srTop方法
+                    if (this.$refs.scrollBox.scrollTop > 0) {
+                        this.$refs.scrollBox.addEventListener("scroll", this.srTop);
+                    }
+                },
+                //滚动条到达顶部
+                srTop() {
+                    //判断：当滚动条距离顶部为0时代表滚动到顶部了
+                    if (this.$refs.scrollBox.scrollTop == 0) {
+
+                        this.page++
+                        this.getlishiList(1)
+
+                    }
+                }
+            }
+        })
+    }
+    function deliveryPhoneFn(data) {
+        api.call({
+            type: 'tel_prompt',
+            number: data
+        });
+    }
+</script>
+
+</html>

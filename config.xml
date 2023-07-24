@@ -1,0 +1,84 @@
+<widget id="A6175141361874" version="0.0.1">
+
+	<name>博宇网络货运司机端</name>
+
+	<description>Example For APICloud.</description>
+
+	<author email="developer@apicloud.com" href="http://www.apicloud.com">Developer</author>
+
+	<content src="index.html" />
+
+	<access origin="*" />
+
+	<preference name="pageBounce" value="false" />
+
+	<preference name="appBackground" value="rgba(0,0,0,0.0)" />
+
+	<preference name="windowBackground" value="rgba(0,0,0,0.0)" />
+
+	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)" />
+
+	<preference name="backgroundMode" value="location" />
+
+	<preference name="hScrollBarEnabled" value="false" />
+
+	<preference name="autoLaunch" value="true" />
+
+	<preference name="fullScreen" value="false" />
+
+	<preference name="autoUpdate" value="true" />
+
+	<preference name="smartUpdate" value="true" />
+
+	<preference name="debug" value="true" />
+
+	<preference name="statusBarAppearance" value="true" />
+
+	<preference name="iOS7StatusBarAppearance" value="true" />
+
+	<permission name="readPhoneState" />
+
+	<permission name="camera" />
+
+	<permission name="record" />
+
+	<permission name="location" />
+
+	<permission name="fileSystem" />
+
+	<permission name="internet" />
+
+	<permission name="bootCompleted" />
+
+	<permission name="hardware" />
+
+	<preference name="backgroundMode" value="audio | location" />
+
+	<feature name="aMap">
+		<param name="android_api_key" value="e9ac33edc796f5f49f8ea477a90456e4" />
+		<param name="ios_api_key" value="9bb51532b75a3c8dffebf216339e5ee3" />
+	</feature>
+	<feature name="aMapNavi">
+		<param name="android_api_key" value="e9ac33edc796f5f49f8ea477a90456e4" />
+		<param name="ios_api_key" value="9bb51532b75a3c8dffebf216339e5ee3" />
+	</feature>
+	<feature name="yunxinIM">
+		<param name="appKey" value="2fc0b39277edea2720899a832488487f" />
+	</feature>
+
+	<!-- <feature name="bMap">
+        <param name="android_api_key" value="nHKcSl7E212Ft0604RGdyj5iNUr7x0dB"/>
+        <param name="android_api_key" value="nHKcSl7E212Ft0604RGdyj5iNUr7x0dB"/>
+        <param name="ios_api_key" value="1w6ypW1S5j4qAFRaib1ErNzDQeSxMFv2"/>
+    </feature> 
+	
+	<feature name="bdTTS">
+    	<param  name="appId_iOS" value="10665882"/>
+    	<param  name="apiKey_iOS" value="M0EXftb4K00yqN4SjYrQF3Th"/>
+    	 <param  name="secretKey_iOS" value="1b010d38a92073fd7c44da733aaa5f58"/>
+    	<param  name="appId_android" value="29159643"/>
+    	<param  name="apiKey_android" value="SgGIUbXTcpt0GASXgqydAgNX"/>
+    	<param  name="secretKey_android" value="Oy6GYFZ0inzamFscGboMiLxTiQob2tgm"/>
+    </feature> -->
+
+</widget>

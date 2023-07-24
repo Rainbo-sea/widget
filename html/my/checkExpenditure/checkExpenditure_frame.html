@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <style>
+        .centent {
+            width: 100%;
+            height: 100%;
+        }
+
+        .list {
+            height: 145px;
+            background: #ffffff;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .listNameText {
+            font-size: 17px;
+            float: left;
+            width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .listHeader {
+            height: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .money {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .listP {
+            margin: 5px 5px 5px 10px;
+            font-size: 15px;
+        }
+
+        .contentP {
+            height: 46px;
+            width: 90%;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            /* 这里是超出几行省略 */
+            overflow: hidden
+        }
+
+        .hrStyle {
+            background: #e3e4e5;
+            width: 100%;
+            height: 1px;
+            margin: 5px 0;
+        }
+
+        .listFooter {
+            font-size: 14px
+        }
+
+        .footerRight {
+            float: right;
+        }
+
+        .fonterLeft {
+            float: left;
+        }
+
+        .pmarginTop {
+            margin-top: 15px;
+        }
+
+        .marginTips {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="centent">
+        <div v-if="incomeList.length === 0" class="aui-tips-title marginTips">暂无数据</div>
+        <div class="list" v-for="(item,i) in incomeList">
+            <div class="listHeader">
+                <div class="listNameText" v-text="item.payerMemberName"></div>
+                <span class="money"><span v-text="'-'"></span>
+                    <span v-text="item.amount"></span>元
+                </span>
+            </div>
+            <p class="listP pmarginTop">
+                <span v-text="'费用类型：运费'"></span>
+            </p>
+            <p class="listP contentP">
+                <span v-text="'付款内容:'"></span>
+                <span v-text="item.content"></span>
+            </p>
+            <div class="hrStyle"></div>
+            <p class="listFooter">
+                <span class="fonterLeft" v-text="item.createDate"></span>
+                <span class="footerRight">
+                    <span v-text="'流水号：'"></span>
+                    <span v-text="item.transSeqNo"></span>
+                </span>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                incomeList: [],      //收入流水数据
+                page: 0,
+            },
+            created: function () {
+                var that = this;
+                //监听下拉加载数据
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    that.getIsnodata();
+                });
+                //监听下拉刷新数据
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    loadingImg: 'widget://image/refresh.png',
+                    bgColor: '#ccc',
+                    textColor: '#fff',
+                    textDown: '下拉刷新...',
+                    textUp: '松开刷新...',
+                    showTime: true
+                }, function (ret, err) {
+                    that.page = 0;
+                    that.incomeList = [];
+                    that.getIsnodata();
+                });
+                this.getIsnodata();
+            },
+            methods: {
+                getIsnodata: function () {
+                    $("#page").val(1);
+                    api.showProgress({
+                        title: '加载中...',
+                        modal: false
+                    });
+                    var that = this;
+                    var parm = {
+                        "page": that.page,
+                        "size": 10,
+                        "sort": "id,desc",
+                        "searchParms": {
+                            EQ_isSuccess: 1
+                        }
+                    };
+                    dealData("platform/finfeeLog/payer/query", 'POST', JSON.stringify(parm), function (ret) {
+                        console.log("获取资金流水列表：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            if (ret.data.resultList.length === 0) {
+                                api.toast({
+                                    msg: "无更多数据",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            } else {
+                                ret.data.resultList.map((item) => {
+                                    item.createDate = timeStampTurnTime(item.createDate);
+                                });
+                                that.incomeList = that.incomeList.concat(ret.data.resultList);
+                                that.page++;
+                            }
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });;
+                            console.log(JSON.stringify(ret));
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+
+            }
+        })
+    };
+
+</script>
+
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>起始页</title>
+    <link rel="stylesheet" type="text/css" href="./css/base.css">
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css">
+</head>
+
+<body></body>
+<script type="text/javascript" src="./script/jquery.min.js"></script>
+<script type="text/javascript" src="./script/rem.js"></script>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var isautologin = $api.getStorage('isautologin');
+        //判断是否自动登录
+        if (isautologin == 0) {
+            //获取用户状态，未通过审核需要跳转运力信息页面
+            dealData("platform/esign/status", 'GET', {}, function (ret) {
+                console.log("getStatusFn:" + JSON.stringify(ret));
+                if (ret.code === 0) {
+                    if (ret.data) {
+                        //已经通过
+                        if (ret.data.isOverTime === 0) {
+                            fnOpenMainWin();
+                            //未通过
+                        } else {
+                            api.openWin({
+                                name: 'main',
+                                url: './html/my/carmsg.html',
+                                slidBackEnabled: false,
+                                pageParam: {
+                                    flag: true
+                                },
+                                animation: {
+                                    type: 'fade'
+                                }
+                            });
+                        }
+                    }
+                }
+                if (ret.code !== 0) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                    fnOpenLogin();
+                    return false;
+                }
+            }, function (err) {
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+                fnOpenLogin();
+                return false;
+            })
+        } else {
+            fnOpenLogin();
+        }
+    };
+    //打开主窗口
+    function fnOpenMainWin() {
+        api.openWin({
+            name: 'main',
+            url: './html/main.html',
+            slidBackEnabled: false,
+            animation: {
+                type: 'fade'
+            }
+        });
+    }
+
+
+    //打开登录页面
+    function fnOpenLogin() {
+        api.openWin({
+            name: 'login',
+            url: './html/login/login.html',
+            bounces: false,
+            slidBackEnabled: false,
+            animation: {
+                type: 'fade'
+            }
+        });
+    }
+</script>
+
+</html>

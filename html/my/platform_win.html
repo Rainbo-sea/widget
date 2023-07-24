@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>平台协议</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+</head>
+
+<body class='wrap'>
+    <div class="my" id="app">
+        <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWins();">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#iconzuojiantou"></use>
+                </svg></a>
+            <div class="aui-title">平台协议 </div>
+        </header>
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="pwd" onclick="agreementFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../../image/zhanghu.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台用户协议</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd" onclick="agreementTransactionFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../../image/jiaoyi.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台交易规则</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd" onclick="agreementGrantFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../../image/shouquan.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台授权协议</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="update" onclick="agreementPrivacyFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../../image/yinshi.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台用户隐私协议</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+    //网络货运平台用户协议
+    function agreementFn() {
+        api.openWin({
+            name: 'agreementpage_win',
+            url: './agreementpage_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //交易协议
+    function agreementTransactionFn() {
+        api.openWin({
+            name: 'agreementTransaction_win',
+            url: './agreementTransaction_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台授权协议
+    function agreementGrantFn() {
+        api.openWin({
+            name: 'agreementGrant_win',
+            url: './agreementGrant_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台用户隐私协议
+    function agreementPrivacyFn() {
+        api.openWin({
+            name: 'agreementPrivacy_win',
+            url: './agreementPrivacy_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+</script>
+
+</html>

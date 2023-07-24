@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的任务</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+<style>
+    .headerUl {
+        width: 100%;
+        height: 50px;
+    }
+
+    .headerLi {
+        width: 50px;
+        height: 50px;
+        float: right;
+    }
+
+    .addText {
+        float: right;
+        color: #007aff !important;
+        padding: 0 !important;
+    }
+
+    .fontSize {
+        font-size: 0.32rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.3rem !important;
+    }
+
+    .shamaImg {
+        width: 0.6rem;
+    }
+
+    .frSearchBox {
+        position: absolute;
+        right: 20px;
+        top: 9px;
+        font-size: 0.32rem;
+    }
+
+    .clearfix {
+        position: relative;
+    }
+
+    .myGoodsLeft {
+        position: absolute;
+        top: 9px;
+        font-size: 0.32rem;
+    }
+
+    .searchImg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .goodsPadingTop {
+        padding-top: 30px;
+    }
+</style>
+
+<body class="goodsPadingTop">
+    <header id="header1" class="aui-bar-header clearfix">
+        <div class="aui-title">货源大厅
+        </div>
+        <div class="frSearchBox" onclick="search()">
+            <img class="searchImg" src="../image/serch.png" />
+        </div>
+        <div class="myGoodsLeft" onclick="openMyGoodsFn()">我的报价</div>
+    </header>
+</body>
+
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/rem.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/iconfont.js"></script>
+<script src="../script/vue.js"></script>
+<script type="text/javascript">
+    var menus, headerHeight, header;
+    var prames = {
+        deliveryDatestartTime: null,//筛选开始时间
+        deliveryDateendTime: null,//筛选结束时间
+        receiptDatestartTime: null,//筛选开始时间
+        receiptDateendTime: null,//筛选结束时间
+        startCity: null,
+        endCity: null,
+        carType: null,
+        LTE_distance: null,
+    }
+
+    headerHeight = $("#header1").height();
+
+    apiready = function () {
+
+        //弹出状态栏通知
+        // api.notification({
+        //     notify: {
+        //         title: '通知标题',
+        //         content: '通知内容',
+        //         extra: '123'
+        //     }
+        // });
+
+        // api.addEventListener({
+        //     name: 'noticeclicked'
+        // }, function (ret, err) {
+        //     alert(ret.value);
+        // })
+
+        api.openFrame({
+            name: "hall_frame",
+            url: 'goods/hall_frame.html',
+            bounces: true,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false,
+            bgColor: '#f0f0f0',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + api.safeArea.top,
+                w: 'auto',
+                h: api.frameHeight - headerHeight - api.safeArea.top - api.safeArea.top + 30,
+            },
+            pageParam: {
+                headerHeight: headerHeight,
+                footerHeight: footerHeight,
+            }
+        });
+
+        api.addEventListener({
+            name: 'screenGoods'
+        }, function (ret, err) {
+            prames = ret.value;
+        })
+        cardInfo();
+        //获取证照是否过期
+        function cardInfo() {
+            dealData("/platform/tsdriver/check/truck/driver", 'GET', {}, function (ret) {
+                if (ret.code === 0) {
+                    if (ret.data) {
+                        console.log("获取证照是否过期：" + JSON.stringify(ret.data));
+                        // var cycard = ret.data[0];//从业资格证修改
+                        var jszCard = ret.data[1];  //驾驶证修改
+                        var idCard = ret.data[2];//身份证修改
+                        var carTime = ret.data[3];//车辆检验有效期修改
+                        // editFlag = 1;
+                        var editFlag = null;
+                        var textData = "";
+                        // if (ret.data[0]) {
+                        //     textData = "从业资格证,"
+                        //     editFlag = 0;
+                        // }
+                        if (ret.data[1]) {
+                            textData = textData + "驾驶证,"
+                            editFlag = 0;
+                        }
+                        if (ret.data[2]) {
+                            textData = textData + "身份证,"
+                            editFlag = 0;
+                        }
+                        if (ret.data[3]) {
+                            textData = textData + "车辆检验有效期,"
+                            editFlag = 1;
+                        }
+                        if (editFlag === 0) {
+                            api.confirm({
+                                title: '证件失效',
+                                msg: `你的${textData.substr(0, textData.length - 1)}失效，请修改资料。否则会影响业务开展！`,
+                                buttons: ['确定', '取消']
+                            }, function (ret, err) {
+                                var index = ret.buttonIndex;
+                                if (index == 1) {
+                                    //修改身份信息
+                                    api.openWin({
+                                        name: 'completeData_win',
+                                        url: './my/completeData_win.html',
+                                    });
+                                } else {
+                                    return;
+                                }
+                            });
+                        } else if (editFlag === 1) {
+                            api.confirm({
+                                title: '车辆失效',
+                                msg: `你的${textData.substr(0, textData.length - 1)}失效，请修改资料或者重新绑定车辆。否则会影响业务开展！`,
+                                buttons: ['确定', '取消']
+                            }, function (ret, err) {
+                                var index = ret.buttonIndex;
+                                if (index == 1) {
+                                    var that = this;
+                                    dealData('/platform/tsdriver/binding/truck', 'GET', {}, function (ret) {
+                                        // console.log("获取车辆数据：" + JSON.stringify(ret));
+                                        if (ret.code === 0) {
+                                            api.openWin({
+                                                name: 'addCar_win',
+                                                url: './my/myCarList/addCar_win.html',
+                                                pageParam: {
+                                                    carInfo: ret.data
+                                                },
+                                            });
+                                        } else {
+                                            api.toast({
+                                                msg: ret.msg,
+                                                duration: 5000,
+                                                location: 'middle'
+                                            });
+                                        }
+                                        if (ret.code !== 0) {
+                                            api.toast({
+                                                msg: ret.msg,
+                                                duration: 5000,
+                                                location: 'middle'
+                                            });
+                                        }
+                                    },
+                                        function (err) {
+                                            console.log(JSON.stringify(err));
+                                            api.toast({
+                                                msg: err.body.msg,
+                                                duration: 5000,
+                                                location: 'middle'
+                                            });
+                                        })
+                                    //修改车辆信息
+                                } else {
+                                    return;
+                                }
+                            });
+                        }
+                    }
+                }
+                if (ret.code !== 0) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+            }, function (err) {
+                console.log(JSON.stringify(err));
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+        }
+    }
+    function search() {
+        api.openFrame({
+            name: 'screenGoods',
+            url: './goods/screenGoods.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                prames: prames
+            }
+        });
+    }
+    //我的货源
+    function openMyGoodsFn() {
+        api.openWin({
+            name: 'offerList_win',
+            url: './goods/offerList_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+
+        });
+    }
+
+</script>
+
+</html>

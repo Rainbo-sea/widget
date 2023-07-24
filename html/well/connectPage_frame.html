@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的任务-进行中</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+
+</head>
+<style>
+    .fontSize {
+        font-size: 0.26rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.35rem !important;
+    }
+
+    .fontSize2 {
+        font-size: 0.3rem !important;
+    }
+
+    .marginTop {
+        margin-top: 2px;
+    }
+
+    .colStyle {
+        width: 50%;
+        height: 30px;
+        display: flex;
+        font-size: 14px !important;
+    }
+
+    .rowStyle {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 5px;
+        border-bottom: 1px solid #F5F5F5;
+    }
+
+    .marginTop {
+        margin-top: 5px !important;
+    }
+
+    .connectHeader {
+        border-bottom: 1px solid #F5F5F5;
+        height: 20px;
+    }
+
+    .headerLeft {
+        float: left;
+        width: 72%;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+    }
+
+    .headerRight {
+        float: right;
+        width: 25%;
+        height: 20px;
+        color: #2585a6;
+    }
+
+    .imgIcon {
+        margin-top: 7px;
+        margin-right: 5px;
+        width: 20px;
+        height: 20px;
+        float: left;
+    }
+
+    .widthStyle {
+        width: 47%;
+    }
+
+    .widthStyle2 {
+        width: 53%;
+    }
+</style>
+
+<body>
+    <!--隐藏值 -->
+    <input type="hidden" value="1" id="page" />
+
+    <!-- 运单模块 -->
+    <div class="jinxingzhong">
+        <div class='wrap'>
+
+        </div>
+        <div class="pullUp">
+            <span class="pullUpLabel">正在加载...</span>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="listTemplate">
+    {{each tData as val k}}
+    <div class="box waybillDetails" data-id="{{val.id}}">
+        <div class="header fontSize1 connectHeader">
+           <div class="headerLeft"><img class="imgIcon" src="../../image/nameImg.png" alt="" /> 名称:{{val.name}} </div>  <div  onClick="openWinDetails({{val.id}})" class="headerRight">查看运单</div>
+        </div>
+        <div class="rowStyle"  >
+               <div class="colStyle widthStyle"><div class="colName">司机姓名：</div>{{val.driverName }}</div>
+               <div class="colStyle widthStyle2"><div class="colName">司机电话：</div>{{val.driverPhone }}</div>
+               <div class="colStyle widthStyle"><div class="colName">车牌号：</div>{{val.truckNumber }}</div>
+               <div class="colStyle widthStyle2">
+                <div class="colName ">类型：</div>
+                    {{if val.mode == 0}}
+                        指派
+                     {{/if}}
+                     {{if val.mode == 1}}
+                        定价
+                     {{/if}}
+                     {{if val.mode == 2}}
+                        竞价
+                     {{/if}}
+                </div>
+                <div class="colStyle widthStyle"><div class="colName">状态：</div>
+                    {{if val.status == -1}}
+                      <span>待接驳</span>  
+                     {{/if}}
+                     {{if val.status == 0}}
+                     <span>未派车</span>  
+                     {{/if}}
+                     {{if val.status == 1}}
+                     <span>已派车</span>  
+                     {{/if}}
+                     {{if val.status == 2}}
+                     <span>已到达</span> 
+                     {{/if}}
+                     {{if val.status == 3}}
+                     <span>待指派</span> 
+                    {{/if}}
+                    {{if val.status == 4}}
+                    <span>已起运</span> 
+                   {{/if}}
+                </div>
+        </div>
+        <div class="box_date">
+            <!-- createDate -->
+            <i  class="fontSize">{{val.createDate}}</i> <span class="fontSize">订单编号：{{val.groupSerial}}</span>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    //1时表示当前无数据可以加载了
+    var isnodata = 0;
+    //当前页面的每次加载条目数
+    var size = 10;
+    var searchNum, searchID;
+    apiready = function () {
+        fnReady();
+        // userInfo();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+        //监听更新状态页面 是否完成 起运 达到 回单
+
+        //达到
+        api.addEventListener({
+            name: 'daoda'
+        }, function (ret, err) {
+            if (ret.value.key == 1) {
+                reload();
+            }
+        });
+        //回单
+        api.addEventListener({
+            name: 'huidan'
+        }, function (ret, err) {
+            if (ret.value.key == 1) {
+                reload();
+            }
+        });
+        //搜索
+        api.addEventListener({
+            name: 'search'
+        }, function (ret, err) {
+            if (ret) {
+                searchNum = ret.value.key.status;
+                searchID = ret.value.key.orderId;
+                reload();
+            }
+        });
+
+        reload();
+
+        //刷新页面数据
+        function reload() {
+
+            isnodata = 0;
+            $("#page").val(1);
+            api.showProgress({
+                title: '加载中...',
+                modal: false
+            });
+            var parm = {
+                "page": 0,
+                "size": size,
+                "sort": "id,desc",
+                "searchParms": {
+                    // "EQ_driverPhone": "19853137301"
+                }
+            };
+            console.log("接驳订单参数:", JSON.stringify(parm))
+            dealData("tstransportordergroup/query", 'POST', JSON.stringify(parm), function (ret) {
+                if (ret.code === 0) {
+                    console.log("接驳订单函数返回:", JSON.stringify(ret))
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                        item.ratioAmount = format(item.ratioAmount);
+                        item.balancePriceCount = format(item.balancePriceCount);
+                    });
+                    for (var i = 0; i < list.length; i++) {
+                        var timer = timeStampTurnTime(transformationDate(list[i].createDate)).slice(0, 16);
+                        // list[i].createDate = timer;
+                    }
+
+                    if (list == '') {
+                        var html = '<div class="aui-tips-title">暂无数据</div>';
+                        $('.wrap').html(html);
+                    } else {
+                        var htmlContent = template('listTemplate', {
+                            tData: list
+                        });
+                        $('.wrap').html(htmlContent);
+                        if (list.length > 0) {
+                            api.sendEvent({
+                                name: 'orderRefresh',
+                                extra: {}
+                            });
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+            }, function (err) {
+                console.log(JSON.stringify(err));
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+            setTimeout('api.refreshHeaderLoadDone()', '500');
+        };
+
+
+        //上拉加载下一页数据
+        function jumpPage() {
+            if (isnodata == 1) {
+                return;
+            }
+            var page = parseInt($("#page").val());
+            var parm = {
+                "page": page,
+                "size": size,
+                "sort": "id,desc",
+                "searchParms": {
+                    // "EQ_driverPhone": "19853137301"
+                }
+            };
+            $(".pullUp").show();
+            console.log("接驳订单参数:", JSON.stringify(parm))
+            dealData("tstransportordergroup/query", 'POST', JSON.stringify(parm), function (ret) {
+                console.log("接驳订单函数返回:", JSON.stringify(ret))
+                if (ret.code === 0) {
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                    });
+                    var htmlContent = template('listTemplate', {
+                        tData: list
+                    });
+                    if (list.length == 0) {
+                        api.toast({
+                            msg: "无更多数据",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        $(".pullUp").hide();
+                        isnodata = 1;
+                        return;
+                    }
+                    $("#page").val(page + 1);
+                    $('.wrap').html($('.wrap').html() + htmlContent);
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+                setTimeout('api.refreshHeaderLoadDone()', '500');
+            },
+                function (err) {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: err.body.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                })
+        };
+
+        //监听下拉加载数据
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function (ret, err) {
+            jumpPage();
+        });
+        //监听下拉刷新数据
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            searchNum = '';
+            searchID = '';
+            reload();
+        });
+        // 时间转换
+        function transformationDate(date) {
+            var time = new Date(date)
+            var M = datetime(time.getMonth(time))
+            var D = datetime(time.getDay(time))
+            var H = datetime(time.getHours(time))
+            var Minutes = datetime(time.getMinutes(time))
+            var S = datetime(time.getSeconds(time))
+            return `${M}月${D}日 ${M}:${Minutes}:${S}`;
+        }
+        // 时间补0
+        function datetime(num) {
+            if (num < 10) {
+                return '0' + num;
+            }
+            return num;
+        }
+    };
+    //运单详情
+    function openWinDetails(id) {
+        api.openWin({
+            name: 'connectWaybill_win',
+            url: './connectWaybill_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+            allowEdit: true
+        });
+    }
+
+
+</script>
+
+</html>

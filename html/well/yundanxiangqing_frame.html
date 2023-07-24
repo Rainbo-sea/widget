@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>运单详情Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .jiantou {
+        position: absolute;
+        top: 1rem !important;
+        left: 0rem !important
+    }
+
+    .padding0 {
+        padding: 0 !important;
+    }
+
+    .jinxingzhong_xiangqing {
+        overflow: auto !important;
+        background: #F7F8FA !important;
+    }
+
+    .fgay {
+        overflow: auto !important;
+        background: #F7F8FA !important;
+    }
+
+    .flageLeft {
+        float: left;
+        font-size: 16px;
+        /* font-weight: bold; */
+    }
+
+    .imgDiv {
+        margin-left: 0.86rem;
+        margin-top: 0.1rem;
+        width: 80%;
+        display: flex;
+        flex-flow: wrap;
+    }
+
+    .imgDiv img {
+        width: 30px;
+        height: 30px;
+        margin-left: 0.1rem;
+    }
+
+    .cardList {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        line-height: 40px;
+        margin-top: 15px;
+        padding-left: 15px;
+    }
+
+    .margintop {
+        margin-top: 0px;
+    }
+
+    .cardList img {
+        width: 20px;
+        margin-right: 2px;
+    }
+
+    .marginRghrtico {
+        margin-left: 8px;
+    }
+
+    .colorText1 {
+        color: #8cc540;
+    }
+
+    .jinxingzhong_xiangqing {
+        background: #FFFFFF;
+    }
+
+    .headerInfo {
+        padding: 0.32rem 0.28rem 0 0.36rem;
+    }
+
+    .headerInfoDiv {
+        width: 100%;
+        background: #fff;
+    }
+
+    .headerLeft img {
+        width: 25px;
+        height: 26px;
+        margin-right: 8px;
+    }
+
+    .waybillCardHeader {
+        width: 95%;
+        height: 29px;
+        padding-left: 6px;
+        padding-top: 10px;
+    }
+
+    .headerText {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .headerRight {
+        width: 20%;
+        float: right;
+        text-align: right;
+        font-size: 16px;
+        font-weight: 400;
+        padding-right: 10px;
+        color: #007EF5;
+    }
+
+    .timeText {
+        color: #BFBFBF;
+        font-size: 14px;
+        margin-top: 2px;
+        padding-left: 9px;
+    }
+
+    .topBg {
+        background: #F7F8FA !important;
+        padding: 12px 24px 12px 12px !important;
+    }
+
+    .paddingStyle {
+        padding-top: 0;
+    }
+
+    .address {
+        margin-top: 5px !important;
+        padding-bottom: 10px !important;
+        font-size: 14px !important;
+        color: #969799 !important;
+        border-bottom: 1px solid #f0f2f5 !important;
+    }
+
+    .ordermsg {
+        padding: 0 0.28rem 0 0.36rem !important;
+        font-size: 15px !important;
+    }
+
+    .moneyStyle {
+        font-size: 14px;
+    }
+
+    .calssAmountStyle {
+        font-size: 15px !important;
+        float: none !important;
+        color: #FA4141 !important;
+    }
+
+    .calssAmount {
+        font-size: 16px !important;
+        float: none !important;
+        color: #FA4141 !important;
+    }
+
+    .floatStyle {
+        float: right;
+    }
+
+    .radorStyle {
+        width: 0.5rem !important;
+        height: 0.5rem !important;
+    }
+
+    .yundanStyle {
+        color: #8C93B0;
+        font-size: 14px;
+    }
+
+    .borderRadius {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .pingjiaStyle {
+        display: flex;
+        padding-left: 20px;
+        font-size: 16px;
+    }
+
+
+    .xingIcon {
+        font-size: 20px;
+        line-height: 16px;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="jinxingzhong_xiangqing" id="app">
+        <div class="headerInfo">
+            <div class="headerInfoDiv">
+                <div class="waybillCardHeader">
+                    <div class="headerLeft">
+                        <img src="../../image/cardImg.png" />
+                        <div class="headerText waybillSerial"></div>
+                    </div>
+                    <div class="headerRight status"> </div>
+                </div>
+                <div class="timeText" v-if="goodsCode" @click="copyFn(goodsCode)">货源单号：<span v-text="goodsCode"></span>
+                </div>
+                <div class="timeText">接单时间：<span class="createDate"></span></div>
+                <div class="box">
+                    <div class="top topBg">
+                        <!-- <div><i class="startProvince"></i> → <i class="endProvince"></i></div> -->
+                        <div class="moneyStyle">运费：<span class="calssAmountStyle">￥<span
+                                    class="calssAmount"></span></span>
+                            <span class="payStatus floatStyle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="message">
+            <div>
+                <div class="tel">
+                    <div class="tel_top">
+                        <span class="hair flageLeft">
+                            <svg class="icon radorStyle borderRadius" aria-hidden="true">
+                                <use xlink:href="#iconfahuo"></use>
+                            </svg>
+                        </span>
+                        <span class="hair flageLeft" id="deliveryName">姓名</span>
+                        <span class="telicon" @click="deliveryPhoneFn()">
+                            <svg class="icon borderRadius" aria-hidden="true">
+                                <use xlink:href="#icondianhua"></use>
+                            </svg>
+                        </span>
+                        <span class="phone deliveryPhone" id="deliveryPhoneId" @click="deliveryPhoneFn()"></span>
+                    </div>
+                    <!-- <div class="company deliveryCompany"></div> -->
+                    <div class="address"><span class="startAddress"></span></div>
+                </div>
+                <div class="tel">
+                    <div class="tel_top">
+                        <span class="hair flageLeft">
+                            <svg class="icon radorStyle borderRadius" aria-hidden="true">
+                                <use xlink:href="#iconshouhuo"></use>
+                            </svg>
+                        </span>
+                        <span class="hair flageLeft" id="receiptName">姓名</span>
+                        <span class="telicon" @click="receiverPhoneFn()">
+                            <svg class="icon borderRadius" aria-hidden="true">
+                                <use xlink:href="#icondianhua"></use>
+                            </svg>
+                        </span>
+                        <span class="phone receiverPhone" id="receiverPhoneId" @click="receiverPhoneFn()"></span>
+                    </div>
+                    <!-- <div class="company  receiptCompany"></div> -->
+                    <div class="address"><span class="endAddress"></span> </div>
+                </div>
+            </div>
+        </div>
+        <div class="ordermsg">
+            <div>
+                <div class="detailed">
+                    <div class="orderid">
+                        <p class="paddingStyle">物资明细：</p>
+                        <div>
+                            <table border="1" width="100%" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th class="widthStyle">序号</th>
+                                        <th class="widthStyle">货物名称</th>
+                                        <th class="widthStyle">运量<span class="Company"></span></th>
+                                        <th class="widthStyle">起运量<span class="Company"></span></th>
+                                        <th class="endShipmentAmount widthStyle">到达量<span class="Company"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+
+                            </table>
+
+                            <table border="1" width="100%" id="table2">
+                                <thead>
+                                    <tr>
+                                        <th class="widthStyle">序号</th>
+                                        <th class="widthStyle">货物名称</th>
+                                        <th class="widthStyle">运量
+                                            <span class="Company"></span>
+                                        </th>
+                                        <th class="widthStyle">起运量<span class="Company"></span></th>
+                                        <th class="widthStyle"> 到达量<span class="Company"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody2">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="updatestate">
+            <div class="state">
+                <div class="id">
+                    <p class="yundanStyle">运单节点数据</p>
+                    <div class="box  padding0">
+                        <div class="yundanstate">
+                            <span class="qiyun_icon  status1">
+                                <svg class="icon " aria-hidden="true">
+                                    <use xlink:href="#iconqiyun"></use>
+                                </svg>
+                            </span>
+                            <span class="qiyun  status1">起运 </span>
+                            <span class="success">
+                                <svg class="icon status1 borderRadius" aria-hidden="true">
+                                    <use xlink:href="#icongouxuan-1"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <p class="hair">起运时间：<span id="dealTimeStart">未生成</span></p>
+                        <div class="jiantou">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#icondianjiantou"></use>
+                            </svg>
+                        </div>
+                        <div class="imgDiv">
+                            <img :src="item" alt="" v-for="(item,i) in img1" @click="lookImgFn(item)">
+                            <img :src="item" alt="" v-for="(item,i) in img4" @click="lookImgFn(item)">
+                        </div>
+                    </div>
+                    <div class="box padding0">
+                        <div class="yundanstate">
+                            <span class="qiyun_icon status3">
+                                <svg class="icon " aria-hidden="true">
+                                    <use xlink:href="#icondaoda"></use>
+                                </svg>
+                            </span>
+                            <span class="qiyun  status3">到达</span>
+                            <span class="success">
+                                <svg class="icon  status3 borderRadius" aria-hidden="true">
+                                    <use xlink:href="#icongouxuan-1"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <p class="hair">到达时间：<span id="dealTimeArrive">未生成</span></p>
+                        <div class="jiantou">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#icondianjiantou"></use>
+                            </svg>
+                        </div>
+                        <div class="imgDiv">
+                            <img :src="item" alt="" v-for="(item,i) in img2" @click="lookImgFn(item)">
+                        </div>
+                    </div>
+                    <div class="box padding0">
+                        <div class="yundanstate">
+                            <span class="qiyun_icon status4">
+                                <svg class="icon " aria-hidden="true">
+                                    <use xlink:href="#iconhuidan"></use>
+                                </svg>
+                            </span>
+                            <span class="qiyun status4">回单</span>
+                            <span class="success">
+                                <svg class="icon status4 borderRadius" aria-hidden="true">
+                                    <use xlink:href="#icongouxuan-1"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <p class="hair">回单时间：<span id="dealTimeReceipt">未生成</span></p>
+                        <div class="imgDiv">
+                            <img :src="item" alt="" v-for="(item,i) in img3" @click="lookImgFn(item)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="updatestate" v-show="shipperMessage">
+            <div class="state">
+                <div class="id">
+                    <p class="yundanStyle">评价信息</p>
+                    <div class="pingjiaStyle"><label>评分：</label>
+                        <div>
+                            <span class="xingIcon">★</span>
+                            <span class="xingIcon">★</span>
+                            <span class="xingIcon">★</span>
+                            <span class="xingIcon">★</span>
+                            <span class="xingIcon">★</span>
+                        </div>
+                    </div>
+                    <div class="pingjiaStyle"><label>评论：</label>
+                        <div v-text="shipperMessage"></div>
+                    </div>
+                    <div v-if="shipperImgPaths.length!==0" class="pingjiaStyle"><label>图片：</label>
+                        <div class="imgDiv">
+                            <img :src="item" alt="" v-for="(item,i) in shipperImgPaths" @click="lookImgFn(item)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="listTemplate">
+    {{each tData as val k}}
+    <tr data-id= "{{val.id}}" data-way="{{val.waybillId}}">
+        <td>{{k+1}}</td>
+        <td>{{val.productName}}</td>
+        <td>
+            {{val.count}}
+        </td>
+         <td class='shipmentAmount'>
+           {{val.beginShipmentAmount}}
+        </td>
+        <td class='endShipmentAmount'>{{val.endShipmentAmount}}</td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/html" id="listTemplate2">
+    {{each tDatas as val k}}
+    <tr data-id="{{val.id}}" data-way="{{val.waybillId}}">
+        <td>{{k+1}}</td>
+        <td>{{val.productName}}</td>
+         <td>{{val.count}}</td>
+          <td>{{val.beginShipmentAmount}}</td>
+        <td>
+           {{val.endShipmentAmount}}
+        </td>
+    </tr>
+    {{/each}}
+</script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+
+        var id = api.pageParam.id;
+        var status;
+        fnReady();
+
+        //状态上报
+        $(document).on("click", "#btn", function () {
+            if (status == 10 || status == 15 || status == 20 || status == 40) {
+                api.openWin({
+                    name: 'gengxinzhuangtai_win',
+                    url: './gengxinzhuangtai_win.html',
+                    animation: {
+                        type: "movein", //动画类型（详见动画类型常量）
+                        subType: "from_right", //动画子类型（详见动画子类型常量）
+                        duration: 300 //动画过渡时间，默认300毫秒
+                    },
+                    pageParam: {
+                        id: id,
+                        status: status
+                    },
+                });
+            }
+        });
+
+        //vue对象
+        var app = new Vue({
+            el: '#app',
+            data: {
+                img1: [],
+                img2: [],
+                img3: [],
+                img4: [],
+                deliveryPhone: "",
+                receiptPhone: "",
+                goodsCode: "",
+                shipperMessage: "",
+                shipperImgPaths: []
+            },
+            created: function () {
+                //获取图片
+                this.getImgListFn();
+                this.reload();
+            },
+            methods: {
+                copyFn: function (data) {
+                    var clipBoard = api.require('clipBoard');
+                    clipBoard.set({
+                        value: data
+                    }, function (ret, err) {
+                        if (ret) {
+                            api.toast({
+                                msg: "复制成功：" + data,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                },
+                reload: function () {
+                    var that = this;
+                    dealData("tswaybill/" + id, 'GET', {}, function (ret) {
+                        // console.log("运单详情：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            var data = ret.data;
+                            that.goodsCode = data.goodsCode
+                            var waybillSerial = data.waybillSerial == null ? '' : data.waybillSerial;
+                            var startProvince = data.startProvince == null ? '' : data.startProvince;
+                            var endProvince = data.endProvince == null ? '' : data.endProvince;
+                            var waybillSerial = data.waybillSerial == null ? '' : data.waybillSerial;
+                            var createDate = data.createDate == null ? '' : data.createDate;
+                            var receiptCompany = data.receiptCompany == null ? '' : data.receiptCompany;
+                            var deliveryPhone = data.deliveryPhone == null ? '' : data.deliveryPhone;
+                            that.deliveryPhone = data.deliveryPhone;
+                            var startAddress = data.deliveryAddress == null ? '' : data.deliveryAddress;
+                            var receiverPhone = data.receiptPhone == null ? '' : data.receiptPhone;
+                            that.receiptPhone = data.receiptPhone;
+                            var deliveryCompany = data.deliveryCompany == null ? '' : data.deliveryCompany;
+                            var endAddress = data.receiptAddress == null ? '' : data.receiptAddress;
+                            $(".waybillSerial").html(waybillSerial);
+                            $(".startProvince").html(startProvince);
+                            $(".endProvince").html(endProvince);
+                            $(".createDate").html(timeStampTurnTime(createDate).slice(0, 16));
+                            $(".receiptCompany").html(receiptCompany);
+                            $("#receiptName").html(data.receiptName);
+                            $("#deliveryName").html(data.deliveryName);
+                            $(".deliveryPhone").html(geTel(deliveryPhone));
+                            $(".startAddress").html(data.startProvince + data.startCity + data.startDistrict + startAddress);
+                            $(".receiverPhone").html(geTel(data.receiptPhone));
+                            $(".deliveryCompany").html(data.deliveryCompany);
+                            $(".endAddress").html(data.endProvince + data.endCity + data.endDistrict + endAddress);
+                            $('.balancePrice').html(data.balancePrice)
+                            if (data.modeType === 51 || data.modeType === 52) {
+                                $('.calssAmount').html(format(data.amount) + "元");
+                            } else {
+                                if (data.balancePriceCount) {
+                                    $('.calssAmount').html(format(data.balancePriceCount) + "元")
+                                }
+                            }
+                            if (data.payStatus) {
+                                $('.payStatus').html("已支付")
+                            } else {
+                                $('.payStatus').html("未支付")
+                            }
+                            //设置时间
+                            if (data.dealTimeReceipt) {
+                                document.getElementById("dealTimeReceipt").innerText = timeStampTurnTime(data.dealTimeReceipt).slice(0, 16)
+                            }
+                            if (data.dealTimeArrive) {
+                                document.getElementById("dealTimeArrive").innerText = timeStampTurnTime(data.dealTimeArrive).slice(0, 16)
+                            }
+                            if (data.dealTimeStart) {
+                                document.getElementById("dealTimeStart").innerText = timeStampTurnTime(data.dealTimeStart).slice(0, 16)
+                            }
+
+                            var tsWaybillDetails = data.tsWaybillDetails
+                            // console.log(JSON.stringify(tsWaybillDetails))
+
+                            // 单位
+                            for (var i = 0; i < $('.Company').length; i++) {
+                                // $('.Company').eq(i).html(`(件)`)
+                                if (ret.data.orderUnit) {
+                                    $('.Company').eq(i).html(`(${ret.data.orderUnit})`)
+                                }
+                            }
+                            if (data.shipperMessage) {
+                                that.shipperMessage = data.shipperMessage;
+                                var objArr = document.getElementsByClassName("xingIcon");
+                                for (var i = 0; i < objArr.length; i++) {
+                                    objArr[i].style.color = "#8B8B7A"
+                                    if (i <= data.shipperEvaluateLevel - 1) {
+                                        objArr[i].style.color = "#FFD700"
+                                    }
+                                }
+                            }
+                            if (data.shipperImgPaths) {
+                                that.shipperImgPaths = data.shipperImgPaths;
+
+                            }
+                            //判断当前运单状态 显示对应的UI
+                            status = ret.data.status;
+                            if (status == 10 || status == 15) {
+                                $(".status").html("待起运");
+                                $('.endShipmentAmount').hide();
+                                $('.shipmentAmount').hide();
+                                $('.weight').hide();
+                                $('.endweight').hide();
+                            } else if (status == 20) {
+                                $(".status").html("已起运");
+                                $('.endweight').hide();
+                                $('.endShipmentAmount').hide();
+                            } else if (status == 30) {
+                                $(".status").html("途中");
+                            } else if (status == 40) {
+                                $(".status").html("已到达");
+                            } else if (status == 50) {
+                                $(".status").html("已回单");
+                                $('.button').hide()
+
+                            } else if (status == 60) {
+                                $(".status").html("作废");
+                            }
+
+                            if (status == 10 || status == 15) {
+                                document.getElementById("table1").style.display = "inline-table";
+                                document.getElementById("table2").style.display = "none";
+                                var htmlContent = template('listTemplate', {
+                                    tData: tsWaybillDetails
+                                });
+                                $('#tbody').html(htmlContent);
+                                for (var i = 0; i < $('#tbody #begin').length; i++) {
+                                    $('#tbody #begin').eq(i).html(`<input calss="" type="text" value=${tsWaybillDetails[i].count} onclick="arriveFn()"  onblur="amountFn()" id="amount" class="amount amountStyle">`)
+                                }
+                                $('.endShipmentAmount').hide();
+                                $('.shipmentAmount').hide();
+                                $(".status1").addClass("active");
+                                $(".status2").addClass("def");
+                                $('.status3').addClass('def');
+                                $('.status4').addClass('def');
+                            } else if (status == 20) {
+                                document.getElementById("table1").style.display = "inline-table";
+                                document.getElementById("table2").style.display = "none";
+                                var htmlContent = template('listTemplate', {
+                                    tData: tsWaybillDetails
+                                });
+                                $('#tbody').html(htmlContent);
+                                $(".status1").addClass("active");
+                                $(".status2").addClass("active");
+                                $('.status3').addClass('def');
+                                $('.status4').addClass('def');
+                            } else if (status == 40) {
+                                document.getElementById("table2").style.display = "inline-table";
+                                document.getElementById("table1").style.display = "none";
+                                var htmlContent = template('listTemplate2', {
+                                    tDatas: tsWaybillDetails
+                                });
+                                $('#tbody2').html(htmlContent);
+                                $(".status1").addClass("active");
+                                $(".status2").addClass("active");
+                                $(".status3").addClass("active");
+                                $('.status4').addClass('def');
+                            } else if (status == 50) {
+                                document.getElementById("table2").style.display = "inline-table";
+                                document.getElementById("table1").style.display = "none";
+                                var htmlContent = template('listTemplate2', {
+                                    tDatas: tsWaybillDetails
+                                });
+                                if (data.modeType === 51 || data.modeType === 52) {
+                                    $('.calssAmount').html(format(data.amount) + "元");
+                                } else {
+                                    if (data.ratioAmount) {
+                                        $('.calssAmount').html(format(data.ratioAmount) + "元");
+                                    }
+                                }
+                                $('#tbody2').html(htmlContent);
+                                $(".status1").addClass("active");
+                                $(".status2").addClass("active");
+                                $(".status3").addClass("active");
+                                $('.status4').addClass('active');
+                            }
+
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });;
+                            console.log(JSON.stringify(ret));
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                getImgListFn: function () {
+                    var that = this;
+                    dealData("/platform/tswaybillstatus/list/" + api.pageParam.id, 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            console.log("获取列表信息：" + JSON.stringify(ret));
+                            if (ret.data[0]) {
+                                that.img1 = ret.data[0].imgs;
+                                that.img4 = ret.data[0].carHeadImgs;
+
+                            }
+                            if (ret.data[1]) {
+                                that.img2 = ret.data[1].imgs;
+                            }
+                            if (ret.data[2]) {
+                                that.img3 = ret.data[2].imgs;
+                            }
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                lookImgFn: function (itemImgs) {
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        showList: false,
+                        imageUrls: [itemImgs]
+                    });
+                },
+                // 收货人电话
+                receiverPhoneFn: function () {
+                    var that = this;
+                    console.log("that.deliveryPhone:", that.receiptPhone);
+                    api.call({
+                        type: 'tel_prompt',
+                        number: that.receiptPhone
+                    });
+                },
+                // 收货人电话
+                deliveryPhoneFn: function () {
+                    var that = this;
+                    console.log("that.deliveryPhone:", that.deliveryPhone);
+                    api.call({
+                        type: 'tel_prompt',
+                        number: that.deliveryPhone
+                    });
+                },
+            },
+        });
+    };
+
+
+</script>
+
+</html>

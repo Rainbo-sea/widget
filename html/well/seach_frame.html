@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>搜索Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+
+<body class='fgay'>
+    <div class="seach">
+        <div class="my_box">
+            <div class="oldPwd">
+                运单状态：
+                <select>
+                    <option value="10">待起运</option>
+                    <option value="20">已起运</option>
+                    <option value="40">已到达</option>
+                </select>
+            </div>
+            <div class="newPwd">
+                运单号:
+                <input type="text" placeholder="请输入运单号">
+            </div>
+            <div class="confirmNewPwd">
+
+            </div>
+        </div>
+    </div>
+    <div class="button">
+        <button id="submit">点击搜索</button>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        $(document).on('click', '#submit', function () {
+            var status = $('option:selected').val();
+            var orderId = $('.newPwd input').val();
+            api.sendEvent({
+                name: 'search',
+                extra: {
+                    key: {
+                        "status": status,
+                        "orderId": orderId
+                    }
+                }
+            });
+            api.closeWin();
+        });
+    }
+
+</script>
+
+</html>

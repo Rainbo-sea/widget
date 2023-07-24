@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <style>
+        .centent {
+            width: 100%;
+            height: 100%;
+        }
+
+        .list {
+            /* height: 145px; */
+            background: #ffffff;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .headerError {
+            display: flex;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .waybillId {
+            font-size: 18px;
+            font-weight: bold;
+            width: 80%;
+
+        }
+
+        .waybillErrorStatus {
+            font-size: 18px;
+            font-weight: bold;
+            width: 15%;
+        }
+
+        .waybillContent {
+            font-size: 16px;
+            line-height: 20px;
+        }
+
+        .imgError {
+            width: 80px;
+            height: 80px;
+        }
+
+        .waybillContentText {
+            flex: 1;
+            font-size: 14px;
+            margin-left: 25px;
+        }
+
+        .listDiv {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .listDiv label {
+            width: 20%;
+            height: auto;
+            font-weight: bold;
+            text-align: right;
+            display: inline-block;
+            color: cadetblue;
+        }
+
+        .listDiv div {
+            width: 70%;
+            height: auto;
+        }
+
+        .listDataimg {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .weihuifu {
+            line-height: 26px;
+            text-align: center;
+            font-size: 15px;
+            /* background: rgba(0, 126, 245, 0.16); */
+            border-radius: 4px;
+            color: #007EF5;
+        }
+
+        .yihuifu {
+            line-height: 26px;
+            text-align: center;
+            font-size: 15px;
+            /* background: #A2CD5A; */
+            border-radius: 4px;
+            color: #698B22;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="centent">
+        <div v-if="listData.length === 0" class="aui-tips-title marginTips">暂无数据</div>
+        <div class="list" v-for="(item,i) in listData">
+            <div class="contentcol">
+                <div class="headerError">
+                    <div class="waybillId" v-text="item.waybillSerial"></div>
+                    <div class="waybillErrorStatus">
+                        <span class="weihuifu" v-if="item.status===0">未回复</span>
+                        <span class="yihuifu" v-if="item.status ===1">已回复</span>
+                    </div>
+                </div>
+                <div class="waybillContent">
+                    <div class="listDiv"><label> 时间:</label>
+                        <div v-text="item.exceptionDate"></div>
+                    </div>
+                    <div class="listDiv"><label> 地址:</label>
+                        <div v-text="item.exceptionAddress"></div>
+                    </div>
+                    <div class="listDiv"><label> 异常描述:</label>
+                        <div v-text="item.exceptionInfo"></div>
+                    </div>
+                    <div class="listDiv">
+                        <label> 异常图片:</label>
+                        <div>
+                            <img class="listDataimg" :src="imgcrs" @click="lookImgFn(imgcrs)"
+                                v-for="imgcrs in  item.exceptionImgs">
+                        </div>
+                    </div>
+                    <div class="listDiv" v-if="item.replyText"><label> 回复内容:</label>
+                        <div v-text="item.replyText"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                listData: [],
+                page: 0,
+            },
+            created: function () {
+                var that = this;
+                //监听下拉加载数据
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    that.getIsnodata();
+                });
+                //监听下拉刷新数据
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    loadingImg: 'widget://image/refresh.png',
+                    bgColor: '#ccc',
+                    textColor: '#fff',
+                    textDown: '下拉刷新...',
+                    textUp: '松开刷新...',
+                    showTime: true
+                }, function (ret, err) {
+                    that.page = 0;
+                    that.listData = [];
+                    that.getIsnodata();
+                });
+                this.getIsnodata();
+            },
+            methods: {
+                lookImgFn: function (itemImgs) {
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        showList: false,
+                        imageUrls: [itemImgs]
+                    });
+                },
+                getIsnodata: function () {
+                    $("#page").val(1);
+                    api.showProgress({
+                        title: '加载中...',
+                        modal: false
+                    });
+                    var that = this;
+                    var parm = {
+                        "page": that.page,
+                        "size": 10,
+                        "sort": "id,desc",
+                        "searchParms": {
+                            EQ_waybillId: api.pageParam.id
+                        }
+                    };
+                    console.log("请求参数：" + JSON.stringify(parm));
+                    dealData("platform/tswaybillexceptionreported/query", 'POST', JSON.stringify(parm), function (ret) {
+                        console.log("历史申报：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            if (ret.data.resultList.length === 0) {
+                                api.toast({
+                                    msg: "无更多数据",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            } else {
+                                ret.data.resultList.map((item) => {
+                                    item.exceptionDate = timeStampTurnTime(item.exceptionDate);
+                                });
+                                that.listData = that.listData.concat(ret.data.resultList);
+                                that.page++;
+                            }
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });;
+                            console.log(JSON.stringify(ret));
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+
+            }
+        })
+    };
+
+</script>
+
+</html>

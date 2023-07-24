@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../css/base.css">
+<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+<link rel="stylesheet" type="text/css" href="../../css/common.css">
+<style>
+    .border_bottom_after {
+        background: #fff;
+        margin-bottom: 0.2rem;
+        padding: 0.2rem;
+        display: flex;
+        padding-left: 0.5rem;
+    }
+
+    .liDivLeft {
+        width: 20%;
+    }
+
+    .liDivLeftImg {
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 5%;
+    }
+
+    .liDivRight {
+        width: 100%;
+        padding-left: 0.2rem;
+    }
+
+    .listLi {}
+
+    .fontWight {
+        font-weight: bold;
+        font-size: 0.3rem;
+    }
+
+    .main_box {
+        padding: 0.1rem;
+    }
+
+    .colorGreen {
+        color: green;
+    }
+
+    .colorRed {
+        color: red;
+    }
+</style>
+
+<body>
+    <div class="container" id='app'>
+        <div class="main_box ">
+            <div v-if="listInfo.length === 0" class="aui-tips-title marginTips">暂无数据</div>
+            <div class="border_bottom_after" v-for="item in  listInfo" tapmode>
+                <div class="liDivRight" @click="selectCarFn(item)">
+                    <div class="listLi fontWight"> <span v-text="item.bankName"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../../script/rem.js"></script>
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+    <script type="text/javascript" src="../../script/common.js"></script>
+    <script type="text/javascript" src="../../script/iconfont.js"></script>
+    <script type="text/javascript" src="../../script/vue.js"></script>
+    <script type="text/javascript">
+        apiready = function () {
+            fnReady();
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    listInfo: [],
+                    //分页数据
+                    size: 20,
+                    page: 0,
+                    bankName: "",
+                },
+                created: function () {
+                    var that = this;
+                    this.jumpPage();
+                    //监听上拉加载数据
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                        }
+                    }, function (ret, err) {
+                        that.jumpPage();
+                    });
+                    //监听下拉刷新数据
+                    api.setRefreshHeaderInfo({
+                        visible: true,
+                        loadingImg: 'widget://image/refresh.png',
+                        bgColor: '#ccc',
+                        textColor: '#fff',
+                        textDown: '下拉刷新...',
+                        textUp: '松开刷新...',
+                        showTime: true
+                    }, function (ret, err) {
+                        that.page = 0;
+                        that.listInfo = [];
+                        that.jumpPage();
+                    });
+                    //监听值的变化
+                    api.addEventListener({
+                        name: 'searchBank'
+                    }, function (ret, err) {
+                        that.listInfo = [];
+                        that.bankName = ret.value.bankName
+                        that.page = 0;
+                        that.jumpPage();
+                    });
+                },
+                methods: {
+                    //上拉加载下一页数据
+                    jumpPage: function () {
+                        var that = this;
+                        var parm = {
+                            "page": that.page,
+                            "size": that.size,
+                            "searchParms": {
+                                LIKE_bankName: that.bankName,
+                            }
+                        };
+                        console.log("请求参数：" + JSON.stringify(parm));
+                        dealData('platform/finbanckpackage/selectbank', 'POST', parm, function (ret) {
+                            console.log("获列表数据：" + JSON.stringify(ret));
+                            if (ret.code === 0) {
+                                if (ret.data.resultList == 0) {
+                                    api.toast({
+                                        msg: "无更多数据",
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                    return;
+                                } else {
+                                    that.listInfo = that.listInfo.concat(ret.data.resultList);
+                                    that.page = that.page + 1;
+                                }
+                            }
+                            if (ret.code !== 0 ) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                            setTimeout('api.refreshHeaderLoadDone()', '500');
+                        },
+                            function (err) {
+                                console.log(JSON.stringify(err));
+                                // api.toast({
+                                //     msg: err.body.msg,
+                                //     duration: 5000,
+                                //     location: 'middle'
+                                // });
+                            })
+                    },
+                    //选择车辆
+                    selectCarFn: function (item) {
+                        api.closeWin();
+                        api.sendEvent({
+                            name: 'selectBank_frame',
+                            extra: {
+                                id: item.id,
+                                bankName: item.bankName
+                            }
+                        })
+                    }
+                },
+            })
+        }
+    </script>
+</body>
+
+</html>

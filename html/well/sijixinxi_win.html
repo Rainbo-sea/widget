@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>司机信息Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .aui-btn-right {
+        position: absolute;
+        top: 14px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+        color: red;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWins();"><svg class="icon"
+                aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title">司机信息 </div>
+        <!-- <div class="aui-pull-right aui-btn-right" id="auiBtn" onclick="logoff()">
+            注销
+        </div> -->
+    </header>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+
+            name: 'sijixinxi_frame',
+            url: 'sijixinxi_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                isReal: api.pageParam.isReal
+            }
+        });
+
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+
+    function logoff() {
+        api.openWin({
+            name: 'confirmLogoff_win',
+            slidBackEnabled: false,
+            url: '../my/logOff/confirmLogoff_win.html'
+        });
+
+    }
+</script>
+
+</html>

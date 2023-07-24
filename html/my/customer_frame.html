@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"
+    />
+    <meta
+      name="format-detection"
+      content="telephone=no,email=no,date=no,address=no"
+    />
+    <title>联系客服</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+  </head>
+
+  <body class="fgay">
+    <div class="my_msg"></div>
+  </body>
+  <script type="text/javascript" src="../../script/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/rem.js"></script>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/common.js"></script>
+  <script type="text/javascript" src="../../script/iconfont.js"></script>
+  <script src="//kefu.easemob.com/webim/easemob.js"></script>
+  <script>
+    window.easemobim = window.easemobim || {};
+    easemobim.config = {
+      hide: true,
+      autoConnect: false,
+    };
+    easemobim.bind({ configId: "7e809573-940c-4085-91bc-70120155031d" });
+    easemobim.config = {
+      configId: "7e809573-940c-4085-91bc-70120155031d",
+      // 用户所在的 appKey 需要与 configId 中指定的关联的 appKey 一致
+      user: {
+        // username 必填，password 和 token 任选一项填写
+        username: "15025344720",
+        password: "qazxsw147852",
+      },
+      // 访客信息（可选）
+      visitor: {
+        trueName: "黎小冷",
+        qq: "12345678",
+        phone: "18812345678",
+        companyName: "环信",
+        userNickname: "小冷",
+        description: "意向客户",
+        email: "xiaoleng@easemob.com",
+      },
+    };
+  </script>
+</html>

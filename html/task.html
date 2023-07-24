@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的任务</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+<style>
+    .headerUl {
+        width: 100%;
+        height: 50px;
+    }
+
+    .headerLi {
+        width: 50px;
+        height: 50px;
+        float: right;
+    }
+
+    .addText {
+        float: right;
+        color: #007aff !important;
+        padding: 0 !important;
+    }
+
+    .fontSize {
+        font-size: 0.32rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.3rem !important;
+    }
+
+    .shamaImg {
+        width: 0.6rem;
+    }
+</style>
+
+<body class="wrap task" id="task">
+    <header id="header1" class="clearfix">
+        <!-- <ul class="headerUl">
+            <li class="headerLi"></li>
+        </ul> -->
+        <div class="fl fontSize active" onclick="fnChange(0);">
+            待起运
+        </div>
+        <div class="fl fontSize" onclick="fnChange(1)">
+            进行中
+        </div>
+        <div class="fl fontSize" onclick="fnChange(2)">
+            已完成
+        </div>
+        <!-- <div class="fl fontSize" onclick="fnChange(3)">
+            接驳
+        </div> -->
+        <div class="addText fontSize1" @click="scanCodeFn()">
+            <img class="shamaImg" alt="" src="../image/shaoma.png" />
+        </div>
+        <!-- <div class="fr searchBox" onclick="search()">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconsousuo"></use>
+            </svg>
+        </div> -->
+    </header>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/rem.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/iconfont.js"></script>
+<script src="../script/vue.js"></script>
+<script type="text/javascript">
+    var menus, headerHeight, header;
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        api.addEventListener({
+            name: 'head'
+        }, function (ret) {
+            if (ret) {
+                fnChange(ret.value.key);
+            }
+        })
+        headerHeight = $("#header1").height();
+        fnReady();
+        fnInit();
+        fnChange(0);
+        fnInitShoplist();
+        var dialogBox = api.require('dialogBox');
+
+        if (sessionStorage.getItem("todaytime") === new Date().getDay().toString()) {
+            sessionStorage.setItem("todaytime", new Date().getDay());
+        } else {
+            setTimeout(function () {
+                api.openFrame({
+                    name: 'maskmodel',
+                    url: './well/maskmodel.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                    },
+                    pageParam: {},
+                    bounces: false,
+                    bgColor: 'rgba(0,0,0,0)',
+                    vScrollBarEnabled: true,
+                    hScrollBarEnabled: true
+                });
+            }, 2000)
+            sessionStorage.setItem("todaytime", new Date().getDay());
+        }
+        //
+        var app = new Vue({
+            el: '#header1',
+            data: {
+                orderInfo: {}
+            },
+            created: function () {
+            },
+            methods: {
+                //扫码函数
+                scanCodeFn: function () {
+                    var resultList = api.hasPermission({
+                        list: ['camera']
+                    });
+                    if (!resultList[0].granted) {
+                        api.requestPermission({
+                            list: ["camera"],
+                        }, function (res) {
+                            if (res.list[0].granted) {
+                            }
+                        });
+                    }
+                    var resultList = api.hasPermission({
+                        list: ['photos']
+                    });
+                    if (!resultList[0].granted) {
+                        api.requestPermission({
+                            list: ["photos"],
+                        }, function (res) {
+                            if (res.list[0].granted) {
+                            }
+                        });
+                    }
+                    var FNScanner = api.require('FNScanner');
+                    var that = this;
+                    FNScanner.openScanner({
+                        autorotation: true
+                    }, function (ret, err) {
+                        if (ret) {
+                            console.log("扫码数据：", JSON.stringify(ret));
+                            if (ret.eventType === "success") {
+                                console.log(JSON.stringify(ret));
+                                if (JSON.parse(ret.content)) {
+                                    that.orderInfo = JSON.parse(ret.content);
+                                    api.openWin({
+                                        name: 'driverOrder_win',
+                                        url: './well/driverOrder/driverOrder_win.html',
+                                        animation: {
+                                            type: "movein", //动画类型（详见动画类型常量）
+                                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                                            duration: 300 //动画过渡时间，默认300毫秒
+                                        },
+                                        pageParam: {
+                                            orderInfo: that.orderInfo  
+                                        }
+                                    });
+                                }
+                            }
+                        } else {
+                            alert(JSON.stringify(err.msg));
+                        }
+                    });
+                }
+            },
+        })
+    };
+
+    function fnInit() {
+        menus = $("#header1 div");
+        fnChangeStyle(0);
+    };
+
+    function fnChangeStyle(index) {
+        menus = $(".fontSize");
+        for (var i = 0; i < menus.length; i++) {
+            if (i == index) {
+                $api.addCls(menus[i], 'active');
+            } else {
+                $api.removeCls(menus[i], 'active');
+            }
+        }
+    };
+
+    var frameNames = ['daichuli_frame', 'jinxingzhong_frame', 'yiwancheng_frame', 'connectPage_frame'];
+
+    function fnInitShoplist() {
+        var frames = [];
+        for (var i = 0; i < frameNames.length; i++) {
+            frames.push({
+                name: frameNames[i],
+                url: 'well/' + frameNames[i] + '.html',
+                bounces: false,
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false,
+                bgColor: '#f0f0f0',
+                pageParam: {
+                    type: i,
+                    headerHeight: headerHeight,
+                    footerHeight: footerHeight,
+                }
+            });
+        }
+        console.log("高度：" + headerHeight);
+        api.openFrameGroup({
+            name: 'waybill_group',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5 + "px",
+                w: 'auto',
+                h: api.frameHeight - headerHeight - api.safeArea.top - 5,
+            },
+            index: 0,
+            preload: 0,
+            frames: frames
+        }, function (ret, err) {
+            fnChangeStyle(ret.index);
+        });
+    };
+
+    function fnChange(index) {
+        fnChangeStyle(index);
+        api.setFrameGroupIndex({
+            name: 'waybill_group',
+            index: index,
+            reload: true,
+            scroll: true
+        });
+    };
+    // 搜索事件
+    function search() {
+        api.openWin({
+            name: 'search_win',
+            url: './well/search_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //司机接单函数z
+    function driverOrderFn() {
+        api.openWin({
+            name: 'driverOrder_win',
+            url: './well/driverOrder/driverOrder_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+</script>
+
+</html>

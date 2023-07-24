@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>司机信息</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .box-margin {
+        margin-bottom: 10px;
+    }
+
+    .headerName {
+        position: relative;
+        font-weight: bold;
+        font-size: 15px;
+        margin-top: 5px;
+    }
+
+    .liDiv {
+        padding-left: 10px;
+        margin-top: 15px;
+        font-size: 15px;
+        display: flex;
+    }
+
+    .liDiv img {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+
+    .paddingBottom {
+        padding: 10px 0;
+    }
+
+    .jiechuButton {
+        width: 75px;
+        border: none;
+        background-color: #007ef5;
+        color: #fff;
+        border-radius: 0.1rem;
+        font-size: 12px;
+        outline: none;
+        height: 25px;
+        line-height: 25px;
+        display: none;
+    }
+
+    .selectPhone {
+        width: 75px;
+        border: none;
+        background-color: #007ef5;
+        color: #fff;
+        border-radius: 0.1rem;
+        font-size: 12px;
+        outline: none;
+        height: 25px;
+        line-height: 25px;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="my_msg paddingBottom">
+        <div class="my_box">
+            <div class="headerName">用户信息： <button class="selectPhone" onclick="selectPhoneFn()">手机号换绑</button></div>
+            <div class="oldPwd">
+                <span class="password">司机姓名 :</span>
+                <span class="name">
+                    姓名</span>
+            </div>
+            <div class="newPwd">
+                <span class="password">司机电话 :</span>
+                <span class="phone">
+                    电话
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="my_msg paddingBottom">
+        <div class="my_box">
+            <div class="headerName">账户信息：</div>
+            <div class="oldPwd">
+                <span class="password">开户名称 :</span>
+                <span class="createMemberName">暂无</span>
+            </div>
+            <div class="newPwd">
+                <span class="password">开户账户 :</span>
+                <span class="childAcctNo"> 暂无 </span>
+            </div>
+            <div class="newPwd">
+                <span class="password">账户银行 :</span>
+                <span> 浦发银行重庆分行营业部 </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="my_msg paddingBottom">
+        <div class="my_box">
+            <div class="headerName">绑卡信息：
+                <span>无绑卡</span>
+                <button class="jiechuButton" onclick="deleteCardFn()">解除绑卡</button>
+            </div>
+            <div class="newPwd" id="displayFlag1">
+                <span class="password">开户名 :</span>
+                <span class="name"></span>
+            </div>
+            <div class="newPwd" id="displayFlag2">
+                <span class="password">身份证号 :</span>
+                <span class="idCard"></span>
+            </div>
+            <div class="newPwd" id="displayFlag3">
+                <span class="password">银行预留手机号 :</span>
+                <span class="bankPhone"></span>
+            </div>
+            <div class="oldPwd" id="displayFlag4">
+                <span class="password">银行卡号 :</span>
+                <span class="bankAccount"> </span>
+            </div>
+            <div class="newPwd" id="displayFlag5">
+                <span class="password">开户行名称 :</span>
+                <span class="bankNameCopy"></span>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- <div class="button">
+        <button id="submit">确认修改</button>
+    </div> -->
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    var driverphone = "";
+    apiready = function () {
+        fnReady();
+        sijiId();
+        geiBankInfo();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+        // 获取司机信息
+        function sijiId() {
+            dealData('user/membermsg', 'GET', {}, function (ret, err) {
+                if (ret.code === 0) {
+                    $('.name').html(ret.data.username);
+                    $('.phone').html(ret.data.phone);
+                    driverphone = ret.data.phone;
+                    // $('.sex').html(ret.data.sex ? '男' : '女');
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+                if (err) {
+                    console.log(JSON.stringify(err))
+                }
+            })
+        }
+
+        //开户账户信息
+        function geiBankInfo() {
+            dealData('platform/finbankcardbind/bymember', 'get', {}, function (ret) {
+                console.log("开户账户信息" + JSON.stringify(ret))
+                if (ret.code === 0) {
+                    $('.createMemberName').html(ret.data.createMemberName ? ret.data.createMemberName : "无");
+                    $('.childAcctNo').html(ret.data.childAcctNo ? ret.data.childAcctNo : "无");
+                    $('.bankName').html(ret.data.bankName ? ret.data.bankName : "无");
+                    $('.bankAccount').html(ret.data.bankAccount ? ret.data.bankAccount : "无");
+                    if (ret.data.bankAccount) {
+                        document.getElementsByClassName("jiechuButton")[0].style.display = "inline"
+                    } else {
+                        var objArr = document.getElementsByClassName("displayFlag");
+                    }
+                    $('.bankNameCopy').html(ret.data.bankNameCopy ? ret.data.bankNameCopy : "无");
+                    $('.bankPhone').html(ret.data.phone ? ret.data.phone : "无");
+                    $('.idCard').html(ret.data.idCard ? ret.data.idCard : "无");
+
+                    if (ret.data.status !== 0) {
+                        document.getElementsByClassName("jiechuButton")[0].style.display = "inline";
+                        $('.createMemberName').html(ret.data.createMemberName ? ret.data.createMemberName : "无");
+                        $('.childAcctNo').html(ret.data.childAcctNo ? ret.data.childAcctNo : "无");
+                        $('.bankName').html(ret.data.bankName ? ret.data.bankName : "无");
+                        $('.bankAccount').html(ret.data.bankAccount ? ret.data.bankAccount : "无");
+                        $('.bankNameCopy').html(ret.data.bankNameCopy ? ret.data.bankNameCopy : "无");
+                        $('.bankPhone').html(ret.data.phone ? ret.data.phone : "无");
+                        $('.idCard').html(ret.data.idCard ? ret.data.idCard : "无");
+                    } else {
+                        document.getElementById("displayFlag1").style.display = "none"
+                        document.getElementById("displayFlag2").style.display = "none"
+                        document.getElementById("displayFlag3").style.display = "none"
+                        document.getElementById("displayFlag4").style.display = "none"
+                        document.getElementById("displayFlag5").style.display = "none"
+                    }
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+            }, function (err) {
+                console.log(JSON.stringify(err));
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+        }
+    }
+    // 解绑银行卡
+    function deleteCardFn() {
+        api.confirm({
+            title: '解绑银行卡',
+            msg: '您确定要解绑银行卡吗？',
+            buttons: ['确定', '取消']
+        }, function (ret, err) {
+            var index = ret.buttonIndex;
+            if (index == 1) {
+                console.log("ret:" + JSON.stringify(ret));
+                dealData('/platform/finbankcardbind/unbing', 'GET', {}, function (ret, err) {
+                    console.log("ret:" + JSON.stringify(ret));
+                    console.log("ret:" + JSON.stringify(err));
+                    if (ret.code === 0) {
+                        setTimeout(function () {
+                            api.closeWin();
+                        }, 1000)
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });;
+                        console.log(JSON.stringify(ret));
+                    }
+                    if (err) {
+                        console.log(JSON.stringify(err))
+                    }
+                })
+            }
+        });
+    }
+
+    //换绑手机号
+    function selectPhoneFn() {
+        if (api.pageParam.isReal !== 1) {
+            api.toast({
+                msg: "请先实名认证在换绑",
+                duration: 5000,
+                location: 'middle'
+            });
+            return false;
+        }
+        api.openWin({
+            name: 'changePhone_win',
+            url: './changePhone/changePhone_win.html',
+            slidBackEnabled: false,
+            pageParam: {
+                driverphone: driverphone
+            }
+        })
+    }
+</script>
+
+</html>

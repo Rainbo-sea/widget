@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/aui.css" />
+    <link rel="stylesheet" href="../../script/H5TimeSelector/libs/iosselect.css">
+    <script language="javascript" src="http://webapi.amap.com/maps?v=1.3&key=7e2cbc797bd32062fbd3c2be61afc600"></script>
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 110% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            float: right !important;
+        }
+
+        .aui-list {
+            padding: 0rem;
+        }
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.65rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .flowhid {
+            overflow: hidden;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+
+
+        .hide {
+            display: none;
+        }
+
+        .displayFlex {
+            display: flex;
+        }
+
+        .radioStyle {
+            width: 60%;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            width: 80%;
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .img {
+            padding-left: 28px !important;
+        }
+
+        .imgTitleStyle {
+            font-size: 16px !important;
+        }
+
+        .file {
+            width: 60px !important;
+            height: 60px !important;
+            line-height: 60px !important;
+            font-size: 30px !important;
+        }
+
+        .imgDiv {
+            width: 60px !important;
+            height: 60px !important;
+            margin-right: 20px !important;
+            margin-bottom: 5px !important;
+            position: relative;
+        }
+
+        .imgStyle {
+            width: 60px !important;
+            height: 60px !important;
+        }
+
+        .imgContent {
+            width: 100%;
+            display: flex;
+            flex-flow: wrap;
+        }
+
+        .imgDiv span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: -10px;
+            right: -10px;
+            text-align: center;
+            line-height: 20px;
+            background-color: red;
+            color: #fff;
+            font-size: 15px
+        }
+
+        .xingIcon {
+            color: #8B8B7A;
+        }
+
+        .xingAction {
+            color: #FFD700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>货主:</p>
+                        <input class="input_rt" type="text" v-model="dataInfo.commonCarrierName" placeholder="请输入"
+                            readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>评分:</p>
+                        <div id="btn">
+                            <span class="xingIcon" @click="openEvaluateFn(0)">★</span>
+                            <span class="xingIcon" @click="openEvaluateFn(1)">★</span>
+                            <span class="xingIcon" @click="openEvaluateFn(2)">★</span>
+                            <span class="xingIcon" @click="openEvaluateFn(3)">★</span>
+                            <span class="xingIcon" @click="openEvaluateFn(4)">★</span>
+                        </div>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>评论:</p>
+                        <input class="input_rt" type="text" v-model="commonMessage" placeholder="请输入">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class='w95 maruto1r pb20'>
+            <p>
+            <div class="aui-btn aui-btn-block backblue fwhite savebtn" @click="addFn()">确认提交</div>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var dataInfo = api.pageParam.data
+        var UIActionSelector = api.require('UIActionSelector');
+        var app = new Vue({
+            el: '#app',
+            data: {
+                commonEvaluateLevel: null,
+                dataInfo: api.pageParam.data,
+                commonMessage: ""
+            },
+            created: function () {
+                console.log("dddd:" + JSON.stringify(this.dataInfo));
+            },
+            methods: {
+                //打分函数
+                openEvaluateFn: function (flag) {
+                    var objArr = document.getElementsByClassName("xingIcon");
+                    for (var i = 0; i < objArr.length; i++) {
+                        objArr[i].style.color = "#8B8B7A"
+                        if (i <= flag) {
+                            objArr[i].style.color = "#FFD700"
+                        }
+                    }
+                    this.commonEvaluateLevel = flag;
+                },
+                addFn: function () {
+                    var that = this;
+
+                    var params = {
+                        id: this.dataInfo.id,
+                        commonEvaluateLevel: this.commonEvaluateLevel + 1,
+                        commonMessage: this.commonMessage,
+                    }
+                    // console.log("参数:" + JSON.stringify(params));
+                    api.showProgress({
+                        title: '提交评分报中...',
+                        modal: false
+                    });
+                    dealData('/driver/tswaybill/driver/evaluate', 'put', params, function (ret) {
+                        if (ret.code === 0) {
+                            $.mvalidateTip('上提交成功！')
+                            setTimeout(function () {
+                                api.closeWin()
+                                api.sendEvent({
+                                    name: 'evaluate_win',
+                                });
+                            }, 1500)
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        if (err) {
+                            console.log(JSON.stringify(err))
+                            $.mvalidateTip('上传失败')
+                        }
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+            },
+        })
+    }
+
+
+</script>
+
+</html>

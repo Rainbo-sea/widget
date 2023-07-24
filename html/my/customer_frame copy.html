@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>绑卡</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+</head>
+<style>
+    .buttonStyle {
+        border: 0;
+        background: #007ef5;
+        color: #fff;
+        width: 90px;
+        height: 30px;
+        border-radius: 0.1rem;
+        font-weight: bold;
+        padding: 0 5px;
+        font-size: 14px;
+    }
+
+    .tipStyle {
+        padding: 0 20px;
+        color: red;
+        font-size: 14px;
+    }
+
+    .serviceCodeDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .serviceCodeDivImg {
+        width: 200px;
+        height: 200px;
+    }
+
+    .serviceCode {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="my_msg">
+        <div class='serviceCodeDiv'>
+            <img class="serviceCodeDivImg" alt="博宇亨通官方客服微信"
+                src="https://api.qrserver.com/v1/create-qr-code?data=https://work.weixin.qq.com/kfid/kfc7a5f098821d09e35" />
+            <div class='serviceCode'>请用手机微信端扫描二维码</div>
+            <div class='serviceCode' onclick="deliveryPhoneFn('4007775656')">客服电话:400-777-5656
+                <span>
+                    <svg class="icon borderRadius" aria-hidden="true">
+                        <use xlink:href="#icondianhua"></use>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+
+    }
+    function deliveryPhoneFn(data) {
+        api.call({
+            type: 'tel_prompt',
+            number: data
+        });
+    }
+</script>
+
+</html>

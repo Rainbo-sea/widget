@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>绑卡</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+</head>
+<style>
+    .my_msg {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="my_msg">
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var pdfReader = api.require('pdfReader');
+        pdfReader.openPdfView({
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            path: api.pageParam.pdfUrl,
+            fixedOn: api.frameName,
+            fixed: true
+        }, function (ret) {
+        });
+    }
+    function deliveryPhoneFn(data) {
+        api.call({
+            type: 'tel_prompt',
+            number: data
+        });
+    }
+</script>
+
+</html>

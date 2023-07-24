@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/aui.css" />
+    <link rel="stylesheet" href="../../../script/H5TimeSelector/libs/iosselect.css">
+    <script language="javascript" src="http://webapi.amap.com/maps?v=1.3&key=7e2cbc797bd32062fbd3c2be61afc600"></script>
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 110% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            float: right !important;
+        }
+
+        .aui-list {
+            padding: 0rem;
+        }
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.65rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .flowhid {
+            overflow: hidden;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+
+
+        .hide {
+            display: none;
+        }
+
+        .displayFlex {
+            display: flex;
+        }
+
+        .radioStyle {
+            width: 60%;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            width: 80%;
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .img {
+            padding-left: 28px !important;
+        }
+
+        .imgTitleStyle {
+            font-size: 16px !important;
+        }
+
+        .file {
+            width: 60px !important;
+            height: 60px !important;
+            line-height: 60px !important;
+            font-size: 30px !important;
+        }
+
+        .imgDiv {
+            width: 60px !important;
+            height: 60px !important;
+            margin-right: 20px !important;
+            margin-bottom: 5px !important;
+            position: relative;
+        }
+
+        .imgStyle {
+            width: 60px !important;
+            height: 60px !important;
+        }
+
+        .imgContent {
+            width: 100%;
+            display: flex;
+            flex-flow: wrap;
+        }
+
+        .imgDiv span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: -10px;
+            right: -10px;
+            text-align: center;
+            line-height: 20px;
+            background-color: red;
+            color: #fff;
+            font-size: 15px
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>异常描述:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="abnormaldata.exceptionInfo">
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>上报地址:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="exceptionAddress">
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>上报时间:</p>
+                        <input @click="selectExceptionDate()" class="input_rt" type="text" placeholder="请选择"
+                            v-model="exceptionDate" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>运单号:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="abnormaldata.waybillSerial">
+                    </li>
+                </ul>
+                <div class="updatestate">
+                    <div class="state">
+                        <div class="img">
+                            <p class="imgTitleStyle"><span class="color_ec">*</span><span id="stateFlage">请上传异常照片</span>
+                            </p>
+                            <div class="imgContent">
+                                <div class="imgDiv" v-for="(item,i) in httpimgArr"><span @click="delFn(i)">-</span>
+                                    <img class="imgStyle" :src="item" />
+                                </div>
+                                <div class="file" @click="fnShowAction()">十</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='w95 maruto1r pb20'>
+            <p>
+            <div class="aui-btn aui-btn-block backblue fwhite savebtn" @click="addFn()">异常上报</div>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var id = api.pageParam.id
+        var UIActionSelector = api.require('UIActionSelector');
+        var app = new Vue({
+            el: '#app',
+            data: {
+                localinfo: {},
+                abnormaldata: {},
+                exceptionDate: "",
+                exceptionAddress: "",
+                //图片参数
+                imgArr: [],
+                httpimgArr: [],
+            },
+            created: function () {
+                this.getPhoneLocation(1)
+            },
+            methods: {
+                //
+                getPhoneLocation: function () {
+                    // 获取经纬度
+                    var that = this;
+                    var aMap = api.require('aMap');
+                    aMap.open({
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 0,
+                            h: 0
+                        }
+                    }, function (ret, err) {
+                        // console.log("2:", JSON.stringify(ret));
+                        if (ret.status) {
+                            aMap.getLocation(function (ret, err) {
+                                if (ret) {
+                                    that.localinfo.lon = ret.lon
+                                    that.localinfo.lat = ret.lat
+                                    // 获取地址
+                                    var location = ret.lon.toString() + "," + ret.lat.toString();
+                                    var webApiPath = "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=" + location + "&key=7e2cbc797bd32062fbd3c2be61afc600&radius=0&extensions=base"
+                                    that.abnormaldata.exceptionAddress = outDealData(webApiPath, function (ret) {
+                                        console.log("web反解析:", JSON.stringify(ret));
+                                        if (ret && ret.status == "1") {
+                                            console.log("web反解析:", JSON.stringify(ret.regeocode.formatted_address));
+                                            that.exceptionAddress = ret.regeocode.formatted_address;
+                                        } else {
+                                            api.toast({
+                                                msg: '地址反解析失败',
+                                                duration: 5000,
+                                                location: 'middle'
+                                            });
+                                        }
+                                    }, function (err) {
+                                        api.toast({
+                                            msg: '地址反解析失败',
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                    })
+
+                                } else {
+                                    // alert(JSON.stringify(err.locationDetail));
+                                    console.log("err:" + JSON.stringify(err));
+                                    api.toast({
+                                        msg: '定位失败,请查看定位权限是否为[始终允许]',
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                            });
+                        } else {
+
+                            api.toast({
+                                msg: '定位失败,请查看定位权限是否为[始终允许]',
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    })
+                    api.hideProgress()
+                },
+
+                //选择身份证日期
+                selectExceptionDate: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        // date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        console.log("dddd:" + JSON.stringify(date.valueOf(date)));
+                        that.exceptionDate = timeStampTurnTime(date).slice(0, 16);
+                        that.abnormaldata.exceptionDate = date.valueOf(date);
+
+                    })
+                },
+                addFn: function () {
+                    var that = this;
+
+                    if (!that.abnormaldata.exceptionInfo) {
+                        $.mvalidateTip('异常描述不能为空！')
+                        return;
+                    }
+                    if (!that.exceptionAddress) {
+                        $.mvalidateTip('上报地址不能为空！')
+                        return;
+                    }
+
+                    if (!this.exceptionDate) {
+                        $.mvalidateTip('上报时间不能为空！')
+                        return;
+                    }
+                    if (!that.httpimgArr.length) {
+                        $.mvalidateTip('异常图片不能为空！')
+                        return;
+                    }
+                    var params = {
+                        waybillSerial: that.waybillSerial, //运单号
+                        exceptionImgs: that.httpimgArr, //异常上报图片
+                        exceptionAddress: that.exceptionAddress, //异常上报地址
+                        exceptionInfo: that.abnormaldata.exceptionInfo,
+                        exceptionDate: that.abnormaldata.exceptionDate,
+                    }
+                    console.log("参数:" + JSON.stringify(params));
+                    api.showProgress({
+                        title: '状态上报中...',
+                        modal: false
+                    });
+                    dealData('/platform/tswaybillexceptionreported/add', 'post', params, function (ret) {
+                        if (ret.code === 0) {
+                            $.mvalidateTip('上传成功！')
+                            setTimeout(function () {
+                                api.closeWin()
+                                api.sendEvent({
+                                    name: 'editDiveri',
+                                });
+                            }, 1500)
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        if (err) {
+                            console.log(JSON.stringify(err))
+                            $.mvalidateTip('上传失败')
+                        }
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+                //图片上传
+                fnShowAction: function () {
+                    var that = this;
+                    //上传图片标识
+                    signImg = 'carHeadImg';
+                    var resultList = api.hasPermission({
+                        list: ['camera']
+                    });
+                    if (!resultList[0].granted) {
+                        api.requestPermission({
+                            list: ["camera"],
+                        }, function (res) {
+                            if (res.list[0].granted) {
+                            }
+                        });
+                    }
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        // buttons: ['拍照']
+                        buttons: ['拍照', '相册']
+                    }, function (ret, err) {
+                        // if (ret.buttonIndex != 3) {
+                        if (ret) {
+                            sourceTypes = ['camera', 'album'];
+                            api.getPicture({
+                                // sourceType: 'camera',
+                                sourceType: sourceTypes[ret.buttonIndex - 1],
+                                allowEdit: false,
+                                saveToPhotoAlbum: false
+                            }, function (ret, err) {
+                                if (ret) {
+                                    var path = ret.data;
+                                    if (path != '') {
+                                        console.log("压缩前图片" + JSON.stringify(path));
+                                        that.photograph(0, path);
+                                    }
+                                }
+                                if (err) {
+                                    console.log(JSON.stringify(err))
+                                }
+                            });
+                        }
+                        if (err) {
+                            console.log(JSON.stringify(err))
+                        }
+                    });
+                },
+                //图片压缩
+                //i ->压缩次数 0开始    
+                //path ->图片路径
+                photograph: function (i, path) {
+                    var that = this;
+                    var minSize = 50 * 1024;
+                    //鉴于税务接口的限制 图片不能大于400kb
+                    var maxSize = 400 * 1024;
+                    var imageCachePath = api.cacheDir;
+
+                    var quality = 1;
+                    var scale = 1;
+
+                    if (i >= 2) {
+                        quality = quality / i;
+                    }
+                    if (i > 5) {
+                        scale = 0.9;
+                    }
+                    console.log("i:" + i + ",quality:" + quality + ",scale:" + scale);
+                    var imageFilter = api.require("imageFilter");
+                    imageFilter.getAttr({
+                        path: path
+                    }, function (ret, err) {
+                        if (ret.size < minSize) {
+                            alert("图片大小小于50kb，请重新上传图片！");
+                            return;
+                        }
+                        if (ret.size > maxSize) {//如果图片大于1M就进行压缩处理
+                            var imgName = new Date().getTime() + ".jpg";
+                            imageFilter.compress({
+                                img: path,
+                                quality: quality,
+                                //压缩比例,
+                                scale: scale,
+                                save: {
+                                    imgPath: imageCachePath,
+                                    imgName: imgName
+                                }
+                            }, function (ret, err) {
+                                var compressedImgPath = imageCachePath + '/' + imgName;
+                                imageFilter.getAttr({
+                                    path: compressedImgPath
+                                }, function (ret1, err) {
+                                    console.log("ret1:" + ret1.size);
+
+                                    if (ret1.size > maxSize) {//如果图片大于1M就进行压缩处理
+                                        //循环压缩
+                                        i++;
+                                        that.photograph(i, compressedImgPath);
+                                    }
+                                    else {
+                                        // console.log("fina:" + ret1.size);
+                                        //选择图片预览
+                                        var addImg = "";
+                                        that.imgArr.push(compressedImgPath);
+                                        that.upImg(compressedImgPath);
+                                    }
+                                })
+                            })
+                        }
+                        else {
+                            // console.log("fina:" + ret1.size);
+                            //选择图片预览
+                            that.imgArr.push(path);
+                            that.upImg(path);
+                        }
+                    })
+                },
+
+                //提交图片
+                upImg: function (imgArr) {
+                    var that = this;
+                    api.showProgress({
+                        title: '上传中...',
+                        modal: false
+                    });
+                    var accessToken = $api.getStorage('accessToken');
+                    api.ajax({
+                        url: getBaseRootPath() + "/app/tswaybill/importequery",
+                        method: 'post',
+                        dataType: 'json',
+                        headers: {
+                            "Authorization": 'bearer ' + accessToken
+                        },
+                        data: {
+                            files: {
+                                imgFiles: imgArr
+                            }
+                        }
+                    }, function (ret, err) {
+                        if (ret.code === 0) {
+                            that.httpimgArr.push(ret.data[0]);
+                        }
+                        if (err) {
+                            $.mvalidateTip('图片上传失败')
+                            // alert(JSON.stringify(err));
+                        }
+                        api.hideProgress();
+                    });
+                },
+                //删除图片
+                delFn: function (i) {
+                    this.httpimgArr.splice(i, 1)
+                }
+            },
+        })
+    }
+
+
+</script>
+
+</html>

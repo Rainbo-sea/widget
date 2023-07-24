@@ -1,0 +1,1310 @@
+html,
+body {
+  height: 100%;
+  background-color: #f7f8fa;
+}
+
+.wrap {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-flex-flow: column;
+}
+
+.header {
+  height: 0.88rem;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  font-size: 0.3rem;
+}
+
+.header #header2 {
+  background-color: #007ef5;
+  width: 100%;
+  height: 0.88rem;
+  line-height: 0.2rem;
+  display: none;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+#task #header1 {
+  width: 100%;
+  padding: 12px 0.32rem;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* #task #header1 div:nth-child(2) {
+  margin-left: 0.2rem;
+} */
+
+/* #task #header1 div:nth-child(3) {
+  background-color: transparent;
+  padding-right: 0px;
+}
+
+#task #header1 div:nth-child(3) span {
+  font-size: 0.3rem;
+  text-align: right;
+} */
+
+#task #header1>div {
+  padding: 0.1rem 0.32rem;
+  box-sizing: border-box;
+  border-radius: 0.4rem;
+  color: #969799;
+  font-size: 0.28rem;
+  font-weight: 600;
+  margin-top: 0.14rem;
+}
+
+#task #header1 .active {
+  background-color: #f2f5fa;
+  color: #007aff;
+}
+
+.flex-1 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+}
+
+footer {
+  height: 65px;
+  width: 100%;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+footer .active p {
+  color: #007aff;
+}
+
+footer>div {
+  width: 33%;
+  height: 100%;
+  text-align: center;
+  padding-top: 0.15rem;
+  box-sizing: border-box;
+}
+
+footer>div p {
+  color: #2e3033;
+  font-size: 0.24rem;
+  font-weight: 500;
+}
+
+.aui-tips-title {
+  width: 100%;
+  background-color: #eee;
+  height: 0.8rem;
+  line-height: 0.8rem;
+  text-align: center;
+  font-size: 0.24rem;
+  border-radius: 0.1rem;
+}
+
+.pullUp {
+  width: 100%;
+  height: 0.8rem;
+  line-height: 0.8rem;
+  background-color: #f1f1f1;
+  font-size: 0.24rem;
+  text-align: center;
+  display: none;
+}
+
+.pullUp span {
+  text-align: center;
+}
+
+.aui-bar-header {
+  width: 100%;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  box-sizing: border-box;
+  background-color: #fff;
+  position: relative;
+}
+
+.aui-bar-header .aui-btn {
+  width: 1rem;
+  height: 100%;
+  line-height: 0.88rem;
+  font-size: 0.4rem;
+  margin-top: 0.1rem;
+  color: #323233;
+  position: absolute;
+  left: 0.32rem;
+  top: 0;
+}
+
+.aui-bar-header .aui-title {
+  width: 100%;
+  text-align: center;
+  height: 100%;
+  line-height: 0.88rem;
+  font-size: 0.32rem;
+  color: #323233;
+}
+
+.active {
+  color: #007ef5 !important;
+}
+
+.actived {
+  color: #323233 !important;
+}
+
+.having {
+  color: #969799 !important;
+}
+
+.def {
+  fill: #c4c4c4;
+}
+
+.yiwancheng .wrap,
+.jinxingzhong .wrap {
+  height: auto;
+  padding: 0.32rem;
+}
+
+.yiwancheng .wrap .box,
+.jinxingzhong .wrap .box {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  margin-bottom: 0.32rem;
+}
+
+.yiwancheng .wrap .box .button,
+.jinxingzhong .wrap .box .button,
+.yiwancheng .wrap .box .checkContract,
+.jinxingzhong .wrap .box .checkContract,
+.yiwancheng .wrap .box .detail,
+.jinxingzhong .wrap .box .detail {
+  text-align: center;
+  border: none;
+  border-radius: 0.08rem;
+  font-size: 0.32rem;
+  line-height: 0.64rem;
+  width: auto;
+  font-size: 0.28rem;
+  color: #fff;
+  position: absolute;
+  right: 0.7rem;
+  z-index: 999;
+  outline: none;
+}
+
+.yiwancheng .wrap .box .detail,
+.jinxingzhong .wrap .box .detail {
+  margin-top: -0.1rem;
+  padding: 0 0.2rem;
+  background-color: #007ef5;
+}
+
+.yiwancheng .wrap .box .checkContract,
+.jinxingzhong .wrap .box .checkContract {
+  margin-top: 1.7rem;
+  padding: 0 0.2rem;
+  background-color: #007ef5;
+}
+
+.yiwancheng .wrap .box .button,
+.jinxingzhong .wrap .box .button {
+  margin-top: 0.8rem;
+  padding: 0 0.2rem;
+  background-color: #fa8c16;
+}
+
+.yiwancheng .wrap .box .header,
+.jinxingzhong .wrap .box .header {
+  width: 100%;
+  height: 0.42rem;
+  line-height: 0.42rem;
+  overflow: hidden;
+  color: #262626;
+  font-size: 0.32rem;
+  text-align: left;
+}
+
+.yiwancheng .wrap .box .line,
+.jinxingzhong .wrap .box .line {
+  width: 100%;
+  height: auto;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.yiwancheng .wrap .box .line div,
+.jinxingzhong .wrap .box .line div {
+  width: 100%;
+  height: 0.76rem;
+  position: relative;
+}
+
+.yiwancheng .wrap .box .line div .line1_span,
+.jinxingzhong .wrap .box .line div .line1_span {
+  width: 0.2rem;
+  height: 0.2rem;
+  border-radius: 50%;
+  background-color: #1f529a;
+  display: inline-block;
+  position: absolute;
+  top: 0.27rem;
+  left: 0.12rem;
+}
+
+.yiwancheng .wrap .box .line div .line2_span,
+.jinxingzhong .wrap .box .line div .line2_span {
+  width: 0.2rem;
+  height: 0.2rem;
+  border-radius: 50%;
+  background-color: #fa8c16;
+  display: inline-block;
+  position: absolute;
+  top: 0.27rem;
+  left: 0.12rem;
+  margin-top: 0.15rem;
+}
+
+.yiwancheng .wrap .box .line div i,
+.jinxingzhong .wrap .box .line div i {
+  font-size: 0.28rem;
+  color: #666666;
+  font-style: normal;
+  width: 60%;
+  position: absolute;
+  left: 0.4rem;
+  top: 0.15rem;
+}
+
+.yiwancheng .wrap .box .line div:nth-child(2),
+.jinxingzhong .wrap .box .line div:nth-child(2) {
+  width: 100%;
+  height: 0.76rem;
+  position: relative;
+}
+
+.yiwancheng .wrap .box .line div:nth-child(2) i,
+.jinxingzhong .wrap .box .line div:nth-child(2) i {
+  color: #666666;
+  font-style: normal;
+  width: 60%;
+  position: absolute !important;
+  left: 0.4rem !important;
+  top: 0.32rem !important;
+}
+
+.yiwancheng .wrap .box .box_date,
+.jinxingzhong .wrap .box .box_date {
+  width: 100%;
+  height: 0.72rem;
+  line-height: 0.72rem;
+  overflow: hidden;
+}
+
+.yiwancheng .wrap .box .box_date i,
+.jinxingzhong .wrap .box .box_date i {
+  float: left;
+  font-style: normal;
+  color: #434343;
+  font-size: 0.28rem;
+}
+
+.yiwancheng .wrap .box .box_date span,
+.jinxingzhong .wrap .box .box_date span {
+  float: right;
+  color: #bfbfbf;
+  font-size: 0.24rem;
+}
+
+.jinxingzhong .wrap .box {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.jinxingzhong .wrap .box .header {
+  line-height: 0.64rem;
+  height: 0.64rem;
+  position: relative;
+}
+
+.jinxingzhong .wrap .box .line {
+  margin: 0;
+}
+
+.xiangqing .box,
+.jinxingzhong_xiangqing .box {
+  padding: 0.32rem 0.28rem 0 0.36rem;
+}
+
+.xiangqing .top,
+.jinxingzhong_xiangqing .top {
+  padding: 0.32rem 0.32rem 0.16rem;
+  background-image: linear-gradient(to right, #eff1f4, #e6e9f0);
+  font-size: 0.32rem;
+}
+
+.xiangqing .top span,
+.jinxingzhong_xiangqing .top span {
+  float: right;
+  color: #3ed67e;
+}
+
+.xiangqing .bottom,
+.jinxingzhong_xiangqing .bottom {
+  color: #646566;
+  margin-top: 0.16rem;
+  font-size: 0.24rem;
+}
+
+.xiangqing .msg,
+.jinxingzhong_xiangqing .msg {
+  padding: 0.4rem 0.76rem 0.32rem 0.68rem;
+  font-size: 0.24rem;
+}
+
+.xiangqing .message,
+.jinxingzhong_xiangqing .message {
+  padding: 0 0.28rem 0 0.36rem;
+}
+
+.xiangqing .message div,
+.jinxingzhong_xiangqing .message div {
+  background-color: #fff;
+}
+
+.xiangqing .tel,
+.jinxingzhong_xiangqing .tel {
+  padding: 0.24rem 0.24rem 0;
+  height: auto;
+}
+
+.xiangqing .tel:nth-child(2) .address,
+.jinxingzhong_xiangqing .tel:nth-child(2) .address {
+  border: none;
+}
+
+.xiangqing .tel_top,
+.jinxingzhong_xiangqing .tel_top {
+  height: 0.52rem;
+  line-height: 0.52rem;
+}
+
+/* .xiangqing .hair,
+.jinxingzhong_xiangqing .hair {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: #1f529a;
+  border-radius: 50%;
+  margin: 0.1rem;
+  line-height: 0.44rem;
+  text-align: center;
+  color: #fff;
+  font-size: 0.28rem;
+} */
+
+.xiangqing .phone,
+.jinxingzhong_xiangqing .phone {
+  line-height: 0.52rem;
+  vertical-align: top;
+  float: right;
+  margin-right: 0.06rem;
+  font-size: 0.32rem;
+}
+
+.xiangqing .telicon,
+.jinxingzhong_xiangqing .telicon {
+  float: right;
+  display: inline-block;
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 50%;
+}
+
+.xiangqing .telicon .icon,
+.jinxingzhong_xiangqing .telicon .icon {
+  float: right;
+  width: 100%;
+  height: 100%;
+}
+
+.xiangqing .company,
+.jinxingzhong_xiangqing .company {
+  margin-top: 0.2rem;
+  font-size: 0.28rem;
+}
+
+.xiangqing .address,
+.jinxingzhong_xiangqing .address {
+  margin-top: 0.08rem;
+  padding-bottom: 0.36rem;
+  font-size: 0.24rem;
+  color: #969799;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.xiangqing .collect,
+.jinxingzhong_xiangqing .collect {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: #fa8c16;
+  border-radius: 50%;
+  margin: 0.1rem;
+  line-height: 0.48rem;
+  text-align: center;
+  color: #fff;
+  font-size: 0.28rem;
+}
+
+.xiangqing .ordermsg,
+.jinxingzhong_xiangqing .ordermsg {
+  padding: 0.32rem 0.28rem 0.72rem 0.36rem;
+  font-size: 0.32rem;
+}
+
+.xiangqing .ordermsg div,
+.jinxingzhong_xiangqing .ordermsg div {
+  background-color: #fff;
+}
+
+.xiangqing .orderid p,
+.jinxingzhong_xiangqing .orderid p {
+  padding-top: 0.4rem;
+  padding-left: 0.4rem;
+  font-size: 0.24rem;
+  color: #969799;
+}
+
+.xiangqing .orderid div,
+.jinxingzhong_xiangqing .orderid div {
+  padding-top: 0.12rem;
+  padding-left: 0.4rem;
+  padding-bottom: 0.44rem;
+  border-bottom: 1px solid #f0f2f5;
+  padding-right: 0.4rem;
+}
+
+.xiangqing .orderid div table,
+.jinxingzhong_xiangqing .orderid div table {
+  border-color: rgba(204, 204, 204, 0.1);
+}
+
+.xiangqing .orderid div table thead tr,
+.jinxingzhong_xiangqing .orderid div table thead tr {
+  text-align: center;
+  height: 0.88rem;
+  font-size: 0.24rem;
+  color: rgba(51, 51, 51, 0.5);
+}
+
+.xiangqing .orderid div table tbody tr,
+.jinxingzhong_xiangqing .orderid div table tbody tr {
+  text-align: center;
+  height: 0.88rem;
+  font-size: 0.24rem;
+  color: #ccc;
+}
+
+.xiangqing .orderid div table tr,
+.jinxingzhong_xiangqing .orderid div table tr {
+  text-align: center;
+  color: #999;
+  line-height: 0.88rem;
+  font-size: 0.32rem;
+}
+
+.xiangqing .orderid div #table1,
+.jinxingzhong_xiangqing .orderid div #table1 {
+  display: block;
+}
+
+.xiangqing .orderid div #table2,
+.jinxingzhong_xiangqing .orderid div #table2 {
+  display: none;
+}
+
+.xiangqing .orderid div i,
+.jinxingzhong_xiangqing .orderid div i {
+  display: inline-block;
+  width: 0.48rem;
+  height: 0.48rem;
+  vertical-align: middle;
+  float: right;
+  margin-right: 0.32rem;
+}
+
+.xiangqing .price .orderid div,
+.jinxingzhong_xiangqing .price .orderid div {
+  color: #fa4141;
+}
+
+.xiangqing .button,
+.jinxingzhong_xiangqing .button {
+  margin-top: 0.64rem;
+}
+
+.xiangqing .button button,
+.jinxingzhong_xiangqing .button button {
+  width: 100%;
+  border: none;
+  background-image: linear-gradient(to right, #eff1f4, #e6e9f0);
+  color: #007ef5;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 0.1rem;
+  outline: none;
+}
+
+.updatestate .state,
+.yundanzhuangtai .state {
+  padding: 0.32rem;
+}
+
+.updatestate .state .id,
+.yundanzhuangtai .state .id {
+  background-color: #fff;
+  padding: 0.36rem 0rem 0.32rem 0.36rem;
+  position: relative;
+}
+
+.updatestate .state .id .box,
+.yundanzhuangtai .state .id .box {
+  position: relative;
+}
+
+.updatestate .state .id .box .yundanstate,
+.yundanzhuangtai .state .id .box .yundanstate {
+  height: 0.64rem;
+  line-height: 0.64rem;
+  margin-top: 0.32rem;
+}
+
+.updatestate .state .id .box .yundanstate .active,
+.yundanzhuangtai .state .id .box .yundanstate .active {
+  color: #007ef5 !important;
+}
+
+.updatestate .state .id .box .yundanstate .qiyun_icon,
+.yundanzhuangtai .state .id .box .yundanstate .qiyun_icon {
+  width: 0.64rem;
+  height: 0.64rem;
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
+  margin-top: 0.1rem;
+  font-size: 0.4rem;
+}
+
+.updatestate .state .id .box .yundanstate .qiyun,
+.yundanzhuangtai .state .id .box .yundanstate .qiyun {
+  font-size: 0.32rem;
+  color: #c4c4c4;
+  vertical-align: 0.2rem;
+  margin-left: 0.32rem;
+  vertical-align: top;
+}
+
+.updatestate .state .id .box .yundanstate .success,
+.yundanzhuangtai .state .id .box .yundanstate .success {
+  float: right;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: 0.12rem;
+  margin-right: 0.36rem;
+  border-radius: 50%;
+  vertical-align: top;
+  text-align: center;
+  line-height: 0.4rem;
+  font-size: 0.3rem;
+}
+
+.updatestate .state .id .box .hair,
+.yundanzhuangtai .state .id .box .hair {
+  margin-left: 0.96rem;
+  font-size: 0.24rem;
+  color: #c4c4c4;
+}
+
+.updatestate .state .id .box .jiantou,
+.yundanzhuangtai .state .id .box .jiantou {
+  position: absolute;
+  top: 0.8rem;
+  /* left: 0.1rem; */
+  width: 0.32rem;
+  height: 0.44rem;
+  font-size: 0.3rem;
+}
+
+.updatestate .state .id p,
+.yundanzhuangtai .state .id p {
+  font-size: 0.28rem;
+}
+
+.updatestate .state .weight,
+.yundanzhuangtai .state .weight {
+  margin: 0.24rem 0;
+  background-color: #fff;
+  font-size: 0.32rem;
+  height: auto;
+}
+
+.updatestate .state .weight table,
+.yundanzhuangtai .state .weight table {
+  border-color: rgba(204, 204, 204, 0.1);
+}
+
+.updatestate .state .weight table thead tr,
+.yundanzhuangtai .state .weight table thead tr {
+  text-align: center;
+  height: 0.88rem;
+  font-size: 0.24rem;
+  color: rgba(51, 51, 51, 0.5);
+}
+
+.updatestate .state .weight table tbody tr,
+.yundanzhuangtai .state .weight table tbody tr {
+  text-align: center;
+  height: 0.88rem;
+  font-size: 0.24rem;
+  color: #ccc;
+}
+
+.updatestate .state .weight table tbody tr td input,
+.yundanzhuangtai .state .weight table tbody tr td input {
+  width: 100%;
+  text-align: center;
+}
+
+.updatestate .state .weight tr,
+.yundanzhuangtai .state .weight tr {
+  text-align: center;
+  height: 0.88rem;
+  font-size: 0.24rem;
+  color: #ccc;
+}
+
+.updatestate .state .img,
+.updatestate .state .img2,
+.yundanzhuangtai .state .img {
+  background-color: #fff;
+  margin-top: 0.32rem;
+  padding: 0.32rem;
+  width: 100%;
+  margin-right: 0.32rem;
+  box-sizing: border-box;
+}
+
+.updatestate .state .img p,
+.updatestate .state .img2 p,
+.yundanzhuangtai .state .img p {
+  font-size: 0.28rem;
+  margin-bottom: 0.32rem;
+}
+
+.updatestate .state .img div,
+.updatestate .state .img2 div,
+.yundanzhuangtai .state .img div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.updatestate .state .img div .img,
+.updatestate .state .img2 div .img2,
+.yundanzhuangtai .state .img div .img {
+  width: 1.96rem;
+  height: 1.96rem;
+  background-color: antiquewhite;
+  margin: 0.16rem 0.16rem 0.16rem 0;
+  padding: 0;
+  position: relative;
+}
+
+.updatestate .state .img div .img img,
+.updatestate .state .img2 div .img2 img,
+.yundanzhuangtai .state .img div .img img {
+  width: 100%;
+  height: 100%;
+}
+
+.updatestate .state .img div .img span,
+.updatestate .state .img2 div .img2 span,
+.yundanzhuangtai .state .img div .img span {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  top: -0.2rem;
+  right: -0.1rem;
+  text-align: center;
+  line-height: 0.45rem;
+  background-color: red;
+  color: #fff;
+  font-size: 0.4rem;
+  z-index: 9;
+}
+
+.updatestate .state .img div .img:nth-child(3n),
+.updatestate .state .img2 div .img2:nth-child(3n),
+.yundanzhuangtai .state .img div .img:nth-child(3n) {
+  margin-right: 0px;
+}
+
+.updatestate .state .img div .file,
+.updatestate .state .img2 div .file,
+.yundanzhuangtai .state .img div .file {
+  width: 1.96rem;
+  height: 1.96rem;
+  background-color: #eff1f4;
+  margin-top: 0.16rem;
+  line-height: 1.96rem;
+  font-size: 1rem;
+  color: #007aff;
+  display: inline;
+  text-align: center;
+  font-weight: 100;
+}
+
+.updatestate .state .button,
+.yundanzhuangtai .state .button {
+  margin-top: 0.64rem;
+}
+
+.updatestate .state .button button,
+.yundanzhuangtai .state .button button {
+  width: 100%;
+  border: none;
+  background-color: #007ef5;
+  color: #fff;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 0.1rem;
+  font-size: 0.32rem;
+  outline: none;
+}
+
+.jinxingzhong_xiangqing .box span {
+  color: #007ef5;
+}
+
+.jinxingzhong_xiangqing .ordermsg .button button {
+  background-image: none;
+  background-color: #007ef5;
+  color: #fff;
+  border-radius: 0.08rem;
+}
+
+.my .my_name {
+  width: 100%;
+  padding-bottom: 0.72rem;
+  background-color: #007ef5;
+  height: 1rem;
+}
+
+.my .my_name .pic {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-left: 0.36rem;
+  float: left;
+}
+
+.my .my_name .tel {
+  float: left;
+  line-height: 0.5rem;
+  color: #fff;
+  margin-left: 0.32rem;
+}
+
+.my .my_name .tel p {
+  font-size: 0.32rem;
+  font-family: OPPOSans, OPPOSans-Bold;
+  font-weight: 700;
+  text-align: LEFT;
+  color: #ffffff;
+}
+
+.my .my_name .tel .tel_tel {
+  font-size: 0.24rem;
+  font-weight: 500;
+}
+
+.my .my_name .right {
+  float: right;
+  line-height: 1rem;
+  color: #fff;
+  margin-right: 0.44rem;
+  font-size: 0.32rem;
+}
+
+.my .my_msg {
+  margin: 0.48rem 0.32rem 0 0.32rem;
+  background-color: #fff;
+}
+
+.my .my_msg .my_box {
+  padding: 0 0.24rem 0 0.32rem;
+}
+
+.my .my_msg .my_box .pwd,
+.my .my_msg .my_box .tel,
+.my .my_msg .my_box .update,
+.my .my_msg .my_box .kh,
+.my .my_msg .my_box .bk {
+  background-color: #fff;
+  height: 0.96rem;
+  line-height: 0.96rem;
+  border-bottom: 1px solid #eee;
+}
+
+.my .my_msg .my_box .pwd .icon1,
+.my .my_msg .my_box .tel .icon1,
+.my .my_msg .my_box .update .icon1,
+.my .my_msg .my_box .kh .icon1,
+.my .my_msg .my_box .bk .icon1 {
+  display: inline-block;
+  width: 0.4rem;
+  height: 100%;
+  line-height: 0.96rem;
+  margin: 0 !important;
+  float: left;
+}
+
+.my .my_msg .my_box .pwd .icon1 .img,
+.my .my_msg .my_box .tel .icon1 .img,
+.my .my_msg .my_box .update .icon1 .img,
+.my .my_msg .my_box .kh .icon1 .img,
+.my .my_msg .my_box .bk .icon1 .img {
+  margin-top: 0.28rem;
+  width: 0.4rem;
+  height: 0.4rem;
+}
+
+.my .my_msg .my_box .pwd .icon1 .icon,
+.my .my_msg .my_box .tel .icon1 .icon,
+.my .my_msg .my_box .update .icon1 .icon,
+.my .my_msg .my_box .kh .icon1 .icon,
+.my .my_msg .my_box .bk .icon1 .icon {
+  width: 100%;
+  height: 100%;
+  vertical-align: 0.7rem;
+}
+
+.my .my_msg .my_box .pwd .password,
+.my .my_msg .my_box .tel .password,
+.my .my_msg .my_box .update .password,
+.my .my_msg .my_box .kh .password,
+.my .my_msg .my_box .bk .password {
+  float: left;
+  margin-left: 0.16rem;
+  font-size: 0.28rem;
+  color: #393f4d;
+}
+
+.my .my_msg .my_box .pwd .right,
+.my .my_msg .my_box .tel .right,
+.my .my_msg .my_box .update .right,
+.my .my_msg .my_box .kh .right,
+.my .my_msg .my_box .bk .right {
+  width: 0.32rem;
+  height: 0.32rem;
+  display: inline-block;
+  float: right;
+  margin-top: 0.23rem;
+  line-height: 0.32rem;
+  text-align: center;
+  vertical-align: top;
+  font-size: 0.4rem;
+}
+
+.my .my_msg .my_box .pwd .phone,
+.my .my_msg .my_box .tel .phone,
+.my .my_msg .my_box .update .phone,
+.my .my_msg .my_box .kh .phone,
+.my .my_msg .my_box .bk .phone {
+  float: right;
+  margin-right: 0.12rem;
+  font-size: 0.28rem;
+  color: #969799;
+}
+
+.my .my_msg .my_box .tel .icon1,
+.my .my_msg .my_box .update .icon1 {
+  margin: 0.34rem -0.38rem;
+}
+
+.my .my_msg .my_box .update {
+  border: none;
+}
+
+.my .button {
+  margin: 0 0.32rem;
+  margin-top: 0.64rem;
+}
+
+.my .button button {
+  width: 100%;
+  border: none;
+  background-color: #007ef5;
+  color: #fff;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 0.1rem;
+  font-size: 0.32rem;
+  outline: none;
+}
+
+#login {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(153deg, #27beff 100%, #007ef5 100%);
+  position: relative;
+}
+
+#login .loginBox {
+  position: absolute;
+  width: 6rem;
+  height: 10.5rem;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px 0px rgba(39, 190, 255, 0.2);
+  border-radius: 0.16rem;
+  top: 50%;
+  left: 50%;
+  margin-top: -5rem;
+  margin-left: -3rem;
+  padding: 0rem 0.48rem 0 0.48rem;
+  box-sizing: border-box;
+}
+
+#login .loginBox h1 {
+  color: #262626;
+  font-size: 0.48rem;
+  padding: 0.5rem 0.4rem 0 0.4rem;
+  box-sizing: border-box;
+  margin-bottom: 0.6rem;
+  text-align: center;
+}
+
+#login .loginBox>div {
+  padding: 0 0.4rem;
+  box-sizing: border-box;
+}
+
+#login .loginBox>div p {
+  color: #969799;
+  font-size: 0.24rem;
+}
+
+#login .loginBox>div input {
+  width: 100%;
+  height: 0.6rem;
+  line-height: 0.6rem;
+  margin-bottom: 0.1rem;
+  margin-top: 0.1rem;
+  font-size: 0rem;
+}
+
+#login .loginBox>div i {
+  display: inline-block;
+  width: 100%;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+#login .loginBox .user {
+  margin-bottom: 0.4rem;
+}
+
+#login .loginBox button {
+  width: 100%;
+  height: 0.88rem;
+  background-color: #007ef5;
+  border-radius: 0.08rem;
+  box-shadow: 0px 2px 8px 0px rgba(0, 126, 245, 0.3);
+  border: none;
+  margin-top: 0.3rem;
+  color: #fff;
+  text-shadow: 0px 2px 8px 0px rgba(0, 126, 245, 0.3);
+  font-size: 0.32rem;
+  outline: none;
+}
+
+#login .loginBox .getregisters {
+  padding: 0 !important;
+  margin-top: 0.2rem;
+}
+
+#login .loginBox .getregisters .register {
+  color: orange;
+}
+
+.fgay {
+  overflow: hidden;
+}
+
+.fgay .my_msg {
+  margin: 0.48rem 0.32rem 0 0.32rem;
+  background-color: #fff;
+}
+
+.fgay .my_msg .my_box {
+  padding: 0 0.24rem 0 0.32rem;
+}
+
+.fgay .my_msg .my_box .oldPwd,
+.fgay .my_msg .my_box .newPwd,
+.fgay .my_msg .my_box .confirmNewPwd {
+  background-color: #fff;
+  height: 0.96rem;
+  line-height: 0.96rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.3rem;
+}
+
+.fgay .my_msg .my_box .oldPwd input,
+.fgay .my_msg .my_box .newPwd input,
+.fgay .my_msg .my_box .confirmNewPwd input {
+  padding-left: 0.1rem;
+}
+
+.fgay .my_msg .my_box .confirmNewPwd {
+  border: none;
+}
+
+.fgay .button {
+  margin-top: 0.5rem;
+  padding: 0 0.24rem 0 0.32rem;
+}
+
+.fgay .button button {
+  width: 100%;
+  border: none;
+  background-color: #007ef5;
+  color: #fff;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 0.1rem;
+  outline: none;
+}
+
+.fgay .button div {
+  margin-top: 0.2rem;
+}
+
+.fgay .button div .login {
+  color: orange;
+}
+
+.fgay .seach {
+  margin: 0.48rem 0.32rem 0 0.32rem;
+  background-color: #fff;
+}
+
+.fgay .seach .oldPwd,
+.fgay .seach .newPwd {
+  font-size: 0.32rem;
+  width: 100%;
+  height: 0.96rem;
+  line-height: 0.96rem;
+  padding-left: 0.2rem;
+}
+
+.fgay .seach .oldPwd input,
+.fgay .seach .newPwd input {
+  font-size: 0.5rem;
+  text-align: center;
+  color: #555;
+}
+
+.fgay .seach .oldPwd select,
+.fgay .seach .newPwd select {
+  width: 40%;
+  margin-left: 16%;
+  background-color: #fff;
+  box-sizing: border-box;
+  font-size: 0.32rem;
+  border: none;
+  line-height: 0.96rem;
+  -webkit-appearance: none;
+  text-align: center;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  color: #555;
+  /*去掉下拉箭头*/
+}
+
+.fgay .seach .oldPwd select option,
+.fgay .seach .newPwd select option {
+  text-align: center;
+}
+
+.fgay .button {
+  margin-top: 0.5rem;
+  padding: 0 0.24rem 0 0.32rem;
+}
+
+.fgay .button button {
+  width: 100%;
+  border: none;
+  background-color: #007ef5;
+  color: #fff;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 0.1rem;
+  outline: none;
+  font-size: 0.32rem;
+}
+
+/* 卡片样式 */
+.waybillCardHeader {
+  width: 100%;
+  height: 30px;
+  display: flex;
+}
+
+.headerLeft img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.headerLeft {
+  width: 70%;
+  float: left;
+  display: flex;
+  align-items: center;
+}
+
+.headerRight {
+  flex: 1;
+  float: right;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 400;
+  color: #007ef5;
+  padding-right: 20px;
+  position: relative;
+}
+
+.headerRight img {
+  width: 14px;
+  height: 14px;
+  float: right;
+  position: absolute;
+  top: 4px;
+}
+
+.headerText {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.timeText {
+  color: #BFBFBF;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.addreText {
+  width: 94%;
+  height: 50px;
+  background: #F7F8FA;
+  color: #343B4D;
+  margin-top: 10px;
+  line-height: 50px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0 3%;
+  font-weight: bold;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addreText span {
+  float: right;
+}
+
+.addressDiv {
+  display: flex;
+  height: 28px;
+  width: 100%;
+  align-items: center;
+  line-height: 28px;
+  font-size: 13px;
+}
+
+.addressDiv_span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1F529A;
+  margin-right: 10px;
+}
+
+.bg2 {
+  background: #FA8C16;
+}
+
+.addressText {
+  font-size: 14px;
+  width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+.footerBottonDiv {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  margin-top: 13px;
+  position: relative;
+}
+
+.BottonDiv {
+  width: 73px;
+  height: 30px;
+  border: 1px #007EF5 solid;
+  border-radius: 20px;
+  text-align: center;
+  color: #007EF5;
+  line-height: 30px;
+  font-size: 14.5px;
+  margin-right: 8px;
+}
+
+.BottonDivColor {
+  border: 1px #5C5F66 solid;
+  color: #5C5F66;
+}
+
+.mostBotton {
+  color: #5C5F66;
+  font-size: 14.5px;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}

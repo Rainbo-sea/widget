@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>绑卡Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+
+<style>
+    .positionStyle {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        color: #0080ff;
+        font-size: 16px;
+        display: none;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWins();">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title" id="bangkaText">绑卡 </div>
+        <div class="aui-pull-right aui-btn-right positionStyle" onclick="deleteCardFn()">
+            银行卡解绑
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        if (api.pageParam.isBind) {
+            document.getElementById("bangkaText").innerHTML = "更新绑卡";
+            document.getElementsByClassName("positionStyle")[0].style.display = "block"
+        }
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+
+            name: 'bangka_frame',
+            url: 'bangka_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                isBind: api.pageParam.isBind
+            }
+        }
+        );
+
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+    // 解绑银行卡
+    function deleteCardFn() {
+        api.confirm({
+            title: '解绑银行卡',
+            msg: '您确定要解绑银行卡吗？',
+            buttons: ['确定', '取消']
+        }, function (ret, err) {
+            var index = ret.buttonIndex;
+            if (index == 1) {
+                console.log("ret:" + JSON.stringify(ret));
+                dealData('platform/finbankcardbind/app/unbing', 'GET', {}, function (ret, err) {
+                    console.log("ret:" + JSON.stringify(ret));
+                    if (ret.code === 0) {
+                        setTimeout(function () {
+                            api.sendEvent({
+                                name: 'getStatusFn',
+                                extra: {}
+                            });
+                            api.closeWin();
+                        }, 1000)
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });;
+                        console.log(JSON.stringify(ret));
+                    }
+                    if (err) {
+                        console.log(JSON.stringify(err))
+                    }
+                })
+            }
+        });
+    }
+</script>
+
+</html>

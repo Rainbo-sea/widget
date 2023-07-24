@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../../css/base.css">
+<link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css">
+<link rel="stylesheet" type="text/css" href="../../../css/common.css">
+<style>
+    .border_bottom_after {
+        background: #fff;
+        margin-bottom: 0.2rem;
+        padding: 0.2rem;
+        display: flex;
+        padding-left: 0.5rem;
+    }
+
+    .liDivLeft {
+        width: 20%;
+    }
+
+    .liDivLeftImg {
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 5%;
+    }
+
+    .liDivRight {
+        width: 70%;
+        padding-left: 0.2rem;
+    }
+
+    .listLi {}
+
+    .fontWight {
+        font-weight: bold;
+        font-size: 0.3rem;
+    }
+
+    .main_box {
+        padding: 0.1rem;
+    }
+
+    .colorGreen {
+        color: green;
+    }
+
+    .colorRed {
+        color: red;
+    }
+
+    .fontStyle {
+        font-size: 17px;
+    }
+</style>
+
+<body>
+    <div class="container" id='app'>
+        <div class="main_box ">
+            <div v-if="listInfo.length === 0" class="aui-tips-title marginTips fontStyle">请根据车牌号精确查询</div>
+            <div class="border_bottom_after" v-for="item in  listInfo" tapmode>
+                <div class="liDivLeft">
+                    <img class="liDivLeftImg" :src="item.imgOther2" alt="" />
+                </div>
+                <div class="liDivRight" @click="selectCarFn(item)">
+                    <div class="listLi fontWight"> <span v-text="item.number"></span>(
+                        <span class="colorGreen" v-if="item.isLeisure ===0">空闲</span>
+                        <span class="colorRed" v-if="item.isLeisure ===1">使用中</span>)
+                    </div>
+                    <div> 汽车外廓:<span v-text="item.gabariteLength"></span>×<span
+                            v-text="item.gabariteWidth"></span>×<span v-text="item.gabariteWidth"></span> <span
+                            v-text="item.gabariteHeight"></span> </div>
+                    <div> 所有人:<span v-text="item.owner"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../script/rem.js"></script>
+    <script type="text/javascript" src="../../../script/api.js"></script>
+    <script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+    <script type="text/javascript" src="../../../script/common.js"></script>
+    <script type="text/javascript" src="../../../script/iconfont.js"></script>
+    <script type="text/javascript" src="../../../script/vue.js"></script>
+    <script type="text/javascript">
+        apiready = function () {
+            fnReady();
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    listInfo: [],
+                    //分页数据
+                    size: 10,
+                    page: 0,
+                    number: "",
+                    owner: ""
+                },
+                created: function () {
+                    var that = this;
+                    // this.jumpPage();
+                    // //监听上拉加载数据
+                    // api.addEventListener({
+                    //     name: 'scrolltobottom',
+                    //     extra: {
+                    //         threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    //     }
+                    // }, function (ret, err) {
+                    //     that.jumpPage();
+                    // });
+                    // //监听下拉刷新数据
+                    // api.setRefreshHeaderInfo({
+                    //     visible: true,
+                    //     loadingImg: 'widget://image/refresh.png',
+                    //     bgColor: '#ccc',
+                    //     textColor: '#fff',
+                    //     textDown: '下拉刷新...',
+                    //     textUp: '松开刷新...',
+                    //     showTime: true
+                    // }, function (ret, err) {
+                    //     that.page = 0;
+                    //     that.listInfo = [];
+                    //     that.jumpPage();
+                    // });
+                    //监听值的变化
+                    api.addEventListener({
+                        name: 'searchDriverOrder'
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret.value.driverInfo));
+                        that.listInfo = [];
+                        that.number = ret.value.driverInfo.number;
+                        that.owner = ret.value.driverInfo.owner;
+                        that.page = 0;
+                        that.jumpPage();
+                    });
+                },
+                methods: {
+                    //上拉加载下一页数据
+                    jumpPage: function () {
+                        var that = this;
+                        var parm = {
+                            "page": that.page,
+                            "size": that.size,
+                            "sort": "id,desc",
+                            "searchParms": {
+                                EQ_isUse: 1,
+                                EQ_status: 2,
+                                EQ_number: that.number,
+                                EQ_owner: that.owner
+                            }
+                        };
+                        console.log("请求参数：" + JSON.stringify(parm));
+                        dealData('platform/tstruck/carrier/query', 'POST', parm, function (ret) {
+                            console.log("获取车辆数据：" + JSON.stringify(ret));
+                            if (ret.code === 0) {
+                                if (ret.data.resultList.length == 0) {
+                                    $.mvalidateTip("未查询到您的有效车辆数据");
+                                    return;
+                                } else {
+                                    that.listInfo = that.listInfo.concat(ret.data.resultList);
+                                    that.page = that.page + 1;
+                                }
+                            }
+                            if (ret.code !== 0) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                            setTimeout('api.refreshHeaderLoadDone()', '500');
+                        },
+                            function (err) {
+                                console.log(JSON.stringify(err));
+                                api.toast({
+                                    msg: err.body.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            })
+                    },
+                    //选择车辆
+                    selectCarFn: function (item) {
+                        api.closeWin();
+                        api.sendEvent({
+                            name: 'selectCar_frame',
+                            extra: {
+                                id: item.id,
+                                number: item.number
+                            }
+                        })
+                    }
+                },
+            })
+        }
+    </script>
+</body>
+
+</html>

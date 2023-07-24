@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆详情</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/aui.css" />
+    <link rel="stylesheet" href="../../../script/H5TimeSelector/libs/iosselect.css">
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 120% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"],
+        .aui-list-item-input input[type="date"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem
+        }
+
+        /* .aui-list {
+            padding: 0rem 1rem;
+        } */
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type="date"],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.7rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+            padding-top: 5px;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem 0.4rem;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .flowhid {
+            overflow: hidden;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .maruto1r1 {
+            margin: 1rem;
+        }
+
+        .savebtn0,
+        .savebtn1 {
+            background-color: #007ef5;
+            float: left;
+            width: 49.5%;
+        }
+
+        .savebtn2 {
+            width: 100%;
+            background-color: #007ef5;
+        }
+
+        .savebtn2:active,
+        .savebtn1:active,
+        .savebtn0:active {
+            background-color: #007ef5;
+        }
+
+        .savebtn0 {
+            margin-right: 1%;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            width: 50%;
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .rolHeader {
+            font-size: 16px;
+            display: flex;
+            margin: 10px 10px 0 10px;
+            color: #000;
+        }
+
+        .rolHeader img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .rolHeaderImg {
+            width: 20px;
+            height: 16px;
+        }
+
+        .checkFailArrText {
+            min-height: 20px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+        <div class='orderdetail pr'>
+            <div class="rolHeader">
+                <img class="rolHeaderImg" src="../../../image/basicImg.png" />行驶证正页
+            </div>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list">
+                    <li class="mian_item border_bottom_after checkFailArrText" v-if="carInfo.status === 1 " tapmode>
+                        <p style="color: red;">拒绝理由<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" v-model="carInfo.checkFailArrText"> </input>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车牌号<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.number" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车辆类型<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请选择" v-model="carInfo.shapeName" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>所有人<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.owner" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>使用性质<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请选择" v-model="carInfo.useCharacter" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车辆识别代码<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.carVin" readonly>
+                    </li>
+
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>发证机关<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.issuingOrganizations"
+                            readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>注册日期<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.registerDate" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>发证日期<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.issueDate" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车辆品牌<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.truckBrand" readonly>
+                    </li>
+                </ul>
+            </div>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'><img src="../../../image/shangchuan.png" id='scan1'
+                                class='imgblock' onclick='imgblockFn(this)' />
+                            <div class='changeimg pa' onclick='changeimgFn(this)'>选择图片</div>
+                            <!--<span class='pa delimg'onclick='delimgFn(this)'>X</span> -->
+                        </div>
+                        <div class='f16 mt5 updateImg' onclick='updateImgFn(this)'>行驶证(主页)<span
+                                class="color_ec">*</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='orderdetail pr'>
+            <div class="rolHeader">
+                <img class="rolHeaderImg" src="../../../image/basicImg.png" />行驶证副页
+            </div>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list">
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>总质量(吨)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.gvm" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>整备质量(吨)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.equipWeight" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>核定载质量(吨)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.weight" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车辆能源类型<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="vehicleEnergyType" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>外廓尺寸(长/mm)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.gabariteLength" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>外廓尺寸(宽/mm)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.gabariteWidth" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>外廓尺寸(高/mm)<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.gabariteHeight" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车厢类型<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.carType">
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>核验有效期<span class="color_ec">*</span>:</p>
+                        <input @click="selectCheckoutTimeout()" class="input_rt" type="text" placeholder="请输入"
+                            v-model="carInfo.checkoutTimeout" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>核验有效期<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.checkoutTimeout"
+                            readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>档案编号:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.vimdah" readonly>
+                    </li>
+                </ul>
+            </div>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../../image/shangchuan.png" id='scan2' class='imgblock'
+                                onclick='imgblockFn(this)' />
+                            <div class='changeimg pa' onclick='changeimgFn(this)'>选择图片</div>
+                            <!--<span class='pa delimg' onclick='delimgFn(this)'>X</span> -->
+                        </div>
+                        <div class='f16 mt5 updateImg' onclick='updateImgFn(this)'>行驶证副页（正面）<span
+                                class="color_ec">*</span></div>
+                    </li>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../../image/shangchuan.png" id='scan2' class='imgblock'
+                                onclick='imgblockFn(this)' />
+                            <div class='changeimg pa' onclick='changeimgFn(this)'>选择图片</div>
+                            <!--<span class='pa delimg' onclick='delimgFn(this)'>X</span> -->
+                        </div>
+                        <div class='f16 mt5 updateImg' onclick='updateImgFn(this)'>行驶证副页（反面）<span
+                                class="color_ec">*</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='orderdetail pr'>
+            <div class="rolHeader">
+                <img class="rolHeaderImg" src="../../../image/bankImg.png" />道路运输证
+            </div>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list">
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>道路运输证号<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="carInfo.transportNum" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>车牌颜色<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请选择" v-model="licensePlateColor" readonly>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../../image/shangchuan.png" id='scan2' class='imgblock'
+                                onclick='imgblockFn(this)' />
+                            <div class='changeimg pa' onclick='changeimgFn(this)'>选择图片</div>
+                            <!--<span class='pa delimg' onclick='delimgFn(this)'>X</span> -->
+                        </div>
+                        <div class='f16 mt5 updateImg' onclick='updateImgFn(this)'>道路运输证<span class="color_ec">*</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+
+        // 查看详情
+        if (api.pageParam.carInfo) {
+            var id = api.pageParam.carInfo.id
+        }
+        var app = new Vue({
+            el: '#app',
+            data: {
+                carInfo: {
+                    issueDate: null,
+                    registerDate: null,
+                    businessTimeout: null,
+                    licensePlateColor: null,
+                    shapeName: null,
+                    useCharacter: null,
+                    vehicleEnergyType: null,
+                    checkoutTimeout: null,
+                },    //车辆信息 
+                isPerpetualBusiness: "否",   //经营许可证是否永久 0否/1是'
+                licensePlateColor: "",  //车牌颜色
+                dealArr: [],
+                dealTextArr: [],
+                dealTextTypeArr: [],
+                vehicleEnergyType: null
+            },
+            created: function () {
+                this.getDealData();
+                if (id) {
+                    this.getCarInfo();
+                }
+
+                $(".changeimg").hide();
+            },
+            methods: {
+                //车辆能源类型
+                selectVehicleEnergyType: function () {
+                    var that = this
+                    var arrInfo = ['汽油', '柴油', '电', "混合油", '天然气', '液化石油气', '甲醇', "乙醇", '太阳能', '混合动力', '无', "其它",];
+                    var arrCode = ["A", "B", "C", "D", "E", "F", "L", "M", "N", "O", "Y", "Z"];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        that.carInfo.vehicleEnergyType = arrCode[ret.buttonIndex - 1];
+                        that.vehicleEnergyType = arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+                //使用性质
+                selectUseCharacterFn: function () {
+                    var that = this
+                    var arrInfo = ['货运', '非营运', '特种车', "其他"];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        that.carInfo.useCharacter = arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+                //获取车辆类型
+                getDealData: function () {
+                    var that = this;
+                    dealData('platform/tstruck/type/query', 'post', {}, function (ret) {
+                        // console.log("获取车辆类型:" + JSON.stringify(ret));
+                        that.dealArr = ret.data.resultList
+                        that.dealArr.map(function (item) {
+                            that.dealTextArr.push(item.typeName);
+                            that.dealTextTypeArr.push(item.typeCode)
+                        });
+                    }, function (err) {
+                        console.log(JSON.stringify(err))
+                    })
+                },
+
+                //车辆类型
+                selectShapeFn: function () {
+                    var that = this
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: that.dealTextArr
+                    }, function (ret, err) {
+                        that.carInfo.shapeName = that.dealTextArr[ret.buttonIndex - 1];
+                        that.carInfo.shape = that.dealTextTypeArr[ret.buttonIndex - 1];
+                    });
+                },
+                //选择颜色
+                selectColorFn: function () {
+                    var that = this
+                    var arrInfo = ['蓝色', '黄色', "黑色", "白色", '绿色', "浓黄色", "浓绿色", "黄绿色", "渐变绿", "其他"];
+                    var arrInfoText = [1, 2, 3, 4, 5, 91, 92, 93, 94, 9];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret));
+                        that.licensePlateColor = arrInfo[ret.buttonIndex - 1];
+                        that.carInfo.licensePlateColor = arrInfoText[ret.buttonIndex - 1];
+                    });
+                },
+                //保存车辆信息
+                saveCarInfo: function () {
+                    var xsz1 = $('.imgblock').eq(0).attr("src");
+                    var xsz2 = $('.imgblock').eq(1).attr("src");
+                    var xszfm = $('.imgblock').eq(2).attr("src");
+                    var dlysztp = $('.imgblock').eq(3).attr("src");
+                    var proveFile = $('.imgblock').eq(4).attr("src");
+                    var params = this.carInfo;
+                    params.imgOther2 = xsz1;
+                    params.imgOther3 = xsz2;
+                    params.imgOther4 = xszfm;
+                    params.vin = dlysztp;
+                    params.proveFile = proveFile;
+
+                    //验证数据
+                    if ($('img').src === '../../../image/shangchuan.png') {
+                        $.mvalidateTip('图片不能为空！')
+                        return;
+                    }
+                    // 车牌号
+                    if (!params.number) {
+                        $.mvalidateTip('车牌号不能空！')
+                        return;
+                    }
+                    // 车牌颜色
+                    if (!this.licensePlateColor) {
+                        $.mvalidateTip('车牌颜色不能空！')
+                        return;
+                    }
+                    // 车辆类型
+                    if (!params.shapeName) {
+                        $.mvalidateTip('车辆类型不能空！')
+                        return;
+                    }
+                    // 所有人
+                    if (!params.owner) {
+                        $.mvalidateTip('所有人不能空！')
+                        return;
+                    }
+                    // 使用性质
+                    if (!params.useCharacter) {
+                        $.mvalidateTip('使用性质不能空！')
+                        return;
+                    }
+                    // 车辆识别代码
+                    if (params.carVin.length != 17) {
+                        $.mvalidateTip('请输入正确的车辆识别代码（17位字符）')
+                        return;
+                    }
+                    // 驾驶证发证机关
+                    if (!params.issuingOrganizations) {
+                        $.mvalidateTip('驾驶证发证机关不能空！')
+                        return;
+                    }
+                    // 注册日期
+                    if (!params.registerDate) {
+                        $.mvalidateTip('注册日期不能空！')
+                        return;
+                    }
+                    // 发证日期
+                    if (!params.issueDate) {
+                        $.mvalidateTip('发证日期不能空！')
+                        return;
+                    }
+                    // 车辆能源类型
+                    if (!params.vehicleEnergyType) {
+                        $.mvalidateTip('车辆能源类型不能空！')
+                        return;
+                    }
+
+                    // 核定载质量
+                    if (!params.weight) {
+                        $.mvalidateTip('核定载质量不能空！')
+                        return;
+                    }
+                    // 整备质量
+                    if (!params.equipWeight) {
+                        $.mvalidateTip('整备质量不能空！')
+                        return;
+                    }
+
+                    // 总质量
+                    if (!params.gvm) {
+                        $.mvalidateTip('总质量不能空！')
+                        return;
+                    }
+
+                    // 外廓尺寸(长)
+                    if (!params.gabariteLength) {
+                        $.mvalidateTip('外廓尺寸(长)不能空！')
+                        return;
+                    }
+
+                    // 外廓尺寸(宽)
+                    if (!params.gabariteWidth) {
+                        $.mvalidateTip('外廓尺寸(宽)不能空！')
+                        return;
+                    }
+
+                    // 外廓尺寸(高)
+                    if (!params.gabariteHeight) {
+                        $.mvalidateTip('外廓尺寸(高)不能空！')
+                        return;
+                    }
+
+                    // // 核验有效期
+                    if (!params.checkoutTimeout) {
+                        $.mvalidateTip('核验有效期不能空！')
+                        return;
+                    }
+
+                    // 道路运输证号
+                    if (!params.transportNum || params.transportNum.length >= 13) {
+                        $.mvalidateTip('请输入正确的道路运输证号（12位字符）')
+                        return;
+                    }
+
+                    if (params.imgOther2 == '../../../image/shangchuan.png') {
+                        $.mvalidateTip('行驶证(主页)不能为空！')
+                        return;
+                    }
+                    if (params.imgOther3 == '../../../image/shangchuan.png') {
+                        $.mvalidateTip('行驶证副页（正面）不能为空！')
+                        return;
+                    }
+                    if (params.imgOther4 == '../../../image/shangchuan.png') {
+                        $.mvalidateTip('行驶证副页（反面）不能为空！')
+                        return;
+                    }
+                    if (params.vin == '../../../image/shangchuan.png') {
+                        $.mvalidateTip('道路运输证图片不能为空！')
+                        return;
+                    }
+
+                    params.registerDate = new Date(params.registerDate).getTime();
+                    params.issueDate = new Date(params.issueDate).getTime();
+                    params.checkoutTimeout = new Date(params.checkoutTimeout).getTime();
+                    console.log("编辑车辆数据请求参数:" + JSON.stringify(params));
+                    if (id) {
+                        //编辑
+                        params.id = id
+                        dealData('platform/tstruck/update/own/truck', 'put', params, function (ret) {
+                            console.log("编辑车辆返回:" + JSON.stringify(ret));
+                            if (ret.code === 0) {
+                                $.mvalidateTip('修改成功');
+                                console.log(JSON.stringify(ret))
+                                setTimeout(function () {
+                                    api.closeWin();
+                                    api.sendEvent({
+                                        name: 'addCar_frame',
+                                        extra: {
+                                            key: 1
+                                        }
+                                    });
+                                }, 1500)
+                            }
+                            if (ret.code !== 0) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                        }, function (err) {
+                            if (err) {
+                                console.log(JSON.stringify(err))
+                                api.toast({
+                                    msg: '修改失败',
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                        })
+                    } else {
+                        //新增
+                        dealData('platform/tstruck/add/own/truck', 'POST', params, function (ret) {
+                            if (ret.code === 0) {
+                                $.mvalidateTip('添加成功')
+                                console.log("编辑车辆返回:" + JSON.stringify(ret));
+                                setTimeout(function () {
+                                    api.closeWin()
+                                    api.sendEvent({
+                                        name: 'addCar_frame',
+                                        extra: {
+                                            key: 1
+                                        }
+                                    })
+                                }, 1500)
+                            }
+                            if (ret.code !== 0) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                        }, function (err) {
+                            console.log(JSON.stringify(err))
+                            $.mvalidateTip('添加失败')
+                        })
+                    }
+                },
+                //注册日期
+                selectRegisterDate: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.carInfo.registerDate = time;
+                    })
+                },
+
+                //发证日期
+                selectIssueDate: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.carInfo.issueDate = time;
+                    })
+                },
+                // 核验有效期
+                selectCheckoutTimeout: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.carInfo.checkoutTimeout = time;
+                    })
+                },
+                //修改车辆信息
+                eidtCarInfo: function () {
+                    api.openWin({
+                        name: 'cheliangxiangqing_win',
+                        url: 'cheliangxiangqing_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        },
+                        pageParam: {
+                            id: id
+                        }
+                    })
+                },
+                //获取车辆信息
+                getCarInfo: function () {
+                    var that = this;
+                    dealData('platform/tstruck/' + id, 'get', {}, function (ret) {
+                        if (ret.code === 0) {
+                            console.log(JSON.stringify(ret));
+                            if (ret.data.status === 1 && ret.data && ret.data.checkFailArr) {
+                                var checkFailArrText = ""
+                                for (var i = 0; i < ret.data.checkFailArr.length; i++) {
+                                    checkFailArrText = checkFailArrText + ret.data.checkFailArr[i] + ","
+                                }
+                            }
+                            var arrInfo = ['蓝色', '黄色', "黑色", "白色", '绿色', "浓黄色", "浓绿色", "黄绿色", "渐变绿", "其他"];
+                            var arrInfoText = [1, 2, 3, 4, 5, 91, 92, 93, 94, 9];
+                            ret.data.registerDate = $app.timeStampTurnTime(ret.data.registerDate).slice(0, 10);
+                            ret.data.issueDate = $app.timeStampTurnTime(ret.data.issueDate).slice(0, 10);
+                            ret.data.checkoutTimeout = $app.timeStampTurnTime(ret.data.checkoutTimeout).slice(0, 10);
+                            that.licensePlateColor = arrInfo[arrInfoText.lastIndexOf(ret.data.licensePlateColor)];
+                            var carTextArrInfo = ['汽油', '柴油', '电', "混合油", '天然气', '液化石油气', '甲醇', "乙醇", '太阳能', '混合动力', '无', "其它",];
+                            var carTypeArrCode = ["A", "B", "C", "D", "E", "F", "L", "M", "N", "O", "Y", "Z"];
+                            that.vehicleEnergyType = carTextArrInfo[carTypeArrCode.indexOf(ret.data.vehicleEnergyType)];
+                            that.carInfo = ret.data;
+                            if (checkFailArrText) {
+                                checkFailArrText = checkFailArrText.substr(0, checkFailArrText.length - 1);
+                            }
+                            that.carInfo.checkFailArrText = checkFailArrText;
+                            var xsz1 = $('.imgblock').eq(0).attr("src", ret.data.imgOther2);
+                            var xsz2 = $('.imgblock').eq(1).attr("src", ret.data.imgOther3);
+                            var xszfm = $('.imgblock').eq(2).attr("src", ret.data.imgOther4);
+                            var dlysztp = $('.imgblock').eq(3).attr("src", ret.data.vin);
+                            var proveFile = $('.imgblock').eq(4).attr("src", ret.data.proveFile);
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        if (err) {
+                            $.mvalidateTip(err.msg)
+                        }
+                    })
+                },
+            }
+        })
+
+        // 时间格式 YYYY-MM-DDTHH:MM:SS
+        function getFormat(date) {
+            var format = "";
+            var nTime = new Date(date);
+            format += nTime.getFullYear() + "-";
+            format += (nTime.getMonth() + 1) < 10 ? "0" + (nTime.getMonth() + 1) : (nTime.getMonth() + 1);
+            format += "-";
+            format += nTime.getDate() < 10 ? "0" + (nTime.getDate()) : (nTime.getDate());
+            format += "T";
+            format += nTime.getHours() < 10 ? "0" + (nTime.getHours()) : (nTime.getHours());
+            format += ":";
+            format += nTime.getMinutes() < 10 ? "0" + (nTime.getMinutes()) : (nTime.getMinutes());
+            format += ":00";
+
+            return format;
+        }
+        //时间格式 YYYY-MM--DD 
+        function getNowFormatDate(date) {
+            var date = new Date(date);
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+    }
+
+    // 拍照
+    function fnShowAction(obj) {
+        openCarme();
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['拍照', '相册']
+        }, function (ret, err) {
+            if (ret.buttonIndex != 3) {
+                sourceTypes = ['camera', 'album'];
+                api.getPicture({
+                    sourceType: sourceTypes[ret.buttonIndex - 1],
+                    allowEdit: false,
+                    saveToPhotoAlbum: false
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.data != '') {
+                            var pathArr = [];
+                            var path = ret.data;
+                            pathArr.push(path);
+
+                            var imgArr = []
+                            var cacheDir = api.cacheDir;
+                            var imgname = new Date().getTime() + '.jpg';
+                        }
+                    }
+                });
+            }
+        });
+    };
+
+    //提交图片
+    function upImg(obj, imgArr) {
+        api.showProgress({
+            title: '上传中...',
+            modal: false
+        });
+        var accessToken = $api.getStorage('accessToken');
+        api.ajax({
+            url: getBaseRootPath() + "/app/tswaybill/importequery",
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            },
+            data: {
+                files: {
+                    imgFiles: imgArr
+                }
+            }
+        }, function (ret, err) {
+            if (ret.code === 0) {
+                var addImg = "<div class='changeimg pa' onclick='changeimgFn(this)'>选择图片</div>";
+                obj.before(addImg);
+                obj.attr("src", ret.data)
+            }
+            if (ret.code !== 0) {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (err) {
+                $.mvalidateTip('图片上传失败')
+            }
+            api.hideProgress();
+        });
+    }
+
+    // 图片展示
+    function imgblockFn(that) {
+        var src = $(that).attr('src');
+        var imgArr = [];
+        imgArr.push(src);
+        if (src != '../../../image/shangchuan.png') {
+            var imageBrowser = api.require('imageBrowser');
+            imageBrowser.openImages({
+                showList: false,
+                imageUrls: imgArr
+            });
+        } else {
+            fnShowAction($(that));
+        }
+    }
+
+    //删除图片
+    function delimgFn(that) {
+        var $this = $(that);
+        api.confirm({
+            msg: "确定删除该图片？",
+            button: ['取消', '确定']
+        }, function (ret, err) {
+            if (ret.buttonIndex == 2) {
+                if ($this.next().attr('id') == 'scan1') {
+                    scan1 = '';
+                    scan1File = '';
+                }
+                if ($this.next().attr('id') == 'scan2') {
+                    scan2 = '';
+                    scan2File = '';
+                }
+                $this.parent().find('.imgblock').attr('src', '../../../image/shangchuan.png');
+                $this.parent().find('.changeimg').remove();
+                $this.remove();
+            }
+        });
+    }
+
+    //更换图片
+    function changeimgFn(that) {
+        // var $this = $(that).parent().find('.imgblock');
+        // fnShowAction($this);
+    }
+    // 更换图片-- > 更换进页面的默认图片
+    function updateImgFn(that) {
+        // var $this = $(that).parent().children(0).find('.imgblock');
+        // fnShowAction($this);
+    }
+</script>
+
+</html>

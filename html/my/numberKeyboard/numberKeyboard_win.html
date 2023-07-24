@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="../../commonUi/H5TimeSelector/libs/iosselect.css">
+    <style>
+        html,
+        body {
+            background-color: transparent;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFangSC;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, .2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            position: relative;
+            background-color: transparent;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .contentDiv {
+            width: 100%;
+            /* height: 450px; */
+            overflow: auto;
+            background-color: #fff;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(245, 245, 245, 1);
+            background: #fff;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .header-input {
+            display: flex;
+            padding: 10px;
+            position: relative;
+            justify-content: center;
+        }
+
+        .munberInput {
+            width: 40px;
+            height: 40px;
+            border: 1px #e3e3e3 solid;
+            margin: 2px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .radios-div {
+            width: 6px;
+            height: 6px;
+            background: #e3e3e3;
+            border-radius: 50%;
+            margin-top: 20px;
+        }
+
+        .keyBoard {
+            /* height: 330px; */
+            background: #e3e3e3;
+            padding: 10px;
+        }
+
+        .keyBoard-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .keyBoard-content button {
+            margin: 2px;
+        }
+
+        button {
+            appearance: none;
+            background-color: #FAFBFC;
+            border: 1px solid rgba(27, 31, 35, 0.15);
+            border-radius: 6px;
+            box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+            box-sizing: border-box;
+            color: #24292E;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            list-style: none;
+            padding: 6px 16px;
+            position: relative;
+            transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            white-space: nowrap;
+            word-wrap: break-word;
+            height: 45px;
+            width: 45px;
+        }
+
+        button:hover {
+            /* background-color: #F3F4F6; */
+            text-decoration: none;
+            transition-duration: 0.1s;
+        }
+
+
+        button:focus {
+            outline: 1px transparent;
+        }
+
+        button:before {
+            display: none;
+        }
+
+        button:-webkit-details-marker {
+            display: none;
+        }
+
+        .keyBoard-footer {
+            height: 50px;
+
+        }
+
+        .keyBoard-footer button {
+            width: 90px;
+        }
+
+        .button-del {
+            float: right;
+            color: #d93a49;
+        }
+
+        .button-finish {
+            float: right;
+            color: #ffffff;
+            background: #007ef5;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" id="app">
+        <div class="closeFrame" @click="closeFn()"></div>
+        <div class="contentDiv">
+            <div class="header-input">
+                <input type="text" class="munberInput" @focus="focusInputFn(0)" v-model="number0" />
+                <input type="text" class="munberInput" @focus="focusInputFn(1)" v-model="number1" />
+                <div class="radios-div"></div>
+                <input type="text" class="munberInput" @focus="focusInputFn(2)" v-model="number2" />
+                <input type="text" class="munberInput" @focus="focusInputFn(3)" v-model="number3" />
+                <input type="text" class="munberInput" @focus="focusInputFn(4)" v-model="number4" />
+                <input type="text" class="munberInput" @focus="focusInputFn(5)" v-model="number5" />
+                <input type="text" class="munberInput" @focus="focusInputFn(6)" v-model="number6" />
+            </div>
+            <div class="keyBoard">
+                <div class="keyBoard-content" v-if="keyBoardFlag">
+                    <button class="" v-for="(item, index) in ChineseList" :key="item.id"
+                        @click="checkChinese(item.name)">
+                        {{item.name}}
+                    </button>
+                </div>
+                <div class="keyBoard-content" v-if="!keyBoardFlag">
+                    <button class="" v-for="(item, index) in English_Number" :key="item.id"
+                        @click="checkEnglishNumber(item.name)">
+                        {{item.name}}
+                    </button>
+                </div>
+                <div class="keyBoard-footer">
+                    <button @click="colesFn()">取消</button>
+                    <button @click="finishFn()" class="button-finish">完成</button>
+                    <button @click="delFn()" class="button-del">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script type="text/javascript" src="../../../script/vue.js"></script>
+<script>
+    apiready = function () {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                focusFlag: 0,
+                keyBoardFlag: true,
+                number0: null,
+                number1: null,
+                number2: null,
+                number3: null,
+                number4: null,
+                number5: null,
+                number6: null,
+                ChineseList: [
+                    { name: '京', id: 1 },
+                    { name: '津', id: 2 },
+                    { name: '冀', id: 3 },
+                    { name: '晋', id: 4 },
+                    { name: '蒙', id: 5 },
+                    { name: '辽', id: 6 },
+                    { name: '吉', id: 7 },
+                    { name: '黑', id: 8 },
+                    { name: '沪', id: 9 },
+                    { name: '苏', id: 10 },
+                    { name: '浙', id: 11 },
+                    { name: '皖', id: 12 },
+                    { name: '闽', id: 13 },
+                    { name: '赣', id: 14 },
+                    { name: '鲁', id: 15 },
+                    { name: '豫', id: 16 },
+                    { name: '鄂', id: 17 },
+                    { name: '湘', id: 18 },
+                    { name: '粤', id: 19 },
+                    { name: '桂', id: 20 },
+                    { name: '琼', id: 21 },
+                    { name: '渝', id: 22 },
+                    { name: '川', id: 23 },
+                    { name: '贵', id: 24 },
+                    { name: '云', id: 25 },
+                    { name: '藏', id: 26 },
+                    { name: '陕', id: 27 },
+                    { name: '甘', id: 28 },
+                    { name: '青', id: 29 },
+                    { name: '宁', id: 30 },
+                    { name: '新', id: 31 },
+                    { name: '台', id: 32 },
+                    { name: '港', id: 33 },
+                    { name: '澳', id: 34 },
+                ],
+                English_Number: [
+                    { name: '1', id: 39 },
+                    { name: '2', id: 40 },
+                    { name: '3', id: 41 },
+                    { name: '4', id: 42 },
+                    { name: '5', id: 43 },
+                    { name: '6', id: 44 },
+                    { name: '7', id: 45 },
+                    { name: '8', id: 46 },
+                    { name: '9', id: 47 },
+                    { name: '0', id: 48 },
+                    { name: 'A', id: 49 },
+                    { name: 'B', id: 50 },
+                    { name: 'C', id: 51 },
+                    { name: 'D', id: 52 },
+                    { name: 'E', id: 53 },
+                    { name: 'F', id: 54 },
+                    { name: 'G', id: 55 },
+                    { name: 'H', id: 58 },
+                    { name: 'J', id: 59 },
+                    { name: 'K', id: 60 },
+                    { name: 'L', id: 61 },
+                    { name: 'M', id: 62 },
+                    { name: 'N', id: 63 },
+                    { name: 'P', id: 64 },
+                    { name: 'Q', id: 65 },
+                    { name: 'R', id: 66 },
+                    { name: 'S', id: 67 },
+                    { name: 'T', id: 68 },
+                    { name: 'U', id: 69 },
+                    { name: 'V', id: 70 },
+                    { name: 'W', id: 71 },
+                    { name: 'X', id: 72 },
+                    { name: 'Y', id: 73 },
+                    { name: 'Z', id: 74 },
+                ],
+            },
+            created: function () {
+            },
+            methods: {
+                //完成
+                finishFn: function () {
+                    var that = this;
+                    if (this.focusFlag === 6 && this.number6 != null) {
+                        var number = that.number0 + that.number1 + that.number2 + that.number3 + that.number4 + that.number5 + that.number6;
+                        api.sendEvent({
+                            name: 'numberKeyboard',
+                            extra: {
+                                number: number
+                            }
+                        });
+
+                        api.closeFrame({
+                            name: 'numberKeyboard_win'
+                        });
+                    } else {
+                        api.toast({
+                            msg: "请填写完整的车牌号！",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    }
+                },
+                //删除
+                delFn: function () {
+                    if (this.focusFlag === 0) {
+                        this.number0 = null;
+                        this.keyBoardFlag = true;
+                    }
+                    if (this.focusFlag === 1) {
+                        this.number1 = null;
+                        this.focusFlag = 0;
+                    }
+                    if (this.focusFlag === 2) {
+                        this.number2 = null;
+                        this.focusFlag = 1;
+                    }
+                    if (this.focusFlag === 3) {
+                        this.number3 = null;
+                        this.focusFlag = 2;
+                    }
+                    if (this.focusFlag === 4) {
+                        this.number4 = null;
+                        this.focusFlag = 3;
+                    }
+                    if (this.focusFlag === 5) {
+                        this.number5 = null;
+                        this.focusFlag = 4;
+                    }
+                    if (this.focusFlag === 6) {
+                        this.number6 = null;
+                        this.focusFlag = 5;
+                    }
+                },
+                //关闭
+                colesFn: function () {
+                    api.closeFrame({
+                        name: 'numberKeyboard_win'
+                    });
+                },
+                focusInputFn: function (focusFlag) {
+                    this.focusFlag = focusFlag;
+                    document.activeElement.blur();
+                },
+                checkChinese: function (data) {
+                    this.number0 = data;
+                    this.focusFlag = 0;
+                    this.keyBoardFlag = false;
+                },
+                checkEnglishNumber: function (data) {
+                    if (this.focusFlag === 0) {
+                        this.number1 = data;
+                        this.focusFlag = 1;
+                    } else if (this.focusFlag === 1) {
+                        this.number2 = data;
+                        this.focusFlag = 2;
+                    } else if (this.focusFlag === 2) {
+                        this.number3 = data;
+                        this.focusFlag = 3;
+                    } else if (this.focusFlag === 3) {
+                        this.number4 = data;
+                        this.focusFlag = 4;
+                    } else if (this.focusFlag === 4) {
+                        this.number5 = data;
+                        this.focusFlag = 5;
+                    } else if (this.focusFlag === 5) {
+                        this.number6 = data;
+                        this.focusFlag = 6;
+                    }
+                }
+            }
+        })
+    }
+</script>
+
+</html>

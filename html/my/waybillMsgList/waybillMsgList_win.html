@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>历史申报</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+</head>
+<style>
+    .positionStyle {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        color: #0080ff;
+        font-size: 16px;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWins();">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title">异常管理 </div>
+        <div class="aui-pull-right aui-btn-right positionStyle" onclick="addFn()">
+            添加
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+            name: 'waybillMsgList_frame',
+            url: 'waybillMsgList_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            },
+        }
+        );
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+    function addFn() {
+        api.openWin({
+            name: 'addAbnormal_win',
+            url: './addAbnormal_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+        });
+    }
+</script>
+
+</html>

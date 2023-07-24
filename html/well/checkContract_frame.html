@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实名认证</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+</head>
+
+<body>
+    <iframe id="reportFrame" scrolling="no" width="99%" height="99%" src=""></iframe>
+</body>
+
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        document.getElementById("reportFrame").src = api.pageParam.data;
+        // var int = self.setInterval(function () {
+        //     console.log("document.getElementById().src" + JSON.stringify(document.getElementById("reportFrame").src));
+
+        // }, 6000);
+        //销毁定时器
+        //   clearInterval(int);
+    }
+</script>
+
+</html>

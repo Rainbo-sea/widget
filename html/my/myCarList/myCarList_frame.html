@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../../css/base.css">
+<link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css">
+<link rel="stylesheet" type="text/css" href="../../../css/common.css">
+<style>
+    .border_bottom_after {
+        background: #fff;
+        margin-bottom: 0.2rem;
+        padding: 0.2rem;
+        padding-left: 0.5rem;
+    }
+
+    .liDivLeft {
+        width: 20%;
+    }
+
+    .liDivLeftImg {
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 5%;
+    }
+
+    .liDivRight {
+        width: 70%;
+        padding-left: 0.2rem;
+    }
+
+    .listLi {}
+
+    .fontWight {
+        font-weight: bold;
+        font-size: 0.3rem;
+    }
+
+    .main_box {
+        padding: 0.1rem;
+    }
+
+    .colorGreen {
+        color: green;
+    }
+
+    .colorRed {
+        color: red;
+    }
+
+    .status0 {
+        color: #1890FF;
+    }
+
+    .fontStyle {
+        font-size: 17px;
+    }
+
+    .contentcol {
+        display: flex;
+    }
+</style>
+
+<body>
+    <div class="container" id='app'>
+        <div class="main_box ">
+            <div v-if="listInfo.length === 0" class="aui-tips-title marginTips fontStyle">未添加数据</div>
+            <div class="border_bottom_after" v-for="item in  listInfo" tapmode>
+                <div class="contentcol">
+                    <div class="liDivLeft">
+                        <img class="liDivLeftImg" :src="item.tsTruckDTO.imgOther2" alt="" />
+                    </div>
+                    <div class="liDivRight">
+                        <div class="listLi fontWight"> <span v-text="item.tsTruckDTO.number"></span>(
+                            <span class="status0" v-if="item.tsTruckDTO.status ===0">待审核</span>
+                            <span class="colorGreen" v-if="item.tsTruckDTO.status ===2">
+                                <span class="" v-if="item.tsTruckDTO.isCommonUse === 0">
+                                    <span v-if="item.tsTruckDTO.isOverTime === 0">已通过</span>
+                                    <span class="colorRed" v-if="item.tsTruckDTO.isOverTime === 1">证照临期</span>
+                                    <span class="colorRed" v-if="item.tsTruckDTO.isOverTime === 2">证照过期</span>
+                                </span>
+                                <span class="" v-if="item.tsTruckDTO.isCommonUse === 1">
+                                    <span v-if="item.tsTruckDTO.isOverTime === 0">常用车辆</span>
+                                    <span class="colorRed" v-if="item.tsTruckDTO.isOverTime === 1">证照临期</span>
+                                    <span class="colorRed" v-if="item.tsTruckDTO.isOverTime === 2">证照过期</span>
+                                </span>
+                            </span>
+                            <span class="colorRed" v-if="item.tsTruckDTO.status ===1">已拒绝</span>
+                            )
+                        </div>
+                        <div> 汽车外廓:<span v-text="item.tsTruckDTO.gabariteLength"></span>×<span
+                                v-text="item.tsTruckDTO.gabariteWidth"></span>×<span
+                                v-text="item.tsTruckDTO.gabariteWidth"></span> <span
+                                v-text="item.tsTruckDTO.gabariteHeight"></span> </div>
+                        <div> 所有人:<span v-text="item.tsTruckDTO.owner"></span></div>
+                    </div>
+                </div>
+                <div class="footerBottonDiv">
+                    <div v-if="item.tsTruckDTO.status ===1 ||item.tsTruckDTO.isOverTime ===(2||1)" class="BottonDiv"
+                        @click="editCarFn(item)">
+                        修改车辆
+                    </div>
+                    <div class="BottonDiv" v-if="item.tsTruckDTO.isCommonUse === 0 && item.tsTruckDTO.status ===2 "
+                        @click="commonVehiclesFn(item.tsTruckDTO)">
+                        常用车辆
+                    </div>
+                    <div class="BottonDiv" @click="seeCarFn(item)">
+                        查看车辆
+                    </div>
+                    <div class="BottonDiv" @click="deleteCarFn(item.tsTruckDTO.id)">
+                        删除
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../script/rem.js"></script>
+    <script type="text/javascript" src="../../../script/api.js"></script>
+    <script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+    <script type="text/javascript" src="../../../script/common.js"></script>
+    <script type="text/javascript" src="../../../script/iconfont.js"></script>
+    <script type="text/javascript" src="../../../script/vue.js"></script>
+    <script type="text/javascript">
+        apiready = function () {
+            fnReady();
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    listInfo: [],
+                    //分页数据
+                    size: 10,
+                    page: 0,
+                    number: "",
+                    owner: ""
+                },
+                created: function () {
+                    var that = this;
+                    that.jumpPage();
+                    //监听值的变化
+                    api.addEventListener({
+                        name: 'addCar_frame'
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret.value.driverInfo));
+                        that.page = 0;
+                        that.jumpPage();
+                    });
+                },
+                methods: {
+                    commonVehiclesFn: function (carInfo) {
+                        api.openWin({
+                            name: 'addCarFn_win',
+                            url: '../../well/driverOrder/addCarFn_win.html',
+                            pageParam: {
+                                carInfo: carInfo
+                            },
+                        });
+                    },
+                    //删除车辆
+                    deleteCarFn: function (id) {
+                        var that = this;
+
+                        api.confirm({
+                            title: '提示',
+                            msg: '是否确定删除该车辆信息？',
+                            buttons: ['确定', '取消']
+                        }, function (ret, err) {
+                            var index = ret.buttonIndex;
+                            if (index == 1) {
+                                dealData('platform/tstruck/won/' + id, 'DELETE', {}, function (ret) {
+                                    console.log("获取车辆数据：" + JSON.stringify(ret));
+                                    if (ret.code === 0) {
+                                        $.mvalidateTip("删除成功！")
+                                        that.jumpPage();
+                                    }
+                                    if (ret.code !== 0) {
+                                        api.toast({
+                                            msg: ret.msg,
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                    }
+                                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                                },
+                                    function (err) {
+                                        console.log(JSON.stringify(err));
+                                        api.toast({
+                                            msg: err.body.msg,
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                    })
+                                setTimeout('api.refreshHeaderLoadDone()', '500');
+                            }
+
+                        })
+
+
+                    },
+                    //修改车辆
+                    editCarFn: function (data) {
+                        console.log(data);
+                        var that = this;
+                        api.openWin({
+                            name: 'addCar_win',
+                            url: './addCar_win.html',
+                            pageParam: {
+                                carInfo: data.tsTruckDTO
+                            },
+                        });
+                    },
+                    seeCarFn: function (data) {
+                        var that = this;
+                        api.openWin({
+                            name: 'seeCar_win',
+                            url: './seeCar_win.html',
+                            pageParam: {
+                                carInfo: data.tsTruckDTO
+                            },
+                        });
+                    },
+                    //上拉加载下一页数据
+                    jumpPage: function () {
+
+                        var that = this;
+                        var parm = {
+                            "page": that.page,
+                            "size": that.size,
+                            "sort": "id,desc",
+                            "searchParms": {
+                                EQ_isUse: 1,
+                                EQ_status: 2,
+                                EQ_number: that.number,
+                                EQ_owner: that.owner
+                            }
+                        };
+                        dealData('platform/tstruck/own/query', 'GET', {}, function (ret) {
+                            console.log("获取车辆数据：" + JSON.stringify(ret));
+                            if (ret.code === 0) {
+                                if (ret.data.length == 0) {
+                                    $.mvalidateTip("未查询到您的有效车辆数据");
+                                    that.listInfo = [];
+                                    return;
+                                } else {
+                                    that.listInfo = [];
+                                    that.listInfo = that.listInfo.concat(ret.data);
+                                    that.page = that.page + 1;
+                                }
+                                api.addEventListener({
+                                    name: 'getStatusFn'
+                                }, function (ret, err) { });
+                            }
+                            if (ret.code !== 0) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                            setTimeout('api.refreshHeaderLoadDone()', '500');
+                        },
+                            function (err) {
+                                console.log(JSON.stringify(err));
+                                api.toast({
+                                    msg: err.body.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            })
+                    },
+                },
+            })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>index</title>
+	<link rel="stylesheet" type="text/css" href="libs/aui.css" />
+	<style>
+		#zknight_h5autograph_canvas {
+			border: 1px solid #333;
+			display: block;
+			margin: 20px auto;
+		}
+
+		.cloneInfo {
+			width: 66px;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+			font-size: 15px;
+			background: rgba(0, 126, 245, 0.16);
+			border-radius: 4px;
+			color: #007EF5;
+			transform: rotate(90deg);
+			position: fixed;
+			top: 60px;
+			right: 10px;
+		}
+
+		.keepInfo {
+			width: 66px;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+			font-size: 15px;
+			background: rgba(0, 126, 245, 0.16);
+			border-radius: 4px;
+			color: #007EF5;
+			transform: rotate(90deg);
+			position: fixed;
+			top: 150px;
+			right: 10px;
+		}
+
+		.removeInfo {
+			width: 66px;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+			font-size: 15px;
+			background: rgba(0, 126, 245, 0.16);
+			border-radius: 4px;
+			color: #007EF5;
+			transform: rotate(90deg);
+			position: fixed;
+			top: 230px;
+			right: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="aui-content">
+		<canvas class="aui-margin-t-10 " id="zknight_h5autograph_canvas" width="250" height="600"></canvas>
+		<div class="cloneInfo aui-btn aui-btn-warning" onclick="closeWinFn()">
+			返回
+		</div>
+		<div class="keepInfo aui-btn aui-btn-warning" onclick="saveImgFn()">
+			保存
+		</div>
+		<div class="removeInfo aui-btn" onclick="zknightH5autographCleanCanvas()">
+			重置
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="libs/html2canvas.min.js"></script>
+<script type="text/javascript" src="libs/bluebird.core.min.js"></script>
+<script type="text/javascript">
+	apiready = function () {
+
+		api.alert({
+			msg: "请横置手机，签名会以横板角度展示！"
+		});
+	}
+	var start_x, start_y, move_x, move_y, end_x, end_y;
+	var wrapper = null;
+	var ctx = null;
+	//新建画板渲染背景色
+	var canvas = null;
+
+	//canvas上边距
+	var t = null;
+	//canvas左边距
+	var l = null;
+	var flagDiv1 = false;
+	var flagDiv2 = false;
+	var flagDiv3 = false;
+	var flagDiv4 = false;
+	var flagDiv5 = false;
+	var flagDiv6 = false;
+	window.onload = function () {
+		wrapper = document.getElementById("zknight_h5autograph_canvas");
+		ctx = wrapper.getContext("2d");
+		canvas = document.createElement('canvas');
+
+		t = wrapper.offsetTop;
+		l = wrapper.offsetLeft;
+
+		//按下
+		wrapper.addEventListener("touchstart", function (e) {
+			start_x = e.touches[0].pageX - l;
+			start_y = e.touches[0].pageY - t;
+			flagDiv1 = true;
+		});
+		//移动
+		wrapper.addEventListener("touchmove", function (e) {
+			move_x = e.touches[0].pageX - l;
+			move_y = e.touches[0].pageY - t;
+			flagDiv2 = true;
+		});
+		//松开
+		wrapper.addEventListener("touchend", function (e) {
+			end_x = e.changedTouches[0].pageX - l;
+			end_y = e.changedTouches[0].pageY - t;
+			flagDiv3 = true;
+		});
+
+		//按下时开始绘画,标记画笔起始点
+		wrapper.addEventListener("touchstart", function (e) {
+			start_x = e.touches[0].pageX - l;
+			start_y = e.touches[0].pageY - t;
+			//开始本次绘画
+			ctx.beginPath();
+			//画笔起始点
+			ctx.moveTo(start_x, start_y);
+			flagDiv4 = true;
+		});
+
+		//绘画中，根据画笔路径绘画并渲染出来
+		wrapper.addEventListener("touchmove", function (e) {
+			move_x = e.touches[0].pageX - l;
+			move_y = e.touches[0].pageY - t;
+			//根据鼠标路径绘画
+			ctx.lineTo(move_x, move_y);
+			//立即渲染
+			ctx.stroke();
+			flagDiv5 = true;
+		});
+
+		//松开时,创建从当前点到开始点的路径
+		wrapper.addEventListener("touchend", function (e) {
+			end_x = e.changedTouches[0].pageX - l;
+			end_y = e.changedTouches[0].pageY - t;
+			//创建从当前点到开始点的路径
+			ctx.closePath();
+			flagDiv6 = true;
+		});
+	};
+
+	/**
+	 * 有背景色签名图片的base64 
+	 */
+
+	/**
+	 * 无背景色签名 
+	 */
+	function saveImgFn() {
+		//输出签名图片base64
+		if (!((flagDiv1 && flagDiv2 && flagDiv3 && flagDiv4 && flagDiv5 && flagDiv6) === true)) {
+			alert('请正确签名再保存！')
+			return false;
+		}
+		api.sendEvent({
+			name: 'ownsignFrame',
+			extra: {
+				data: wrapper.toDataURL("image/png")
+			}
+		});
+		api.closeWin();
+	}
+
+	/**
+	 * 清空（重置）签名画板 
+	 */
+	function zknightH5autographCleanCanvas() {
+		ctx.clearRect(0, 0, 250, 600);
+	}
+	function cloneFn() {
+
+	}
+
+	function closeWinFn() {
+		api.closeWin();
+	}
+</script>
+
+</html>

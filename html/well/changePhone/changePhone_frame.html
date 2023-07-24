@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注销账号</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+</head>
+<style>
+    .verification {
+        position: relative;
+    }
+
+    .getCode {
+        border: none;
+        padding: 2px 4px;
+        height: 30px;
+        width: 88px;
+        background: rgba(5, 143, 253, 1);
+        border-radius: 3px;
+        position: absolute;
+        top: 17%;
+        right: 20px;
+        bottom: 20px;
+        line-height: 30px;
+        font-size: 13px;
+        font-weight: 400;
+        color: rgba(254, 254, 254, 1);
+    }
+</style>
+
+<body class='fgay'>
+    <div id="app">
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="confirmNewPwd">
+                    <span class="password">新手机号 :</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入新手机号" v-model="newPhone">
+                    </span>
+                </div>
+                <div class="confirmNewPwd">
+                    <span class="password">旧手机号 :</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入旧手机号" v-model="phone" disabled>
+                    </span>
+                </div>
+                <div class="confirmNewPwd verification">
+                    <span class="password">验证码(旧手机号):</span>
+                    <span class="right ">
+                        <input type="text" v-model="code" placeholder="请输入验证码">
+                        <button v-show="showFlage" class="getCode" tapmode @click="sendSms()"
+                            id="getCode">获取验证码</button>
+                        <button v-show="!showFlage" class="getCode" id="getCode" v-cloak>重新发送{{count}}</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="button">
+            <button id="submit" @click="confirmFn()">确认换绑手机</button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">apiready = function () {
+        fnReady();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                phone: api.pageParam.driverphone, //手机号
+                newPhone: '',  //新手机号
+                code: '', //短信验证码
+                showFlage: true,
+                count: '',
+                timer: null
+            },
+            created: function () {
+            },
+            methods: {
+                //获取验证码
+                sendSms: function () { //发送验证码
+                    var that = this;
+                    if (!that.phone) {
+                        api.toast({
+                            msg: '手机号不能为空...',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    // 手机号验证
+                    var reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+                    if (!reg.test(that.phone)) {
+                        api.toast({
+                            msg: "请输入正确的手机号！",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    console.log("ddddd:", JSON.stringify(that.phone));
+                    dealData("/driver/member/update/phone/" + that.phone, 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            that.getCod();
+                            that.showFlage = false;
+                            api.toast({
+                                msg: ret.data,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                },
+                getCod: function () { //点击验证码倒计时
+                    const TIME_COUNT = 60;
+                    var that = this;
+                    if (!that.timer) {
+                        that.count = TIME_COUNT;
+                        that.showFlage = false;
+                        that.timer = setInterval(function () {
+                            if (that.count > 0 && that.count <= TIME_COUNT) {
+                                that.count--;
+                            } else {
+                                that.showFlage = true;
+                                clearInterval(that.timer);
+                                that.timer = null;
+                                that.count = null;
+                            }
+                        }, 1000)
+                    }
+                },
+                //确认函数
+                confirmFn: function () {
+                    var prame = {
+                        phone: this.newPhone,
+                        code: this.code,
+                    };
+                    if (!this.newPhone) {
+                        api.toast({
+                            msg: '新手机号不能为空！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    if (!this.code) {
+                        api.toast({
+                            msg: '验证码不能为空！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    dealData("/driver/member/update/phone", 'POST', JSON.stringify(prame), function (ret) {
+                        console.log(JSON.stringify(ret))
+                        if (ret.code === 0) {
+                            api.openWin({
+                                name: 'logOff',
+                                url: '../../login/login.html',
+                                bounces: false,
+                                pageParam: { key: 'value' }
+                            });
+                            $api.rmStorage('isautologin');
+                            $api.rmStorage('accessToken');
+                            $api.rmStorage('refreshToken');
+                            $api.rmStorage('username');
+                            $api.rmStorage('phone');
+                            $api.rmStorage('truckNumber');
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                }
+            },
+        })
+    };
+</script>
+
+</html>

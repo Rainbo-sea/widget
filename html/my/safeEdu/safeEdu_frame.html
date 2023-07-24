@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+</head>
+<style>
+    .videoStyle {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+
+<body class='fgay'>
+    <div id="app">
+        <video controls v-if="videoPath" :poster="videoPath" class="videoStyle">
+            <source :src="videoPath" type="video/mp4">
+            </source>
+        </video>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                dataInfo: api.pageParam.dataInfo,
+                videoPath: api.pageParam.dataInfo.videoPath,
+                studyId: null,
+                setIntervalName: null,
+            },
+            created: function () {
+                console.log("api.pageParam.dataInfo.videoPath:", api.pageParam.dataInfo.videoPath)
+                var pdfReader = api.require('pdfReader');
+                pdfReader.openPdfView({
+                    rect: {
+                        x: 0,
+                        y: api.pageParam.dataInfo.videoPath ? 300 : 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    path: api.pageParam.dataInfo.filePath,
+                    fixedOn: api.frameName,
+                    fixed: true
+                }, function (ret) {
+                });
+                this.startStudyFn();
+            },
+            methods: {
+                startStudyFn() {
+                    var that = this;
+                    setTimeout(function () {
+                        dealData("/driver/learningrecord/add", 'POST', {
+                            classId: that.dataInfo.id, //课堂id
+                            classTitle: that.dataInfo.title, //课堂标题
+                            totalTime: 60 //累计时长
+                        }, function (ret) {
+                            console.log("ssss:" + JSON.stringify(ret));
+                            if (ret.code === 0) {
+                                that.studyId = ret.data.id
+                                that.addStudyTime();
+                            } else {
+
+                            }
+                        }, function (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        })
+                    }, 60000);
+                },
+                //增加时长
+                addStudyTime() {
+                    var that = this;
+                    that.setIntervalName = setInterval(() => {
+                        dealData("/driver/learningrecord/add/time", 'put', {
+                            id: that.studyId, //课堂id
+                            totalTime: 60 //累计时长
+                        }, function (ret) {
+
+                        }, function (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        })
+                    }, 60000);
+                },
+            },
+            beforeDestroy() {
+                //清除定时器
+                clearInterval(this.setIntervalName);
+                this.setIntervalName = null;
+            }
+        })
+    }
+</script>
+
+</html>

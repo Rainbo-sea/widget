@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>提现</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <style>
+        .total,
+        .txmoney {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 1.68rem !important;
+            color: #000;
+        }
+
+        .money,
+        .phone,
+        .inmm {
+            font-size: 0.6rem;
+            margin-top: -0.2rem;
+            font-weight: 500;
+        }
+
+        .rmb {
+            font-size: 0.6rem;
+            font-weight: 500;
+            float: left;
+            margin-top: -0.1rem;
+
+        }
+
+        .je {
+            font-size: 0.6rem;
+            font-weight: 500;
+            float: left;
+            width: 80%;
+            border: none !important;
+        }
+
+        .pwd {
+            clear: both;
+            height: 1.68rem !important;
+            color: #000;
+        }
+
+        .tx {
+            width: 1.2rem;
+            height: 0.6rem;
+            text-align: center;
+            color: #007ef5;
+            line-height: 0.6rem;
+            border: 1px solid #007ef5;
+            border-radius: 5%;
+            font-size: 0.32rem;
+            margin-top: 0.2rem;
+            float: right;
+        }
+
+        .detailed {
+            float: right;
+            color: #007ef5;
+        }
+
+        .box-margin {
+            margin-bottom: 10px;
+        }
+
+        .headerName {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .liDiv {
+            padding-left: 10px;
+            margin-top: 15px;
+            font-size: 15px;
+            display: flex;
+        }
+
+        .liDiv img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        .paddingBottom {
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body class='fgay'>
+    <div class="my_msg">
+        <div class="my_box">
+            <div class="oldPwd  total">
+                <p class="password">账户余额(元) :</p>
+                <p class="money"></p>
+            </div>
+            <div class="oldPwd txmoney">
+                <p class="password">支出金额 :<span class="detailed  checkExpenditure">支出明细</span></p>
+                <p class="phone">
+
+                </p>
+            </div>
+            <div class="newPwd pwd">
+                <p class="password">收入金额 :<span class="detailed checkIncome">收入明细</span></p>
+                <p class="right inmm">
+
+                </p>
+            </div>
+            <!-- <div>
+                <div class="tx">提现</div>
+            </div> -->
+        </div>
+
+    </div>
+    <div class="button">
+        <button id="submit">提现</button>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+
+        reload();
+        api.addEventListener({
+            name: 'reload'
+        }, function (ret) {
+            if (ret) {
+                reload()
+            }
+        })
+
+        // 展示账户余额信息
+        function reload() {
+            dealData('finance/bymember', 'get', {}, function (ret) {
+                console.log(JSON.stringify(ret))
+                if (ret.code === 0) {
+                    $('.money').html(hasDot(ret.data.amount))
+                    $('.phone').html(hasDot(ret.data.outAmount))
+                    $('.inmm').html(hasDot(ret.data.inAmount))
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+            }, function (err) {
+                console.log(JSON.stringify(err));
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            })
+        }
+
+        // 跳转提现页面
+        $('#submit').on('click', function () {
+            var money = $('.money').html()
+            api.openWin({
+                name: 'tixian_win',
+                url: 'tixian_win.html',
+                animation: {
+                    type: "movein", //动画类型（详见动画类型常量）
+                    subType: "from_right", //动画子类型（详见动画子类型常量）
+                    duration: 300 //动画过渡时间，默认300毫秒
+                },
+                pageParam: {
+                    money
+                }
+            });
+        })
+        // 判断一个数字是否含有小数点，如果含有，则返回该数字；如果不含小数点，则小数点后保留两位有效数字
+        function hasDot(num) {
+            if (!isNaN(num)) {
+                return ((num + '').indexOf('.') != -1) ? num : num.toFixed(2);
+            }
+        };
+
+        // 收入明细
+        $('.checkIncome').on('click', function checkIncomeFn() {
+            api.openWin({
+                name: 'checkIncome_win',
+                url: 'checkIncome/checkIncome_win.html',
+                animation: {
+                    type: "movein", //动画类型（详见动画类型常量）
+                    subType: "from_right", //动画子类型（详见动画子类型常量）
+                    duration: 300 //动画过渡时间，默认300毫秒
+                }
+            });
+        })
+
+        //支出明细
+        $('.checkExpenditure').on('click', function checkExpenditureFn() {
+            api.openWin({
+                name: 'checkExpenditure_win',
+                url: 'checkExpenditure/checkExpenditure_win.html',
+                animation: {
+                    type: "movein", //动画类型（详见动画类型常量）
+                    subType: "from_right", //动画子类型（详见动画子类型常量）
+                    duration: 300 //动画过渡时间，默认300毫秒
+                }
+            });
+        })
+    };
+
+</script>
+
+</html>

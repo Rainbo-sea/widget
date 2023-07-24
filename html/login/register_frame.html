@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .verification {
+        position: relative;
+    }
+
+    .getCode {
+        border: none;
+        padding: 2px 4px;
+        height: 30px;
+        width: 88px;
+        background: rgba(5, 143, 253, 1);
+        border-radius: 3px;
+        position: absolute;
+        top: 17%;
+        right: 0px;
+        bottom: 20px;
+        line-height: 30px;
+        font-size: 13px;
+        font-weight: 400;
+        color: rgba(254, 254, 254, 1);
+    }
+
+    .box_date_footer {
+        width: 100% !important;
+        height: 1.52rem !important;
+        line-height: 0.72rem !important;
+        overflow: hidden !important;
+        position: relative;
+    }
+
+    .agreeInput {
+        float: left !important;
+        width: 16px !important;
+        position: absolute;
+        top: 14px;
+        left: 14px;
+    }
+
+    .agreeA {
+        position: absolute;
+        top: 12px;
+        left: 28px;
+        float: left !important;
+        font-size: 14px !important;
+        line-height: 18px !important;
+        margin-left: 5px !important;
+        color: #1F529A !important;
+    }
+
+    .passwordDiv {
+        position: relative;
+    }
+
+    .passwordImg {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 36%;
+        right: 20px;
+    }
+
+    .displayNone {
+        display: none;
+    }
+</style>
+
+<body class='fgay'>
+    <div id="app">
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="confirmNewPwd">
+                    <span class="password">姓名:</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入真实姓名" v-model="name">
+                    </span>
+                </div>
+                <div class="confirmNewPwd">
+                    <span class="password">手机号:</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入手机号" v-model="phone">
+                    </span>
+                </div>
+                <div class="confirmNewPwd verification">
+                    <span class="password">输入验证码:</span>
+                    <span class="right ">
+                        <input type="text" v-model="code" placeholder="请输入验证码">
+                        <button v-show="showFlage" class="getCode" tapmode @click="sendSms()"
+                            id="getCode">获取验证码</button>
+                        <button v-show="!showFlage" class="getCode" id="getCode" v-cloak>重新发送{{count}}</button>
+                    </span>
+                </div>
+                <div class="confirmNewPwd passwordDiv">
+                    <span class="password">登录密码:</span>
+                    <span class="right ">
+                        <input id="password1" class="fontSize" type="password" placeholder="请输入新密码" value=""
+                            v-model="passWord">
+                        <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(0)" />
+                        <img class="passwordImg displayNone" src="../../image/passwordOn.png"
+                            onclick="passwordOnFn(0)" />
+                    </span>
+                </div>
+                <div class="confirmNewPwd passwordDiv">
+                    <span class="password">确认登录密码:</span>
+                    <span class="right">
+                        <input id="password2" class="fontSize" type="password" placeholder="请输入新密码" value=""
+                            v-model="confirmPwd">
+                        <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(1)" />
+                        <img class="passwordImg displayNone" src="../../image/passwordOn.png"
+                            onclick="passwordOnFn(1)" />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="button">
+            <button id="submit" @click="confirmFn()">确认</button>
+        </div>
+        <div class="box_date_footer">
+            <input class="agreeInput" type="checkbox" v-model="agreeInput" name="running" />
+            <a class="aui-btn fl agreeA ">
+                <span onclick="agreementFn()">平台用户协议</span>、
+                <span onclick="agreementTransactionFn()">平台交易规则</span>、
+                <span onclick="agreementGrantFn()">平台授权协议</span>、
+                <span onclick="agreementPrivacyFn()">平台用户隐私协议</span>
+            </a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">apiready = function () {
+        fnReady();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+
+        api.addEventListener({
+            name: 'swipeleft'
+        }, function (ret, err) {
+            if (ret) {
+
+            }
+        });
+        // 注册
+        $('#submit').on('click', function () {
+            var name = $('.oldPwd input').val();
+            var phone = $('.passWord input').val();
+            var card = $('.confirmNewPwd input').val();
+            // console.log(name, phone, card)
+            var parm = {
+                name,
+                phone,
+                card
+            }
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                iconFlag: 1, //密码是否可见
+                name: '', //姓名
+                phone: '', //手机号
+                code: '', //短信验证码
+                passWord: '', //new密码
+                confirmPwd: '', //验证密码
+                showFlage: true,
+                count: '',
+                timer: null,
+                agreeInput: ""
+            },
+            created: function () {
+            },
+            methods: {
+                //获取验证码
+                sendSms: function () { //发送验证码
+                    var that = this;
+                    if (!that.phone) {
+                        api.toast({
+                            msg: '手机号不能为空...',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                    // // 手机号唯一验证
+                    var reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+                    if (!reg.test(that.phone)) {
+                        $.mvalidateTip('请输入正确的手机号！')
+                        return;
+                    }
+
+                    api.ajax({
+                        url: getBaseRootPath() + "/app/platform/member/exists/" + that.phone,
+                        method: 'get',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        data: {
+                            body: {}
+                        }
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret));
+                        console.log(JSON.stringify(err));
+                        if (ret.code === 0) {
+                            if (ret.data) {
+                                $.mvalidateTip("你的手机号已经注册，请前往登录！")
+                                return;
+                            }
+                            //获取验证码
+                            api.ajax({
+                                url: getBaseRootPath() + "/app/platform/member/send/code/" + that.phone,
+                                method: 'get',
+                                headers: {
+                                    'Content-Type': 'application/json;charset=utf-8'
+                                },
+                                data: {
+                                    body: {}
+                                }
+                            }, function (ret, err) {
+                                console.log(JSON.stringify(ret));
+                                console.log(JSON.stringify(err));
+                                if (ret.code === 0) {
+                                    that.getCod();
+                                    that.showFlage = false;
+                                } else {
+                                    api.toast({
+                                        msg: ret.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                                if (err) {
+                                    api.toast({
+                                        msg: err.body.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                            });
+
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                    api.hideProgress();
+                },
+                getCod: function () { //点击验证码倒计时
+                    const TIME_COUNT = 60;
+                    var that = this;
+                    if (!that.timer) {
+                        that.count = TIME_COUNT;
+                        that.showFlage = false;
+                        that.timer = setInterval(function () {
+                            if (that.count > 0 && that.count <= TIME_COUNT) {
+                                that.count--;
+                            } else {
+                                that.showFlage = true;
+                                clearInterval(that.timer);
+                                that.timer = null;
+                                that.count = null;
+                            }
+                        }, 1000)
+                    }
+                },
+                //确认函数
+                confirmFn: function () {
+                    var prame = {
+                        name: this.name,
+                        phone: this.phone,
+                        code: this.code,
+                        password: this.passWord,
+                        confirmPwd: this.confirmPwd,
+                    };
+                    if (!this.agreeInput) {
+                        $.mvalidateTip("请仔细阅读并勾选平台相关协议！");
+                    }
+                    const regex = /^[\u4e00-\u9fa5]+$/;
+
+                    if (!regex.test(this.name)) {
+                        $.mvalidateTip('请输入正确格式的姓名！')
+                        return false;
+                    }
+                    if (!this.phone) {
+                        $.mvalidateTip('手机号不能为空！')
+                        return;
+                    }
+                    if (!this.code) {
+                        $.mvalidateTip('请获取验证码！')
+                        return;
+                    }
+                    var reg = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,20}$/
+                    if (!reg.test(this.passWord)) {
+                        $.mvalidateTip('请输入8-20位数字和英文组合的密码！')
+                        return;
+                    }
+                    if (this.passWord !== this.confirmPwd) {
+                        $.mvalidateTip('两次输入密码不相同！')
+                        return;
+                    }
+                    console.log("参数:" + JSON.stringify(prame));
+                    api.ajax({
+                        url: getBaseRootPath() + "/app/platform/member/driver/register",
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        data: {
+                            body: JSON.stringify(prame)
+                        }
+                    }, function (ret, err) {
+                        console.log("请求返回结果:" + JSON.stringify(ret));
+                        console.log("请求返回结果:" + JSON.stringify(err));
+                        if (ret.code === 0) {
+                            $.mvalidateTip("注册成功！");
+                            setTimeout(function () {
+                                api.closeWin();
+                            }, 1500)
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                    api.hideProgress();
+                }
+            },
+        })
+    };
+
+    //网络货运平台用户协议
+    function agreementFn() {
+        api.openWin({
+            name: 'agreementpage_win',
+            url: '../my/agreementpage_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //交易协议
+    function agreementTransactionFn() {
+        api.openWin({
+            name: 'agreementTransaction_win',
+            url: '../my/agreementTransaction_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台授权协议
+    function agreementGrantFn() {
+        api.openWin({
+            name: 'agreementGrant_win',
+            url: '../my/agreementGrant_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台用户隐私协议
+    function agreementPrivacyFn() {
+        api.openWin({
+            name: 'agreementPrivacy_win',
+            url: '../my/agreementPrivacy_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //密码关闭
+    function passwordOffFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[0].style.display = "none";
+            document.getElementsByClassName("passwordImg")[1].style.display = "block";
+            document.getElementById("password1").type = "text";
+        } else {
+            document.getElementsByClassName("passwordImg")[2].style.display = "none";
+            document.getElementsByClassName("passwordImg")[3].style.display = "block";
+            document.getElementById("password2").type = "text";
+        }
+    }
+    //密码打开
+    function passwordOnFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[1].style.display = "none";
+            document.getElementsByClassName("passwordImg")[0].style.display = "block";
+            document.getElementById("password1").type = "password";
+        } else {
+            document.getElementsByClassName("passwordImg")[3].style.display = "none";
+            document.getElementsByClassName("passwordImg")[2].style.display = "block";
+            document.getElementById("password2").type = "password";
+        }
+    }
+</script>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>运力信息</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+</head>
+<style>
+    .flaetRight {
+        float: right;
+        font-weight: bold;
+    }
+
+    .clolor1 {
+        color: #1890FF;
+    }
+
+    .clolor2 {
+        color: #1890FF;
+    }
+
+    .clolor3 {
+        color: #55af08;
+    }
+
+    .clolor4 {
+        color: red;
+    }
+</style>
+
+<body class='wrap'>
+    <div class="my" id="app">
+        <header class="aui-bar-header clearfix"><a class="aui-btn fl" @click="closeWinsFn()">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#iconzuojiantou"></use>
+                </svg></a>
+            <div class="aui-title">运力信息 </div>
+        </header>
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="bk" @click="completeDataFn()">
+                    <span class="icon1">
+                        <img src="../../image/mydataimg.png" alt="" class="img carImg">
+                    </span>
+                    <span class="password fontSize1">司机信息</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                    <span class="flaetRight clolor1" v-if="userInfoStatus.isDriver === -1">未补全资料</span>
+                    <span class="flaetRight clolor2" v-if="userInfoStatus.isDriver === 0">待审批</span>
+                    <span class="flaetRight clolor3" v-if="userInfoStatus.isDriver === 1">
+                        <span v-if="userInfoStatus.isOverTime === 0">已通过</span>
+                        <span class="clolor4" v-if="userInfoStatus.isOverTime === 1">证照临期</span>
+                        <span class="clolor4" v-if="userInfoStatus.isOverTime === 2">证照过期</span>
+                    </span>
+                    <span class="flaetRight clolor4" v-if="userInfoStatus.isDriver === 2">已拒绝</span>
+                </div>
+                <div class="bk" @click="myCarListFn()">
+                    <span class="icon1">
+                        <img src="../../image/myCarImg.png" alt="" class="img carImg">
+                    </span>
+                    <span class="password fontSize1">添加车辆</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                    <span class="flaetRight clolor2" v-if="userInfoStatus.addCarFalg != 1">未添加</span>
+                    <span class="flaetRight clolor3" v-if="userInfoStatus.addCarFalg === 1">已添加</span>
+                </div>
+                <div class="bk" v-if="" @click="addCarFn()">
+                    <span class="icon1">
+                        <img id="cyclImg" src="../../image/myCar.png" alt="" class="img carImg">
+                    </span>
+                    <span id="cyclText" class="password fontSize1">绑定车辆</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                    <span class="flaetRight clolor2" v-if="isTruck === 0">未绑定</span>
+                    <span class="flaetRight clolor3" v-if="isTruck === 1">已绑定</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isTruck: 0,
+                userInfoStatus: {
+                    isReal: 0,
+                    isBankAccount: 0,
+                    isESign: 0,
+                    isBind: 1,
+                    isDriver: 1,
+                },
+                //定义定时器
+                timerStatus: null,
+                timerStatusNum: 0,
+            },
+            created: function () {
+                this.getStatusFn();
+                var that = this;
+                api.addEventListener({
+                    name: 'getStatusFn',
+                }, function (ret, err) {
+                    that.getStatusFn();
+                });
+                //检测退出功能
+                api.addEventListener({
+                    name: 'keyback'
+                }, function (ret, err) {
+                    that.closeWinsFn();
+                })
+            },
+            methods: {
+                closeWinsFn: function () {
+                    if (api.pageParam.flag) {
+                        api.openWin({
+                            name: 'mainHtml',
+                            url: './../main.html',
+                        });
+                    } else {
+                        api.closeWin();
+                    }
+                },
+                //补全资料函数
+                completeDataFn: function () {
+                    if (this.userInfoStatus.isDriver === 0 || (this.userInfoStatus.isDriver === 1 && this.userInfoStatus.isOverTime === 0)) {
+                        api.openWin({
+                            name: 'driverInfo_win',
+                            url: './driverInfo_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                    } else {
+                        api.openWin({
+                            name: 'completeData_win',
+                            url: './completeData_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                    }
+                },
+                //获取状态
+                getStatusFn: function () {
+                    var that = this;
+                    dealData("platform/esign/status", 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            if (ret.data) {
+                                console.log("数据状态：" + JSON.stringify(ret.data));
+                                that.userInfoStatus = ret.data;
+                                that.isTruck = ret.data.isTruck;
+                                //关闭定时器
+                                if (ret.data.isReal || that.timerStatusNum > 50) {
+                                    clearInterval(that.timerStatus);
+                                }
+                            }
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+
+                //添加常用车辆
+                addCarFn: function () {
+                    var that = this;
+                    if (that.userInfoStatus.isDriver != 1) {
+                        api.toast({
+                            msg: "你的资料未提供平台审核，请点击运力信息菜单填写资料！",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    api.openWin({
+                        name: 'addCarFn_win',
+                        url: '../well/driverOrder/addCarFn_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //司机自己添加常用车辆
+                myCarListFn: function () {
+                    var that = this;
+                    api.openWin({
+                        name: 'myCarList_win',
+                        url: './myCarList/myCarList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+            }
+        })
+
+    };
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+
+</script>
+
+</html>

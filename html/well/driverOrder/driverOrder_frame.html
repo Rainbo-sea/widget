@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/aui.css" />
+    <link rel="stylesheet" href="../../../script/H5TimeSelector/libs/iosselect.css">
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 110% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            float: right !important;
+        }
+
+        .aui-list {
+            padding: 0rem;
+        }
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.65rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+            border: 0;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+
+
+        .hide {
+            display: none;
+        }
+
+        .displayFlex {
+            display: flex;
+        }
+
+        .radioStyle {
+            width: 60%;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            /* width: 50%; */
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .tableValue {
+            min-height: 1.5rem;
+        }
+
+        .tableThText th {
+            font-weight: 200;
+            font-size: 14px;
+        }
+
+        .thStyle {
+            width: 103px;
+            text-align: center;
+            padding-left: 10px;
+        }
+
+        .border_bottom_after p {
+            font-size: 0.8rem;
+        }
+
+        .paddingLeft {
+            text-align: center !important;
+        }
+
+        .heightStyle {
+            height: 60px;
+        }
+
+        /* 进度条 */
+        .box {
+            width: 100px;
+            height: 10px;
+            border-radius: 10px;
+            border: 1px solid #7fb80e;
+            margin-right: 50px;
+            position: relative;
+        }
+
+        .child {
+            position: relative;
+            height: 100%;
+            border-radius: inherit;
+        }
+
+        .process-animate {
+            background: #7fb80e;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: inherit;
+            animation: process 1s linear forwards;
+        }
+
+        @keyframes process {
+            0% {
+                left: 0;
+                right: 100%;
+            }
+
+            20% {
+                right: 80%
+            }
+
+            40% {
+                right: 60%;
+            }
+
+            60% {
+                right: 40%;
+            }
+
+            80% {
+                right: 20%;
+            }
+
+            100% {
+                right: 0;
+            }
+        }
+
+        .yvliang {
+            position: absolute;
+            top: -8px;
+            right: -45px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>货源余量:</p>
+                        <div class="box">
+                            <div class="child">
+                                <p class="process-animate"></p>
+                            </div>
+                            <div class="yvliang" v-text="childWidthNum">100%</div>
+                        </div>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>订单号:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="orderInfo.transportOrderSerial"
+                            readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>发货地:</p>
+                        <input class="input_rt" type="text" placeholder="请输入"
+                            v-model="orderInfo.startProvince+orderInfo.startCity+orderInfo.startDistrict+orderInfo.deliveryAddress"
+                            readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>收货地:</p>
+                        <input class="input_rt" type="text" placeholder="请输入"
+                            v-model="orderInfo.endProvince+orderInfo.endCity+orderInfo.endDistrict+orderInfo.receiptAddress"
+                            readonly>
+                    </li>
+                    <!-- <li class="mian_item border_bottom_after" tapmode>
+                        <p>二维码失效时间<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="timer" readonly>
+                    </li> -->
+                    <li class="mian_item heightStyle border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>业务类型:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="modeType" readonly>
+                    </li>
+                    <li class="mian_item heightStyle border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>计价方式:</p>
+                        <input class="input_rt" type="text" placeholder="请输入"
+                            v-model="orderInfo.balanceMode===1 ?'按量':'包车'" readonly>
+                    </li>
+                    <li class="mian_item heightStyle border_bottom_after" tapmode>
+                        <p><span class="color_ec">*</span>司机运费（元）:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="orderInfo.driverACarTotal"
+                            readonly>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='orderdetail pr'>
+            <li class="mian_item border_bottom_after" tapmode>
+                <p><span class="color_ec">*</span>货物明细:</p>
+            </li>
+            <table width="100%" id="table2">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>货物名称</th>
+                        <th>品牌</th>
+                        <th>数量</th>
+                        <th class="thStyle">运量
+                            <span class="Company"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="tableThText" v-for="(item,index) in orderInfo.tsTransportDetails">
+                        <th v-text="item.indexesNumber"></th>
+                        <th v-text="item.productName"></th>
+                        <th v-text="item.material"></th>
+                        <th v-text="item.goodsNumber"></th>
+                        <th class="thStyle">
+                            <input class="paddingLeft" value="item.defaultCount" v-model="item.count" type="text"
+                                value="30" placeholder="请输入" disabled />
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="tableValue"></div>
+        </div>
+        <div class='w95 maruto1r pb20'>
+            <p>
+                <button class="aui-btn aui-btn-block backblue fwhite savebtn" id="btnId" @click="addFn()">确认接单</button>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var app = new Vue({
+            el: '#app',
+            data: {
+                vehicleClass: "", //准驾车型
+                getInfo: {},
+                orderInfo: {
+                    tsTransportDetails: [],
+                },
+                // timer: null,
+                modeType: null,
+                type: null,
+                childWidthNum: ""
+            },
+            created: function () {
+                var that = this;
+                console.log("扫码数据：：", JSON.stringify(api.pageParam.orderInfo));
+                if (api.pageParam.orderInfo) {
+                    console.log("扫码数据：：", JSON.stringify(api.pageParam.orderInfo));
+                    that.getInfo = api.pageParam.orderInfo;
+                    // that.timer = timeStampTurnTime(that.getInfo.expire).slice(0, 16);
+                    that.getOrderInfoFn();
+                }
+            },
+            methods: {
+                getOrderInfoFn: function () {
+                    var that = this;
+                    dealData("platform/tstransportordercarrie/" + that.getInfo.id, 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            console.log("dddd:", JSON.stringify(ret));
+                            if (ret.data.modeType === 50) {
+                                that.modeType = "C端承运";
+                            }
+                            if (ret.data.modeType === 20) {
+                                that.modeType = "B端承运";
+                            }
+                            if (ret.data.modeType === 25) {
+                                that.modeType = "过票撮合";
+                            }
+                            if (ret.data.modeType === 10) {
+                                that.modeType = "物流金融";
+                            }
+                            if (ret.data.modeType === 60) {
+                                that.modeType = "分中心模式";
+                            }
+                            if (ret.data.modeType === 40) {
+                                that.modeType = "自营业务";
+                            }
+                            // ret.data.tsTransportDetails.map((item) => {
+                            //     item.count = 30;
+                            // });
+                            ret.data.tsTransportDetails.map((item) => {
+                                item.count = item.defaultCount;
+                            });
+                            that.orderInfo = ret.data;
+                            if (ret.data.surplusNumPercentage * 100 < 20) {
+                                document.getElementsByClassName("box")[0].style.border = "1px solid red";
+                                document.getElementsByClassName("process-animate")[0].style.background = "red"
+                            }
+                            document.getElementsByClassName("child")[0].style.width = ret.data.surplusNumPercentage * 100 + "%"
+                            if (ret.data.surplusNumPercentage === 0) {
+                                document.getElementsByClassName("child")[0].style.display = "none"
+                                document.getElementsByClassName("box")[0].style.border = "1px solid red";
+                            }
+                            that.childWidthNum = ret.data.surplusNumPercentage * 100 + "%"
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+
+                //新增函数
+                addFn: function () {
+
+                    if (!this.getInfo) {
+                        $.mvalidateTip('数据未加载完成，请稍后！')
+                        return;
+                    }
+
+                    var parme = {
+                        id: this.getInfo.id,
+                        expire: this.getInfo.expire,
+                        type: this.orderInfo.modeType === 50 ? 1 : 0,
+                        data: [
+                            ...this.orderInfo.tsTransportDetails
+                        ]
+                    }
+                    var carNumber = $api.getStorage('truckNumber') ? $api.getStorage('truckNumber') : "无";
+                    api.confirm({
+                        msg: `确认车牌号：${carNumber}！`,
+                        buttons: ["设置常用车辆", "取消", '确定']
+                    }, function (ret, err) {
+                        if (ret.buttonIndex == 3) {
+                            api.showProgress({
+                                title: '加载中...',
+                                modal: false
+                            });
+                            dealData('platform/tswaybill/code', 'POST', parme, function (ret) {
+                                console.log("接单参数：" + JSON.stringify(ret));
+                                if (ret.code === 0) {
+                                    setTimeout(function () {
+                                        api.closeWin();
+                                    }, 1000)
+                                    api.toast({
+                                        msg: "操作成功！",
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                    api.sendEvent({
+                                        name: 'orderReceiving',
+                                        extra: {
+                                        }
+                                    })
+                                }
+                                if (ret.code === -1) {
+                                    api.toast({
+                                        msg: ret.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                                // document.getElementById("btnId").disabled = false;
+                            },
+                                function (err) {
+                                    console.log(JSON.stringify(err));
+                                    api.toast({
+                                        msg: err.body.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                })
+                        } else if (ret.buttonIndex == 1) {
+                            api.openWin({
+                                name: 'addCarFn_win',
+                                url: './addCarFn_win.html',
+                                bounces: false,
+                            });
+                        }
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                }
+            },
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/aui.css" />
+    <link rel="stylesheet" href="../../script/H5TimeSelector/libs/iosselect.css">
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 110% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            float: right !important;
+        }
+
+        .aui-list {
+            padding: 0rem;
+        }
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.65rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+            padding-top: 2px;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .flowhid {
+            overflow: hidden;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+
+
+        .hide {
+            display: none;
+        }
+
+        .displayFlex {
+            display: flex;
+        }
+
+        .radioStyle {
+            width: 60%;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            width: 50%;
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .rolHeader {
+            font-size: 16px;
+            display: flex;
+            margin: 10px 10px 0 10px;
+            color: #000;
+        }
+
+        .rolHeader img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .rolHeaderImg {
+            width: 20px;
+            height: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <li class="mian_item border_bottom_after checkFailArrText" v-if="driver.status === 2 " tapmode>
+                        <p style="color: red;">拒绝理由<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" v-model="driver.checkFail"> </input>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>姓名<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="driver.name" readonly>
+                    </li>
+                    <li class="mian_item border_bottom_after" tapmode>
+                        <p>身份证号<span class="color_ec">*</span>:</p>
+                        <input class="input_rt" type="text" placeholder="请输入" v-model="driver.iccard" readonly>
+                    </li>
+                </ul>
+            </div>
+            <div class="rolHeader">
+                <img class="rolHeaderImg" src="../../image/basicImg.png" />身份证信息
+            </div>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'><img src="../../image/upload3.png" id='scan1' class='imgblock'
+                                onclick='imgblockFn(this)' />
+                        </div>
+                        <div class='f16 mt5 updateImg'>身份证(人像面)<span class="color_ec">*</span></div>
+                    </li>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../image/upload4.png" id='scan2' class='imgblock' onclick='imgblockFn(this)' />
+                        </div>
+                        <div class='f16 mt5 updateImg'>身份证(国徽面)<span class="color_ec">*</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class='orderdetail pr'>
+            <div class="rolHeader">
+                <img src="../../image/idCardImg.png" />驾驶证信息
+            </div>
+            <div class='orderbody plrr20 fcolor6'>
+            </div>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../image/upload2.png" id='scan1' class='imgblock' onclick='imgblockFn(this)' />
+                        </div>
+                        <div class='f16 mt5 updateImg'>驾驶证(主页)<span class="color_ec">*</span></div>
+                    </li>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../image/upload9.png" id='scan2' class='imgblock' onclick='imgblockFn(this)' />
+                        </div>
+                        <div class='f16 mt5 updateImg'>驾驶证副页（正页）<span class="color_ec">*</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class='orderdetail pr'>
+            <div class="rolHeader">
+                <img src="../../image/user-profile.png" />从业资格证信息
+            </div>
+            <div class='orderbody plrr20 fcolor6'>
+            </div>
+            <div class='orderbody plrr20 fcolor6 flowhid border-b w100'>
+                <ul class='rzimglist'>
+                    <li>
+                        <div class='picwrap mustpost pr'>
+                            <img src="../../image/upload10.png" id='scan2' class='imgblock'
+                                onclick='imgblockFn(this)' />
+                        </div>
+                        <div class='f16 mt5 updateImg'>从业资格证图片<span class="color_ec">*</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var UIActionSelector = api.require('UIActionSelector');
+        var app = new Vue({
+            el: '#app',
+            data: {
+                vehicleClass: "", //准驾车型
+                driver: {
+                    iccardEnd: null,
+                    jobCardEnd: null,
+                    validityEndDate: null,
+                    validityStartDate: null,
+                    provinceCode: "",
+                },
+                isPerpetualJob: "否",   //从业资格证有效期有效期是否永久
+                isPerpetualLicense: "否", // 驾驶证有效期是否永久
+                isPerpetualIdcard: "否",  //身份证有效期是否永久
+                treenodeList: []
+            },
+            created: function () {
+                this.getDriverFn();
+            },
+            methods: {
+                selectprovince: function () {
+                    var that = this
+                    var arrInfo = ['北京市', '天津市', '河北省', "山西省", '内蒙古自治区', '辽宁省', '吉林省', "黑龙江省", '上海市', '江苏省', '浙江省', "安徽省", '福建省', "江西省", '山东省', '河南省', '湖北省', "湖南省", '广东省', "广西壮族自治区", '海南省', '重庆市', '四川省', "贵州省", '云南省', "西藏自治区", '陕西省', '甘肃省', '青海省', "宁夏回族自治区", '新疆维吾尔自治区',];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        that.driver.provinceCode = arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+                getDriverFn: function () {
+                    var that = this;
+                    dealData("platform/member/get/driver", 'GET', {}, function (ret) {
+                        console.log("获取资料：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            console.log("司机数据：" + JSON.stringify(ret));
+                            if (ret.data.status === 2 && ret.data && ret.data.checkFailArr) {
+                                var checkFailArrText = ""
+                                for (var i = 0; i < ret.data.checkFailArr.length; i++) {
+                                    checkFailArrText = checkFailArrText + ret.data.checkFailArr[i] + ","
+                                }
+                            }
+                            var data = ret.data;
+                            console.log(JSON.stringify(data));
+                            data.iccardEnd = $app.timeStampTurnTime(data.iccardEnd).slice(0, 10);
+                            data.validityEndDate = $app.timeStampTurnTime(data.validityEndDate).slice(0, 10);
+                            data.validityStartDate = $app.timeStampTurnTime(data.validityStartDate).slice(0, 10);
+                            data.jobCardEnd = $app.timeStampTurnTime(data.jobCardEnd).slice(0, 10);
+                            that.driver = ret.data;
+                            if (checkFailArrText) {
+                                checkFailArrText = checkFailArrText.substr(0, checkFailArrText.length - 1);
+                            }
+                            that.driver.checkFailArrText = checkFailArrText;
+                            //图片赋值
+                            if (data.imgDriveLicense1) {
+                                var jsz1 = $('.imgblock').eq(2).attr("src", data.imgDriveLicense1);
+                            }
+                            if (data.imgDriveLicense2) {
+                                var jsz2 = $('.imgblock').eq(3).attr("src", data.imgDriveLicense2);
+                            }
+                            if (data.imgIdcard) {
+                                var szfzp1 = $('.imgblock').eq(0).attr("src", data.imgIdcard);
+                            }
+                            if (data.imgIdcardCopy) {
+                                var sfzzp2 = $('.imgblock').eq(1).attr("src", data.imgIdcardCopy);
+                            }
+                            if (data.jobLicense) {
+                                var cyzgzzp = $('.imgblock').eq(4).attr("src", data.jobLicense);
+                            }
+                            that.vehicleClass = data.vehicleClass;
+                            that.isPerpetualJob = data.isPerpetualJob === 1 ? "是" : "否";
+                            that.isPerpetualLicense = data.isPerpetualLicense === 1 ? "是" : "否";
+                            that.isPerpetualIdcard = data.isPerpetualIdcard === 1 ? "是" : "否";
+                        }
+                        if (ret.code !== 0) {
+                            console.log(JSON.stringify(ret));
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                //选择身份证日期
+                selectIccardEnd: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.driver.iccardEnd = time;
+                    })
+                },
+
+                //驾驶证有效期起
+                selectValidityStartDate: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.driver.validityStartDate = time;
+                    })
+                },
+                //驾驶证有效期止
+                selectValidityEndDate: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.driver.validityEndDate = time;
+                    })
+                },
+                // selectJobCardEnd 从业资格证
+                selectJobCardEnd: function () {
+                    var that = this;
+                    var timeDate = new Date(app.logTime)
+                    timeSelector.fnOpenSelector({
+                        title: ' ', //选填 |  '时间选择'    |  String         |  选择器标题文案
+                        sureText: '完成', //选填 |    '完成'      |  String        |   确定按钮文案
+                        isShowUnit: true, //选填 |     true      |  Boolean        |  是否显示中文单位名称
+                        itemShowCount: 5, //选填 |      5        |  Number         |  显示的行数
+                        itemHeight: 55, //选填 |      55       |  Number         |  行高度（单位px）
+                        date: timeDate.getFullYear() + '/' + (timeDate.getMonth() + 1) + '/' + timeDate.getDate()   //选填 |   new Date    |  Date/String     |  默认选中的时间
+                    }, function (ret) {
+                        if (!ret) { return }
+                        var date = new Date(ret.date)
+                        var selectDate = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).getTime();//选择的时间年月日
+                        var currenDateTime = new Date();//当前时间毫秒数
+                        var curenDate = new Date(currenDateTime.getFullYear() + '-' + (currenDateTime.getMonth() + 1) + '-' + currenDateTime.getDate()).getTime();//当前时间年月日
+                        var m = (date.getMonth() + 1) + '', day = date.getDate() + '';
+                        var time = date.getFullYear() + '-' + (m.length > 1 ? m : ('0' + m)) + '-' + (day.length > 1 ? day : ('0' + day));
+                        that.driver.jobCardEnd = time;
+                    })
+                },
+                //准驾车型
+                selectVehicleClass: function () {
+                    var that = this
+                    var arrInfo = ['A1', 'A2', 'A3', "B1", "B2", "C1", "C2"];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        that.vehicleClass = arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+                //从业资格证有效
+                isPerpetualjobFn: function (value) {
+                    var that = this
+                    var arrInfo = ['是', '否'];
+                    if (!this.readonlyFalge) {
+                        api.actionSheet({
+                            cancelTitle: '取消',
+                            buttons: arrInfo
+                        }, function (ret, err) {
+                            that.isPerpetualJob = arrInfo[ret.buttonIndex - 1];
+                        });
+                    }
+                },
+                //身份证有效期
+                isPerpetualIdcardFn: function () {
+                    var that = this
+                    var arrInfo = ['是', '否'];
+                    if (!this.readonlyFalge) {
+                        api.actionSheet({
+                            cancelTitle: '取消',
+                            buttons: arrInfo
+                        }, function (ret, err) {
+                            that.isPerpetualIdcard = arrInfo[ret.buttonIndex - 1];
+                        });
+                    }
+                },
+                //驾驶证有效期
+                radioFn: function () {
+                    // this.isPerpetualLicense = value
+                    var that = this
+                    var arrInfo = ['是', '否'];
+                    if (!this.readonlyFalge) {
+                        api.actionSheet({
+                            cancelTitle: '取消',
+                            buttons: arrInfo
+                        }, function (ret, err) {
+                            that.isPerpetualLicense = arrInfo[ret.buttonIndex - 1];
+                        });
+                    }
+                },
+                //准驾车型
+                selectVehicleClass: function () {
+                    var that = this
+                    var arrInfo = ['A1', 'A2', 'A3', "B1", "B2", "C1", "C2"];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: arrInfo
+                    }, function (ret, err) {
+                        that.vehicleClass = arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+            },
+        })
+    }
+
+
+    // 拍照
+    function fnShowAction(obj) {
+        imgArr = [];
+        openCarme();
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['拍照', '相册']
+        }, function (ret, err) {
+            if (ret.buttonIndex != 3) {
+                sourceTypes = ['camera', 'album'];
+                api.getPicture({
+                    sourceType: sourceTypes[ret.buttonIndex - 1],
+                    allowEdit: false,
+                    saveToPhotoAlbum: false
+                }, function (ret, err) {
+
+                    if (ret) {
+                        console.log("上传图片属性1：" + JSON.stringify(ret));
+                        if (ret.data != '') {
+                            var pathArr = [];
+                            var path = ret.data;
+                            photograph(0, path, obj);
+                        }
+                    }
+                });
+            }
+        });
+    };
+    //图片压缩
+    var imgArr = [];
+    var httpimgArr;
+    //图片压缩
+    //i ->压缩次数 0开始    
+    //path ->图片路径
+    function photograph(i, path, obj) {
+        var minSize = 50 * 1024;
+
+        //鉴于税务接口的限制 图片不能大于400kb
+        var maxSize = 400 * 1024;
+        var imageCachePath = api.cacheDir;
+
+        var quality = 1;
+        var scale = 1;
+
+        if (i >= 2) {
+            quality = quality / i;
+        }
+        if (i > 5) {
+            scale = 0.9;
+        }
+
+        console.log("i:" + i + ",quality:" + quality + ",scale:" + scale);
+        var imageFilter = api.require("imageFilter");
+        imageFilter.getAttr({
+            path: path
+        }, function (ret, err) {
+
+            console.log("上传图片属性2：" + JSON.stringify(ret));
+            if (ret.size < minSize) {
+                alert("图片大小小于50kb，请重新上传图片！");
+                return;
+            }
+            if (ret.size > maxSize) {//如果图片大于1M就进行压缩处理
+                var imgName = new Date().getTime() + ".jpg";
+                imageFilter.compress({
+                    img: path,
+                    quality: quality,
+                    //压缩比例,
+                    scale: scale,
+                    save: {
+                        imgPath: imageCachePath,
+                        imgName: imgName
+                    }
+                }, function (ret, err) {
+                    var compressedImgPath = imageCachePath + '/' + imgName;
+                    imageFilter.getAttr({
+                        path: compressedImgPath
+                    }, function (ret1, err) {
+                        console.log("上传图片属性3：" + JSON.stringify(ret));
+
+                        if (ret1.size > maxSize) {//如果图片大于1M就进行压缩处理
+                            //循环压缩
+                            i++;
+                            photograph(i, compressedImgPath, obj);
+                        }
+                        else {
+                            imgArr.push(compressedImgPath);
+                            console.log("上传图片地址：" + JSON.stringify(compressedImgPath));
+                            // 上传图片
+                            upImg(obj, imgArr);
+                        }
+                    })
+                })
+            }
+            else {
+                // console.log("fina:" + ret1.size);
+                console.log("上传图片地址：" + JSON.stringify(path));
+                //选择图片预览
+                imgArr.push(path);
+                upImg(obj, imgArr);
+            }
+        })
+    }
+    //提交图片
+    function upImg(obj, imgArr) {
+        //方法
+        api.showProgress({
+            title: '上传中...',
+            modal: false
+        });
+        var accessToken = $api.getStorage('accessToken');
+        api.ajax({
+            url: getBaseRootPath() + "/app/tswaybill/importequery",
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            },
+            data: {
+                files: {
+                    imgFiles: imgArr
+                }
+            }
+        }, function (ret, err) {
+            if (ret.code === 0) {
+                // var addImg = "<div class='changeimg pa'onclick='updateImgFn(this)' >选择图片</div>";
+                obj.before(addImg);
+                obj.attr("src", ret.data)
+            }
+            if (ret.code !== 0) {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (err) {
+                $.mvalidateTip('图片上传失败')
+            }
+            api.hideProgress();
+        });
+    }
+
+    // 图片展示
+    function imgblockFn(that) {
+        var src = $(that).attr('src');
+        var imgArr = [];
+        imgArr.push(src);
+        if (src != '../../image/shangchuan.png') {
+            var imageBrowser = api.require('imageBrowser');
+            imageBrowser.openImages({
+                showList: false,
+                imageUrls: imgArr
+            });
+        } else {
+            fnShowAction($(that));
+        }
+    }
+
+    //删除图片
+    function delimgFn(that) {
+        var $this = $(that);
+        api.confirm({
+            msg: "确定删除该图片？",
+            button: ['取消', '确定']
+        }, function (ret, err) {
+            if (ret.buttonIndex == 2) {
+                if ($this.next().attr('id') == 'scan1') {
+                    scan1 = '';
+                    scan1File = '';
+                }
+                if ($this.next().attr('id') == 'scan2') {
+                    scan2 = '';
+                    scan2File = '';
+                }
+
+                $this.parent().find('.imgblock').attr('src', '../../image/shangchuan.png');
+                $this.parent().find('.changeimg').remove();
+                $this.remove();
+            }
+        });
+    }
+
+    //更换图片
+    function updateImgFn(that) {
+        var $this = $(that).parent().find('.imgblock');
+        fnShowAction($this);
+    }
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/aui.css" />
+    <style>
+        .aui-tab-first {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aui-tab-first .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-second .aui-active {
+            color: #ff8113;
+            border-bottom: 0;
+        }
+
+        .aui-tab-item {
+            height: 1.2rem;
+            line-height: 1.2rem;
+            margin: 0.5rem 0;
+            border-right: 1px solid #ddd
+        }
+
+        .fahuo-wrap {
+            width: 95%;
+            margin: 0.5rem auto;
+            padding: 0.5rem auto;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 4rem !important;
+        }
+
+        .aui-list-item-label {
+            float: left
+        }
+
+        .aui-list .aui-list-item-label {
+            /*		width:45%!important;*/
+            width: 110% !important;
+        }
+
+        .aui-list-item-input input[type="text"],
+        .aui-list-item-input input[type="datetime-local"] {
+            width: 100%;
+            margin-right: -0.5rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+            float: right !important;
+        }
+
+        .aui-list {
+            padding: 0rem;
+        }
+
+        .aui-list.aui-select-list .aui-list-item-inner {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 0.8rem
+        }
+
+        .aui-list-item-label,
+        .aui-list-item-input input[type='text'],
+        .aui-list-item-input input[type='datetime-local'],
+        .aui-list-item-input input[type='password'],
+        .aui-list-item-input input[type='number'],
+        .aui-list-item-input select {
+            font-size: 0.65rem;
+        }
+
+        .rzimglist li {
+            width: 48%;
+            float: left;
+            margin: 0.5rem 1%;
+            text-align: center;
+        }
+
+        .rzimglist li .picwrap,
+        .rzimglist li .picwrap img {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .picwrap .delimg {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 20px;
+            text-align: center;
+            font-size: 12px;
+            right: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .picwrap .changeimg {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+            background: #000;
+            opacity: 0.7;
+            color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 22px;
+            bottom: 0;
+            position: absolute;
+        }
+
+
+
+        .orderdetail {
+            width: 95%;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .orderwrap .orderhead,
+        .orderdetail .orderhead {
+            padding: 0 0.5rem;
+            height: 2.25rem;
+            line-height: 2.25rem;
+        }
+
+        .pr {
+            position: relative
+        }
+
+
+        /* .backgray {
+            background: #959595 !important;
+        } */
+
+        .front-dot {
+            display: inline-block;
+            width: 0.2rem;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            margin-right: 0.2rem;
+            z-index: 99;
+        }
+
+        .f16 {
+            font-size: 0.8rem;
+        }
+
+        .color0 {
+            color: #000 !important;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .maruto1r {
+            margin: 1rem;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+        }
+
+        .border-b {
+            position: relative;
+        }
+
+        .w100 {
+            width: 100%;
+        }
+
+        .fcolor6 {
+            color: #666666 !important;
+        }
+
+        .fwhite {
+            color: #fff !important;
+        }
+
+        .flowhid {
+            overflow: hidden;
+        }
+
+        .pb20 {
+            padding-bottom: 1rem;
+        }
+
+        .orderwrap {
+            width: 95%;
+            height: auto;
+            background: #fff;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+
+
+        .hide {
+            display: none;
+        }
+
+        .radioStyle {
+            width: 60%;
+        }
+
+        .color_ec {
+            color: #EC4031
+        }
+
+        .mian_item {
+            height: 45px;
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-bottom: 1px #e3e4e5 solid;
+        }
+
+        .mian_item .input_rt {
+            padding-left: 15px;
+            text-align: right;
+            padding-right: 5px;
+            font-size: 14px;
+            float: right;
+            width: 50%;
+        }
+
+        .border_bottom_after p {
+            float: left;
+            color: #212121;
+            padding-left: 1rem;
+        }
+
+        .radio1 {
+            float: right;
+            margin-left: 0.5rem;
+        }
+
+        .floatRight {
+            float: right;
+            line-height: 2rem;
+        }
+
+        .heightImg {
+            height: 100px;
+            display: block;
+        }
+
+        .imgLiStyle {
+            width: 3.5rem;
+            height: 3.5rem;
+            float: right;
+        }
+
+        .imgLiStyle {}
+
+        .imgblock {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+
+        .textColorImg {
+            color: #007ef5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrap' id="app">
+
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6'>
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <li class="mian_item border_bottom_after heightImg" tapmode>
+                        <p><span class="color_ec">*</span>车主声明图片
+                            <!-- （<span class="textColorImg" @click="lookImgFn()">查看模板</span> ） -->
+                            :
+                        </p>
+                        <div class='picwrap mustpost pr imgLiStyle'>
+                            <img :src="imgUrl" id='scan1' class='imgblock' @click="imgblockFn()" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='w95 maruto1r pb20'>
+            <p>
+            <div class="aui-btn aui-btn-block backblue fwhite savebtn" @click="addFn()">提交声明</div>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var app = new Vue({
+            el: '#app',
+            data: {
+                id: null,
+                imgUrl: "../../image/shangchuan.png",
+                cheImg: "../../image/carprove.png",
+                imgArr: [],
+            },
+            created: function () {
+                var that = this;
+                that.getCarInfoFn();
+            },
+            methods: {
+                lookImgFn: function (itemImgs) {
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        showList: false,
+                        imageUrls: ["../../image/carprove.png"]
+                    });
+                },
+                //新增函数
+                addFn: function () {
+                    var statementImg = $('.imgblock').eq(0).attr("src");
+                    if (statementImg === "../../image/shangchuan.png") {
+                        $.mvalidateTip('车主声明不能为空！')
+                        return;
+                    }
+                    var params = {
+                        statementImg: statementImg
+                    }
+                    console.log("dddd:" + JSON.stringify(params));
+                    dealData('/platform/tsdriver/update/state/img', 'put', params, function (ret) {
+                        console.log("编辑车辆返回:" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            $.mvalidateTip('设置成功');
+                            setTimeout(function () {
+                                api.closeWin();
+                            }, 1000)
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                getCarInfoFn: function () {
+                    var that = this;
+                    dealData("/platform/tsdriver/get/driver", 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            console.log("获取信息：", JSON.stringify(ret));
+                            if (ret.data) {
+                                document.getElementsByClassName('imgblock')[0].src = ret.data.statementImg
+                            }
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                //图片上传函数
+                // 拍照
+                fnShowAction: function (obj) {
+                    var resultList = api.hasPermission({
+                        list: ['camera']
+                    });
+                    if (!resultList[0].granted) {
+                        api.requestPermission({
+                            list: ["camera"],
+                        }, function (res) {
+                            if (res.list[0].granted) {
+                            }
+                        });
+                    }
+                    var that = this;
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        // buttons: ['拍照', '相册']
+                        buttons: ['拍照']
+                    }, function (ret, err) {
+                        if (ret.buttonIndex != 3) {
+                            sourceTypes = ['camera', 'album'];
+                            api.getPicture({
+                                sourceType: sourceTypes[ret.buttonIndex - 1],
+                                allowEdit: false,
+                                saveToPhotoAlbum: false
+                            }, function (ret, err) {
+                                if (ret) {
+                                    if (ret.data != '') {
+                                        var pathArr = [];
+                                        var path = ret.data;
+                                        pathArr.push(path);
+                                        var imgArr = []
+                                        var cacheDir = api.cacheDir;
+                                        var imgname = new Date().getTime() + '.jpg';
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+                },
+
+                //图片压缩
+                //i ->压缩次数 0开始    
+                //path ->图片路径
+                photograph: function (i, path) {
+                    var that = this;
+                    var minSize = 50 * 1024;
+                    //鉴于税务接口的限制 图片不能大于400kb
+                    var maxSize = 400 * 1024;
+                    var imageCachePath = api.cacheDir;
+
+                    var quality = 1;
+                    var scale = 1;
+
+                    if (i >= 2) {
+                        quality = quality / i;
+                    }
+                    if (i > 5) {
+                        scale = 0.9;
+                    }
+                    console.log("i:" + i + ",quality:" + quality + ",scale:" + scale);
+                    var imageFilter = api.require("imageFilter");
+                    imageFilter.getAttr({
+                        path: path
+                    }, function (ret, err) {
+                        // alert(JSON.stringify(ret.size));
+                        if (ret.size < minSize) {
+                            alert("图片大小小于50kb，请重新上传图片！");
+                            return;
+                        }
+                        if (ret.size > maxSize) {//如果图片大于1M就进行压缩处理
+                            var imgName = new Date().getTime() + ".jpg";
+                            imageFilter.compress({
+                                img: path,
+                                quality: quality,
+                                //压缩比例,
+                                scale: scale,
+                                save: {
+                                    imgPath: imageCachePath,
+                                    imgName: imgName
+                                }
+                            }, function (ret, err) {
+                                var compressedImgPath = imageCachePath + '/' + imgName;
+                                imageFilter.getAttr({
+                                    path: compressedImgPath
+                                }, function (ret1, err) {
+                                    console.log("ret1:" + ret1.size);
+
+                                    if (ret1.size > maxSize) {//如果图片大于1M就进行压缩处理
+                                        //循环压缩
+                                        i++;
+                                        that.photograph(i, compressedImgPath);
+                                    }
+                                    else {
+                                        that.imgArr.push(compressedImgPath);
+                                        console.log("上传图片地址：" + JSON.stringify(compressedImgPath));
+                                        // 上传图片
+                                        that.upImg(that.imgArr);
+                                    }
+                                })
+                            })
+                        }
+                        else {
+                            // console.log("fina:" + ret1.size);
+                            //选择图片预览
+                            that.imgArr.push(path);
+                            that.upImg(that.imgArr);
+                        }
+                    })
+                },
+
+                //提交图片
+                upImg: function (imgArr) {
+                    //方法
+                    var that = this;
+                    api.showProgress({
+                        title: '上传中...',
+                        modal: false
+                    });
+                    var accessToken = $api.getStorage('accessToken');
+                    api.ajax({
+                        url: getBaseRootPath() + "/app/tswaybill/importequery",
+                        method: 'post',
+                        dataType: 'json',
+                        headers: {
+                            "Authorization": 'bearer ' + accessToken
+                        },
+                        data: {
+                            files: {
+                                imgFiles: imgArr
+                            }
+                        }
+                    }, function (ret, err) {
+                        if (ret.code === 0) {
+                            console.log("上传成功", JSON.stringify(ret));
+                            var addImg = "";
+                            that.imgUrl = ret.data[0];
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (err) {
+                            $.mvalidateTip('图片上传失败')
+                        }
+                        api.hideProgress();
+                    });
+                },
+                //转换函数
+                imgblockFn: function () {
+                    var src = $(this).attr('src');
+                    var imgArr = [];
+                    var that = this;
+                    imgArr.push(src);
+                    that.fnShowAction($(this));
+                    // }
+                },
+                //
+                delimgFn: function () {
+                    var $this = $(this);
+                    api.confirm({
+                        msg: "确定删除该图片？",
+                        button: ['取消', '确定']
+                    }, function (ret, err) {
+                        if (ret.buttonIndex == 2) {
+                            if ($this.next().attr('id') == 'scan1') {
+                                scan1 = '';
+                                scan1File = '';
+                            }
+                            if ($this.next().attr('id') == 'scan2') {
+                                scan2 = '';
+                                scan2File = '';
+                            }
+                            $this.parent().find('.imgblock').attr('src', '../../image/shangchuan.png');
+                            $this.parent().find('.changeimg').remove();
+                            $this.remove();
+                        }
+                    });
+                },
+                changeimgFn: function () {
+                    var $this = $(this).parent().find('.imgblock');
+                    var that = this
+                    that.fnShowAction($this);
+                }
+            },
+        })
+    }
+</script>
+
+</html>

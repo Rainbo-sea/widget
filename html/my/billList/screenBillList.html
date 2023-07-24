@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="../../../commonUi/H5TimeSelector/libs/iosselect.css">
+    <style>
+        html,
+        body {
+            background-color: transparent;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFangSC;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, .2);
+        }
+
+        .content {
+            background-color: transparent;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .rt {
+            width: 60%;
+            height: 100%;
+            overflow: auto;
+            background-color: #fff;
+            float: right;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(245, 245, 245, 1);
+            padding: 10px;
+            background: #fff;
+            position: relative;
+            padding-bottom: 55px;
+        }
+
+        h4 {
+            font-weight: 500;
+            color: rgba(50, 50, 51, 1);
+            line-height: 15px;
+            padding: 10px
+        }
+
+        .time {
+            width: 100%;
+            height: 33px;
+            background: rgba(245, 245, 245, 1);
+            border-radius: 2px;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 33px
+        }
+
+        .btnBox {
+            width: 60%;
+            height: 40px;
+            line-height: 40px;
+            background: #F5F5F5;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .btn {
+            width: 50%;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #8F929A;
+        }
+
+        .active {
+            background: #0590FF;
+            color: #fff
+        }
+
+        .mt_10 {
+            margin-top: 10px;
+        }
+
+        .widthScreen {
+            width: 90%;
+        }
+
+        .closeFrame {
+            width: 30%;
+            height: 100%;
+            float: left;
+        }
+
+        .searchInput {
+            width: 100%;
+            height: 33px;
+            background: rgba(245, 245, 245, 1);
+            border: 0;
+            line-height: 33px;
+            text-align: center;
+        }
+
+        .marginBottom {
+            margin-bottom: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" id="app">
+        <div class="closeFrame" @click="closeFn()"></div>
+        <div class=" rt">
+            <div class="mt_10 widthScreen">
+                <h4>账单状态</h4>
+                <input type="text" placeholder="选择状态" v-model="myStatusText" class="searchInput"
+                    @click="selectMysatue()" readonly>
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>时间段选择</h4>
+                <input type="text" placeholder="选择时间段" v-model="timeText" class="searchInput" @click="selectTime()"
+                    readonly>
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>创建时间</h4>
+                <div>
+                    <div class="time startTime" tapmode @click="beginTimeFn()"
+                        v-text="GTE_createDate ? GTE_createDate : '开始日期'">
+                    </div>
+                    <div class="time entime" tapmode @click="endTimeFn()"
+                        v-text="LTE_createDate ? LTE_createDate : '结束日期'"></div>
+                </div>
+            </div>
+            <div class="mt_10 widthScreen">
+                <h4>付款单位</h4>
+                <input type="text" placeholder="请输入付款单位" v-model="payableMemberName" class="searchInput">
+            </div>
+            <div class="btnBox">
+                <div class="btn" tapmode @click="rotate()">重置</div>
+                <div class="btn active" tapmode @click="submit()">确定</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/vue.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/libs/iosselect.js"></script>
+<script type="text/javascript" src="../../../commonUi/H5TimeSelector/timeselector.js"></script>
+<script>
+    apiready = function () {
+        $api.fixStatusBar($api.byId('app'));
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                GTE_createDate: null,//筛选开始时间
+                LTE_createDate: null,//筛选结束时间
+                payableMemberName: null,
+                myStatusText: null,
+                timeText: null,
+                timeFlag: null,
+                arrInfo: ['实收', '待收'],
+                timeInfo: ['当月', '本季度', '本年'],
+            },
+            created: function () {
+                this.payableMemberName = api.pageParam.prames.payableMemberName;
+                this.LTE_createDate = api.pageParam.prames.LTE_createDate;
+                this.GTE_createDate = api.pageParam.prames.GTE_createDate;
+                this.myStatusText = api.pageParam.prames.myStatusText;
+                this.timeText = api.pageParam.prames.timeText;
+            },
+            methods: {
+                selectMysatue: function () {
+                    var that = this
+                    var arrInfoText = [0, 1, 2, 3];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: that.arrInfo
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret));
+                        that.myStatusText = that.arrInfo[ret.buttonIndex - 1];
+                    });
+                },
+                //时间段选择
+                selectTime: function () {
+                    var that = this
+                    var arrInfoText = [0, 1, 2, 3];
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: that.timeInfo
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret));
+                        that.timeText = that.timeInfo[ret.buttonIndex - 1];
+                    });
+                },
+                //重置按钮
+                rotate: function () {
+                    this.GTE_createDate = null;//筛选开始时间
+                    this.LTE_createDate = null;
+                    this.payableMemberName = null;
+                    this.myStatusText = null;
+                    this.timeText = null;
+                },
+                submit: function () {
+                    var that = this;
+                    api.sendEvent({
+                        name: 'screenBillList',
+                        extra: {
+                            GTE_createDate: this.GTE_createDate,//筛选开始时间
+                            LTE_createDate: this.LTE_createDate,
+                            payableMemberName: this.payableMemberName,
+                            timeText: this.timeText,
+                            myStatusText: this.myStatusText,
+                        }
+                    });
+                    setTimeout(function () {
+                        api.closeFrame();
+                    }, 500)
+                },
+                starttimeFn: function () {
+                    var d = new Date();
+                    var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + '00' + ':' + '00' + ':' + '00';
+                    vm.deliveryDatestartTime = time;
+                },
+                beginTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var seconds = d.getSeconds() + '';
+                            seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                            var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                            that.GTE_createDate = time;
+                        }
+                    })
+                },
+                endTimeFn: function () {
+                    var that = this;
+                    timeSelector.fnOpenSelector({
+                        title: '时间选择',
+                        sureText: '完成',
+                        isShowUnit: true,
+                        itemShowCount: 5,
+                        itemHeight: 55,
+                        date: vm.selectDate
+                    }, function (ret) {
+                        //ret.date
+                        if (ret) {
+                            var d = new Date(ret.date);
+                            var selectTime = d.getTime(); //选择毫秒数
+                            var currenD = new Date(vm.deliveryDatestartTime).getTime()
+                            if (currenD > selectTime) {
+                                api.toast({
+                                    msg: '选择不能小于当前日期',
+                                    duration: 3000,
+                                    location: 'bottom'
+                                });
+                                // vm.deliveryDateendTime = null
+                            } else {
+                                var seconds = d.getSeconds() + '';
+                                seconds.length == 2 ? seconds : (seconds = '0' + seconds)
+                                var time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes() + ':' + seconds;
+                                that.LTE_createDate = time;
+                            }
+                        }
+                    })
+                },
+                openactionSheet: function (content) {
+
+                },
+                selctdevice: function () {
+
+                },
+                closeFn: function () {
+                    console.log("fffff:");
+                    api.closeFrame()
+                }
+
+            }
+        })
+    }
+</script>
+
+</html>

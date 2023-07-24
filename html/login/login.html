@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>登录页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .agreeInput {
+        float: left !important;
+        width: 10px !important;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    .agreeA {
+        position: absolute;
+        top: 12px;
+        left: 14px;
+        float: left !important;
+        font-size: 8px !important;
+        line-height: 18px !important;
+        margin-left: 5px !important;
+        color: #1F529A !important;
+    }
+
+    .box_date_footer {
+        width: 100% !important;
+        height: 1.52rem !important;
+        line-height: 0.72rem !important;
+        overflow: hidden !important;
+        position: relative;
+    }
+
+    .fontSize {
+        font-size: 0.3rem !important;
+    }
+
+    .heightStyle {
+        height: 10.5rem;
+    }
+
+    .forgetpaw {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .register {
+        color: #007ef5;
+    }
+
+    .forgetpawfn {
+        float: right;
+        margin-top: 0.2rem;
+        color: #007ef5;
+    }
+
+    .getregisters {
+        float: left;
+    }
+
+    .passwordDiv {
+        position: relative;
+    }
+
+    .passwordImg {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 36px;
+        right: 20px;
+    }
+
+    .displayNone {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class='wrap xy' id="login">
+        <div class="loginBox heightStyle">
+            <img src="../../image/logo.png" alt="" style="padding-top: 0.4rem">
+            <h1>欢迎登录</h1>
+            <div class="user">
+                <p class="fontSize">用户账号：</p>
+                <input class="fontSize" type="text" id="user" placeholder="请输入用户账号" value="">
+                <i></i>
+            </div>
+            <div class="passwordDiv">
+                <p class="fontSize">登录密码：</p>
+                <input class="fontSize" type="password" id="password" placeholder="请输入用户密码" value="">
+                <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn()" />
+                <img class="passwordImg displayNone" src="../../image/passwordOn.png" onclick="passwordOnFn()" />
+                <i></i>
+            </div>
+            <button onclick="loginFn()">登 录</button>
+            <div class="forgetpaw">
+                <div class="getregisters" onclick="registerFn()">
+                    没有账号?请<span class="register">注册</span>
+                </div>
+                <span class="forgetpawfn" onclick="forgetpawfn()">忘记密码？</span>
+            </div>
+            <div class="box_date_footer">
+                <input class="agreeInput" type="checkbox" name="running" onclick="setCheckboxFn()" />
+                <a class="aui-btn fl agreeA ">
+                    <span onclick="agreementFn()">平台用户协议</span>、
+                    <span onclick="agreementTransactionFn()">平台交易规则</span>、
+                    <span onclick="agreementGrantFn()">平台授权协议</span>、
+                    <span onclick="agreementPrivacyFn()">平台用户隐私协议</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        api.openWin({
+            name: 'login',
+            url: '../login/login.html',
+        });
+        confirmPer('location,photos,storage,notification', function () { });
+        api.hideProgress();
+        //监听退出登录返回
+        api.addEventListener({
+            name: 'isLogin'
+        }, function (ret, err) {
+            if (ret.value.key == 1) {
+                $("#user").val('');
+                $("#password").val('');
+            }
+        });
+
+        if (localStorage.getItem("checkboxVoule") === "1") {
+            document.getElementsByClassName('agreeInput')[0].checked = true;
+        }
+
+        // 监听是否触发了左右滑动
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            api.closeWidget({
+                id: "A6175141361874",
+                retData: {
+                    name: 'closeWidget'
+                },
+                animation: {
+                    type: 'flip',
+                    subType: 'from_bottom',
+                    duration: 500
+                }
+            });
+        });
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#27beff',
+        });
+    }
+    //登录
+    function loginFn() {
+
+        // api.startPlay({
+        //     path: 'widget://res/newtask.mp3'
+        // }, function (ret, err) {
+        //     if (ret) {
+        //         // api.alert({
+        //         //     msg: '播放完成'
+        //         // });
+        //         // api.stopPlay();
+        //     } else {
+        //         // api.alert({
+        //         //     msg: JSON.stringify(err)
+        //         // });
+        //         // api.stopPlay();
+        //     }
+        // });
+
+        if (!document.getElementsByClassName('agreeInput')[0].checked) {
+            $.mvalidateTip("请仔细阅读并勾选平台相关协议！");
+            return false;
+        }
+        var user = $("#user").val();
+        var userRet = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/;
+        var password = $("#password").val();
+        if (!user) {
+            $.mvalidateTip("请输入用户账号！");
+            return;
+        };
+        if (!password) {
+            $.mvalidateTip("请输入密码！");
+            return;
+        };
+        var params = {
+            username: user,
+            password: password
+        };
+
+        api.showProgress({
+            title: '登录中...',
+            modal: false
+        });
+
+        api.ajax({
+            url: getBaseRootPath() + "/login/app",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            data: {
+                body: JSON.stringify(params)
+            }
+        }, function (ret, err) {
+            if (ret) {
+                if (ret && ret.code === 0) {
+                    $api.setStorage('accessToken', ret.data.access_token);
+                    $api.setStorage('refreshToken', ret.data.refresh_token);
+                    // //激活SDK
+                    // var systemType = api.systemType;
+                    // if (systemType == 'ios') {
+                    //     initSdk(1);
+                    // }
+                    // if (systemType == 'android') {
+                    //     startService();
+                    //     initSdk(2);
+                    // }
+                    // 自动登录
+                    $api.setStorage('isautologin', 0);
+
+                    //获取用户状态，未通过审核需要跳转运力信息页面
+                    dealData("platform/esign/status", 'GET', {}, function (ret) {
+                        console.log("getStatusFn:" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            if (ret.data) {
+                                //已经通过
+                                if (ret.data.isOverTime === 0) {
+                                    tologin();
+                                    //未通过
+                                } else {
+                                    api.openWin({
+                                        name: 'main',
+                                        url: '../my/carmsg.html',
+                                        slidBackEnabled: false,
+                                        pageParam: {
+                                            flag: true
+                                        },
+                                        animation: {
+                                            type: 'fade'
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                            tologin();
+                            return false;
+                        }
+                    }, function (err) {
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        tologin();
+                        return false;
+                    })
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    return;
+                }
+            } else {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (err) {
+                var error = JSON.stringify(err);
+                if (error && error.body) { $.mvalidateTip(error.body); }
+                return;
+            }
+        });
+        api.hideProgress();
+    }
+
+    //跳转主窗口
+    function tologin(parm) {
+        api.refreshHeaderLoadDone()
+        api.openWin({
+            name: 'main',
+            url: '../main.html',
+            reload: true,
+            slidBackEnabled: false
+        });
+    }
+    // 跳转注册
+    function registerFn() {
+        api.openWin({
+            name: 'register_win',
+            url: 'register_win.html',
+            historyGestureEnabled: false,
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+
+    function forgetpawfn() {
+        api.openWin({
+            name: 'forgetpaw_win',
+            url: 'forgetpaw_win.html',
+            historyGestureEnabled: false,
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    function setCheckboxFn() {
+        var checkboxVoule = 0;
+        if (document.getElementsByClassName('agreeInput')[0].checked) {
+            checkboxVoule = 1;
+        }
+        localStorage.setItem("checkboxVoule", checkboxVoule);
+    }
+    //网络货运平台用户协议
+    function agreementFn() {
+        api.openWin({
+            name: 'agreementpage_win',
+            url: '../my/agreementpage_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //交易协议
+    function agreementTransactionFn() {
+        api.openWin({
+            name: 'agreementTransaction_win',
+            url: '../my/agreementTransaction_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台授权协议
+    function agreementGrantFn() {
+        api.openWin({
+            name: 'agreementGrant_win',
+            url: '../my/agreementGrant_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    //平台用户隐私协议
+    function agreementPrivacyFn() {
+        api.openWin({
+            name: 'agreementPrivacy_win',
+            url: '../my/agreementPrivacy_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+    //密码关闭
+    function passwordOffFn() {
+        document.getElementsByClassName("passwordImg")[0].style.display = "none";
+        document.getElementsByClassName("passwordImg")[1].style.display = "block";
+        document.getElementById("password").type = "text";
+    }
+    //密码打开
+    function passwordOnFn() {
+        document.getElementsByClassName("passwordImg")[1].style.display = "none";
+        document.getElementsByClassName("passwordImg")[0].style.display = "block";
+        document.getElementById("password").type = "password";
+    }
+</script>
+
+</html>

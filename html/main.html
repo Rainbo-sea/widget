@@ -1,0 +1,839 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/plugcss/validate.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body class="wrap">
+    <div class="header" id="header">
+        <header id="header1"></header>
+        <header id="header2"></header>
+    </div>
+    <div id="main" class="flex-con">
+
+    </div>
+    <footer class="clearfix">
+        <div class="fl active" id="goods">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconcheliang"></use>
+            </svg>
+            <p>
+                货源大厅
+            </p>
+        </div>
+        <div class="fl" id="task">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#iconcheliang"></use>
+            </svg>
+            <p>
+                我的任务
+            </p>
+        </div>
+        <div class="fl" id="my">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icongerenzhongxin3"></use>
+            </svg>
+            <p>我的信息</p>
+        </div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/rem.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/iconfont.js"></script>
+<script language="javascript" src="http://webapi.amap.com/maps?v=1.3&key=7e2cbc797bd32062fbd3c2be61afc600"></script>
+<script type="text/javascript">
+
+    //测试定位时间
+    var locationTime = "";
+    var ajaxTime = "";
+    var timeData = "";
+    var addrrTime = "";
+    var wayBillTime = "";
+    var ajaxErrTime = "";
+
+
+    var aMap;
+    // var myint;
+    var sys;
+    //定位间隔 秒
+    var timeSpan = 30;
+    //避免频繁提示权限报错 所以设定了阈值  每次只报3次 
+    //重新唤醒 或 来单子了再重新提示
+    var errorCount = 0, tipsCount = 3;
+
+    var cashInfo = [];
+    //当前在途运单数量
+    var nowWayBillCount = 0;
+    var number = 0;
+    var msgId = '999';
+    var msgName = "博宇网络货运司机端";
+    var msgDescription = "后台获取定位";
+    //定义定时器
+    var setIntervalLocation = null;
+    var setIntervalMsg = null;
+
+    //是否正在定位  为了保证每次只实例一个定位 所以加以控制
+    var isLocaling = 0;
+
+    //控制首次打开 或 唤醒打开时  必须定位1次
+    var isNeedFirstLocation = 0;
+
+    apiready = function () {
+        //confirmPer('location', function () { });
+
+        //激活SDK
+        var systemType = api.systemType;
+        if (systemType == 'ios') {
+            initSdk(1);
+        }
+        if (systemType == 'android') {
+            startService();
+            initSdk(2);
+        }
+        fnReady();
+        userInfo();
+        fnInit();
+        fnChange(1);
+        cashPost();
+        aMap = api.require('aMap');
+        aMap.updateMapViewPrivacy({
+            privacyAgree: 'didAgree',
+            privacyShow: 'didShow',
+            containStatus: 'didContain'
+        });
+        aMap.updateSearchPrivacy({
+            privacyAgree: 'didAgree',
+            privacyShow: 'didShow',
+            containStatus: 'didContain'
+        });
+        sys = api.systemType;
+
+        //监听运单结束
+        api.addEventListener({
+            name: 'orderEnd'
+        }, function (ret, err) {
+            errorCount = 0;
+            getNowWayBill();
+            openTimer();
+        });
+
+        //监听激活（可能不生效 稳健考虑）
+        api.addEventListener({
+            name: 'resume'
+        }, function (ret, err) {
+            isNeedFirstLocation = 0;
+            // clearInterval(myint);
+            // locationFn();
+            // alert("wake")
+            // alert("重新进入app开启定位")
+            errorCount = 0;
+            getNowWayBill();
+            openTimer();
+            cashPost();
+        });
+
+
+        //监听刷新
+        api.addEventListener({
+            name: 'orderRefresh'
+        }, function (ret, err) {
+            // clearInterval(myint);
+            // locationFn();
+            errorCount = 0;
+            getNowWayBill();
+            openTimer();
+        });
+
+        //首次打开即刻定位
+        getNowWayBill();
+        //开启定时器唤醒定位函数
+        openTimer();
+        var i = 0;
+
+        function openTimer() {
+            //开启定时器唤醒定位函数
+            //存在重复开启定时器，所以先关闭保证每次开启一个定时器
+            clearInterval(setIntervalLocation);
+            setIntervalLocation = setInterval(function () {
+                getNowWayBill();
+            }, 30000);
+
+            // 开启定时器唤醒消息推送 | 语音播放函数
+            clearInterval(setIntervalMsg);
+            setIntervalMsg = setInterval(function () {
+                getMsg();
+            }, 10000);
+        }
+
+        //提交缓存数据
+        function cashPost() {
+            var temp = localStorage.getItem("cashInfo");
+            if (temp != null) {
+                cashInfo = JSON.parse(localStorage.getItem("temp") || '[]');
+                if (cashInfo != null && cashInfo.length > 0) {
+                    dealData("platform/tswaybilllocator/cashadd", 'POST', JSON.stringify(cashInfo), function (res) {
+
+                        if (res) {
+                            cashInfo = [];
+
+                            localStorage.setItem("cashInfo", JSON.stringify(cashInfo));
+                            console.log("缓存数据success");
+
+                        } else {
+                            api.toast({
+                                msg: res.message,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        setTimeout('api.refreshHeaderLoadDone()', '500');
+                    },
+                        function (err) {
+
+                            api.toast({
+                                msg: '缓存定位数据推送失败，请检查网络!!',
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    )
+                }
+
+            }
+        }
+        function getMsg() {
+            dealData("user/getmsg", 'GET', {}, function (ret) {
+                if (ret.code === 0) {
+                    if (ret.data && ret.data.type != null) {
+                        statusMSG(ret.data)
+                        voiceMSG(ret.data.type)
+                    }
+                }
+                else {
+
+                }
+            }, function (err) {
+                console.log(JSON.stringify(err));
+            })
+        }
+        function statusMSG(ret) {
+            var type = ret.type;
+            var title = ret.tetle;
+            var content = ret.content;
+            var extra = ret.extra;
+            //弹出状态栏通知
+            api.notification({
+                notify: {
+                    title: title,
+                    content: content,
+                    extra: extra,
+                    updateCurrent: true
+                }
+            });
+        }
+        api.addEventListener({
+            name: 'noticeclicked'
+        }, function (ret, err) {
+            if (ret && ret != undefined && ret != null
+                && ret.value && ret.value != undefined && ret.value != null && ret.value.indexOf('|') > -1) {
+                var type = ret.value.split("|")[0];
+                // alert(type)
+                switch (type) {
+                    case "1":
+                        $(".fl").removeClass("active");
+                        $("#task").addClass("active");
+                        api.openFrame({
+                            name: 'task',
+                            url: './html/task.html',
+                            bounces: false,
+                            reload: true,
+                            bgColor: '#f0f0f0',
+                            vScrollBarEnabled: false,
+                            hScrollBarEnabled: false,
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: 'auto',
+                                h: api.frameHeight - footerHeight,
+                            },
+                            pageParam: {
+                                footerHeight: footerHeight,
+                            }
+                        });
+                        break;
+                    case "2":
+                        // $(".fl").removeClass("active");
+                        // $("#goods").addClass("active");
+                        api.openWin({
+                            name: 'offerList_win',
+                            url: './html/goods/offerList_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                        break;
+                    case "3":
+
+                        //$("#my").addClass("active");
+                        api.openWin({
+                            name: 'billList_win',
+                            url: './html/my/billList/billList_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        })
+        function voiceMSG(type) {
+            var path = "";
+            if (type == 1) {
+                path = 'widget://res/newtask.mp3';
+            }
+            if (type == 2) {
+                path = 'widget://res/bidsuccess.mp3';
+            }
+            if (type == 3) {
+                path = 'widget://res/getmoney.mp3';
+            }
+            api.startPlay({
+                path: path
+            }, function (ret, err) {
+                if (ret) {
+                    // api.alert({
+                    //     msg: '播放完成'
+                    // });
+                    // api.stopPlay();
+                } else {
+                    api.alert({
+                        msg: JSON.stringify(err)
+                    });
+                    api.stopPlay();
+                }
+            });
+        }
+        function getNowWayBill() {
+
+            var parm = {
+                "sort": "id,desc",
+                "searchParms": {
+                    //测试用
+                    "IN_status": [20, 30, 40],
+                }
+            };
+            dealData("tswaybill/query", 'POST', JSON.stringify(parm), function (res) {
+                if (res.code === 0) {
+                    if (isNeedFirstLocation == 0 || (res.data && res.data.resultList && res.data.resultList.length !== 0)) {
+
+                        nowWayBillCount = res.data.resultList.length;
+                        //根据运单状态 持续定位
+                        if (sys === "ios") {
+                            iosAddLocation();
+                        }
+                        else {
+                            //添加定位
+                            androidAddLocation();
+                        }
+                    } else {
+                        //console.log("没有需要定位的运单")
+                        nowWayBillCount = 0;
+                        aMap.stopLocation();
+                        isLocaling = 0;
+                    }
+                } else {
+                    api.toast({
+                        msg: res.message,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+                setTimeout('api.refreshHeaderLoadDone()', '500');
+            },
+                function (err) {
+                    api.toast({
+                        msg: '运单数据获取失败，请检查网络',
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+            )
+        }
+        //android
+        function androidAddLocation() {
+            if (nowWayBillCount == 0 && isNeedFirstLocation == 1) {
+                isLocaling = 0;
+                aMap.stopLocation();
+                return;
+            }
+            if (isLocaling == 1) {
+                return;
+            }
+            var addInfo = {};
+            aMap.getLocation(
+                {
+                    autoStop: false,
+                    enableLocInForeground: true,
+                    notification: {
+                        title: msgName,
+                        content: msgDescription,
+                        channelId: msgId
+                    }
+                },
+                function (ret, err) {
+                    if (ret.status) {
+                        isLocaling = 1;
+                        addInfo.longitude = ret.lon;
+                        addInfo.latitude = ret.lat;
+                        localStorage.setItem("firstLocalLat", ret.lat);
+                        localStorage.setItem("firstLocalLon", ret.lon);
+                        aMap.getNameFromCoords({
+                            lon: ret.lon,
+                            lat: ret.lat
+                        }, function (ret, err) {
+                            var lastTime = localStorage.getItem("iosLastLocation");
+                            if (lastTime == null) {
+                                localStorage.setItem("iosLastLocation", new Date());
+                            }
+                            else {
+                                var cz = calcTime(lastTime, new Date());
+                                if (cz < timeSpan) {
+                                    return
+                                }
+                                else {
+                                    localStorage.setItem("iosLastLocation", new Date());
+                                }
+                            }
+                            if (ret.status) {
+                                addInfo.positionAddress = ret.address;
+                                var cashData = {
+                                    lon: addInfo.longitude,
+                                    lat: addInfo.latitude,
+                                    address: ret.address,
+                                    time: new Date().getTime()
+                                }
+                                cashInfo.push(cashData);
+                                localStorage.setItem("cashInfo", JSON.stringify(cashInfo));
+                                isNeedFirstLocation = 1;
+                                dealData("platform/tswaybilllocator/add", 'POST', JSON.stringify(addInfo), function (res) {
+                                    if (res) {
+                                        cashInfo.pop();
+                                        localStorage.setItem("cashInfo", JSON.stringify(cashInfo));
+                                    } else {
+                                        api.toast({
+                                            msg: res.message,
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                    }
+                                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                                },
+                                    function (err) {
+                                        api.toast({
+                                            msg: '定位数据推送失败，请检查网络!!',
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                    }
+                                )
+                            } else {
+                                api.toast({
+                                    msg: '定位数据解析失败，未获取到有效位置',
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        errorCount++;
+                        if (errorCount > tipsCount) {
+                            return;
+                        }
+                        if (err && err.locationDetail) {
+                            api.toast({
+                                msg: "请将定位权限选择为[始终允许]",
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        else {
+                            api.toast({
+                                msg: '定位失败,定位信号弱',
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }
+                });
+            // }
+            // else {
+            //     api.toast({
+            //         msg: '后台运行定位失败，请检查权限',
+            //         duration: 5000,
+            //         location: 'middle'
+            //     });
+            // }
+            // })
+        }
+
+        //ios
+        // ios的 上传间隔实际上没办法用setInterval 我也不知道为什么  所以最用 用的是getlocation方法的 autoStop false
+        function iosAddLocation() {
+            if (nowWayBillCount == 0 && isNeedFirstLocation == 1) {
+                isLocaling = 0;
+                aMap.stopLocation();
+                return;
+            }
+            if (isLocaling == 1) {
+                return;
+            }
+            var addInfo = {};
+            aMap.open({
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0
+                }
+            }, function (ret, err) {
+                if (ret.status) {
+                    aMap.getLocation(
+                        {
+                            autoStop: false,
+                            enableLocInForeground: true
+                        },
+                        function (ret, err) {
+                            var lastTime = localStorage.getItem("iosLastLocation");
+                            // locationTime = locationTime + new Date().toLocaleTimeString() + "---";
+                            // localStorage.setItem("locationTime", locationTime);
+                            //localStorage.setItem("iosLastLocation", timestamp);
+                            if (lastTime == null) {
+                                localStorage.setItem("iosLastLocation", new Date());
+                            }
+                            else {
+                                var cz = calcTime(lastTime, new Date());
+                                if (cz < timeSpan) {
+                                    return
+                                }
+                                else {
+                                    localStorage.setItem("iosLastLocation", new Date());
+                                }
+                            }
+                            // timeData = timeData + new Date().toLocaleTimeString() + ":" + ret.status + "---";
+                            // localStorage.setItem("timeData", timeData);
+                            if (ret.status) {
+                                isLocaling = 1;
+                                addInfo.longitude = ret.lon;
+                                addInfo.latitude = ret.lat;
+                                localStorage.setItem("firstLocalLat", ret.lat);
+                                localStorage.setItem("firstLocalLon", ret.lon);
+                                var location = ret.lon.toString() + "," + ret.lat.toString();
+                                var webApiPath = "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=" + location + "&key=7e2cbc797bd32062fbd3c2be61afc600&radius=0&extensions=base"
+                                // getNameFromCoords方法 ios 无效
+                                outDealData(webApiPath, function (ret) {
+                                    console.log("web反解析:" + JSON.stringify(ret));
+                                    if (ret && ret.status) {
+                                        // addrrTime = addrrTime + new Date().toLocaleTimeString() + "---";
+                                        // localStorage.setItem("addrrTime", addrrTime);
+                                        addInfo.positionAddress = ret.regeocode.formatted_address;
+
+                                        var cashData = {
+                                            lon: addInfo.longitude,
+                                            lat: addInfo.latitude,
+                                            address: addInfo.positionAddress,
+                                            time: new Date().getTime()
+                                        }
+
+                                        cashInfo.push(cashData);
+
+                                        localStorage.setItem("cashInfo", JSON.stringify(cashInfo));
+                                        isNeedFirstLocation = 1;
+                                        dealData("platform/tswaybilllocator/add", 'POST', JSON.stringify(addInfo), function (res) {
+                                            // ajaxTime = ajaxTime + new Date().toLocaleTimeString() + "---";
+                                            // localStorage.setItem("ajaxTime", ajaxTime);
+                                            if (res) {
+                                                cashInfo.pop();
+
+                                                localStorage.setItem("cashInfo", JSON.stringify(cashInfo));
+                                                //添加定位
+                                                //addLocation(waybillInfo);
+                                            } else {
+                                                api.toast({
+                                                    msg: '定位数据推送失败，请检查网络',
+                                                    duration: 5000,
+                                                    location: 'middle'
+                                                });
+                                            }
+                                            //setTimeout('api.refreshHeaderLoadDone()', '500');
+                                        },
+                                            function (err) {
+                                                //console.log("定位数据推送失败原因：", JSON.stringify(err));
+                                                // ajaxErrTime = ajaxErrTime + new Date().toLocaleTimeString() + err.msg + "---";
+                                                // localStorage.setItem("ajaxErrTime", ajaxErrTime);
+                                                api.toast({
+                                                    msg: '定位数据解析失败，未获取到有效位置',
+                                                    duration: 5000,
+                                                    location: 'middle'
+                                                });
+                                            }
+                                        )
+                                    } else {
+                                        api.toast({
+                                            msg: '地址反解析失败',
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+
+                                    }
+                                }, function (err) {
+                                    api.toast({
+                                        msg: '地址反解析失败',
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                })
+
+
+                            }
+                            else {
+
+                                errorCount++;
+                                if (errorCount > tipsCount) {
+                                    return;
+                                }
+                                if (err && err.locationDetail) {
+                                    api.toast({
+                                        msg: "请将定位权限选择为[始终允许]",
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                                else {
+                                    api.toast({
+                                        msg: '定位失败,定位信号弱',
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+
+
+                            }
+                        });
+                } else {
+
+                    api.toast({
+                        msg: '定位失败,请查看定位权限是否为[始终允许]',
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                }
+            });
+
+
+        }
+        // 监听是否触发了左右滑动
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            api.closeWidget({
+                id: "A6175141361874",
+                retData: {
+                    name: 'closeWidget'
+                },
+                animation: {
+                    type: 'flip',
+                    subType: 'from_bottom',
+                    duration: 500
+                }
+            });
+        });
+    };
+
+    var headers, footers, headerHeight, footerHeight;
+    function fnInit() {
+        var header = $("#header");
+        var footer = $("footer");
+
+        headers = $("#header header");
+        footers = $("footer div");
+        for (var i = 0; i < headers.length; i++) {
+            $api.fixIos7Bar(headers[i]);
+        }
+        headerHeight = header.height();
+        footerHeight = footer.height();
+    };
+    var frames = ['goods', 'task', 'my'];
+    function fnChange(index) {
+        if (index == 1) {
+            $("#header1").hide();
+            $("#header2").hide();
+            api.openFrame({
+                name: 'goods',
+                url: 'goods.html',
+                bounces: false,
+                reload: true,
+                bgColor: '#f0f0f0',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: api.frameHeight - footerHeight - api.safeArea.top,
+                },
+                pageParam: {
+                    footerHeight: footerHeight,
+                    headerHeight: headerHeight,
+                }
+            });
+        }
+        if (index == 2) {
+            $("#header1").hide();
+            $("#header2").hide();
+            api.openFrame({
+                name: 'task',
+                url: 'task.html',
+                bounces: false,
+                reload: true,
+                bgColor: '#f0f0f0',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: api.frameHeight - footerHeight,
+                },
+                pageParam: {
+                    footerHeight: footerHeight,
+                }
+            });
+        }
+        if (index === 3) {
+            fnInit();
+            $("#header1").hide();
+            $("#header2").show();
+            api.openFrame({
+                name: 'my',
+                url: 'my.html',
+                bounces: false,
+                reload: true,
+                bgColor: '#f0f0f0',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: api.frameHeight - footerHeight,
+                },
+                pageParam: {
+                    footerHeight: footerHeight,
+                }
+            });
+        }
+        // for (var i = 0; i < headers.length; i++) {
+        //     if (index == (i + 1)) {
+
+        // } else {
+        //     api.setFrameAttr({
+        //         name: frames[i],
+        //         hidden: true
+        //     });
+        // }
+        // }
+    };
+    //点击底部
+    $("#goods").click(function () {
+        fnChange(1);
+        $(this).addClass("active").siblings().removeClass("active");
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+    })
+
+    //点击底部
+    $("#task").click(function () {
+        fnChange(2);
+        $(this).addClass("active").siblings().removeClass("active");
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+    })
+    $("#my").click(function () {
+        fnChange(3);
+        $(this).addClass("active").siblings().removeClass("active");
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    })
+    //300秒获取一次定位
+
+
+    // 获取用户信息
+    function userInfo() {
+        dealData("user/membermsg", 'GET', {}, function (ret) {
+            if (ret.code === 0) {
+                if (ret.data) {
+                    $api.setStorage('username', ret.data.username ? ret.data.username : "暂无姓名");
+                    $api.setStorage('account', ret.data.account ? ret.data.account : null);
+
+                    $api.setStorage('phone', ret.data.phone ? ret.data.phone : "暂无手机号");
+                    $api.setStorage('truckNumber', ret.data.truckNumber ? ret.data.truckNumber : "暂无车牌号");
+                }
+            } else {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+            if (ret.code !== 0) {
+                api.toast({
+                    msg: ret.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+        }, function (err) {
+            console.log(JSON.stringify(err));
+            api.toast({
+                msg: err.body.msg,
+                duration: 5000,
+                location: 'middle'
+            });
+        })
+    };
+    function calcTime(startTime, endTime) {
+        var date1 = new Date(startTime);
+        var date2 = new Date(endTime);
+        var date3 = parseInt((date2.getTime() - date1.getTime()) / 1000); //相差秒数
+        return date3;
+    }
+
+</script>
+
+</html>

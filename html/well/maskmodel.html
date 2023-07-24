@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title></title>
+    <style>
+        .maskmodel {
+            /* min-height: 96vh; */
+            width: 100%;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .maskBg {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            background: rgba(135, 137, 142, 1);
+            opacity: 0.2;
+        }
+
+        .maskcontent {
+            position: absolute;
+            height: 80%;
+            min-width: 300px;
+            top: 47%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background-color: #fafafc;
+            text-align: center;
+            background: #fafafc;
+            border-radius: 14px;
+        }
+
+        .titileText {
+            font-size: 28px;
+            font-weight: 700;
+            padding: 25px 10px 0px 10px;
+        }
+
+        .textContent {
+            padding: 14px;
+            height: 70%;
+            overflow: auto;
+            overflow-y: scroll;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: left;
+        }
+
+        .footerDiv {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+
+        }
+
+        .footerButton {
+            color: #fff;
+            background: #1890FF;
+            border: 0;
+            padding: 12px 60px;
+            border-radius: 4px;
+            font-size: 24px;
+        }
+
+        .relativeDiv {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="maskmodel" id="app">
+        <div class="maskBg" onclick="closeMaskmodel()"></div>
+        <div class="maskcontent">
+            <div class="relativeDiv">
+                <div class="titileText">安全提示，温馨提醒</div>
+                <div class="textContent" id="textContent">
+                </div>
+                <div class="footerDiv">
+                    <button class="footerButton" onclick="closeMaskmodel()">同意，已知晓！</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script>
+
+    apiready = function () {
+        initFn();
+        function initFn() {
+            api.ajax({
+                url: getBaseRootPath() + "/app/platform/cmssafetywarning/get/0",
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+            }, function (ret, err) {
+                if (ret) {
+                    if (ret && ret.code === 0) {
+                        document.getElementById("textContent").innerHTML = ret.data.content
+                    }
+                } else {
+                    api.hideProgress();
+                }
+                if (err) {
+                    console.log(JSON.stringify(err))
+                    return;
+                }
+
+            });
+        }
+
+    };
+    function closeMaskmodel() {
+        api.closeFrame({
+            name: 'maskmodel'
+        });
+    }
+</script>
+
+</html>

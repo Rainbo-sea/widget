@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <style>
+        .centent {
+            width: 100%;
+            height: 100%;
+        }
+
+        .list {
+            /* height: 145px; */
+            background: #ffffff;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .listNameText {
+            font-size: 17px;
+            float: left;
+            width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .listHeader {
+            height: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .money {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .listP {
+            margin: 5px 5px 5px 10px;
+            font-size: 15px;
+        }
+
+        .contentP {
+            height: 46px;
+            width: 90%;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            /* 这里是超出几行省略 */
+            overflow: hidden
+        }
+
+        .hrStyle {
+            background: #e3e4e5;
+            width: 100%;
+            height: 1px;
+            margin: 5px 0;
+        }
+
+        .listFooter {
+            font-size: 14px
+        }
+
+        .footerRight {
+            float: right;
+        }
+
+        .fonterLeft {
+            float: left;
+        }
+
+        .pmarginTop {
+            margin-top: 15px;
+        }
+
+        .marginTips {
+            margin: 10px;
+        }
+
+        .listData {
+            font-size: 16px;
+        }
+
+        .listDiv label {
+            width: 25%;
+            height: auto;
+            text-align: right;
+            display: inline-block;
+            color: cadetblue;
+        }
+
+        .listDiv div {
+            width: 70%;
+            height: auto;
+        }
+
+        .listData img {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .listDiv {
+            display: flex;
+        }
+
+        .footerDiv {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .weihuifu {
+            width: 66px !important;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            font-size: 15px;
+            /* background: rgba(0, 126, 245, 0.16); */
+            border-radius: 4px;
+            color: #007EF5;
+        }
+
+        .yihuifu {
+            width: 66px !important;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            font-size: 15px;
+            /* background: #A2CD5A; */
+            border-radius: 4px;
+            color: #698B22;
+        }
+
+        .bottonDiv {
+            border: 1px solid #007EF5;
+            color: #007EF5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="centent">
+        <div v-if="listData.length === 0" class="aui-tips-title marginTips">暂无数据</div>
+        <div class="list" v-for="(item,i) in listData">
+            <div class="contentcol">
+                <div class="listData">
+                    <div class="listDiv"><label> 状态:</label>
+                        <div class="weihuifu" v-if="item.status===0">未回复</div>
+                        <div class="yihuifu" v-if="item.status ===1">已经回复</div>
+                    </div>
+                    <div class="listDiv"><label> 类型:</label>
+                        <div class="weihuifu" v-if="item.type===0">留言</div>
+                        <div class="yihuifu" v-if="item.type ===1">反馈</div>
+                    </div>
+                    <div class="listDiv"><label> 问题类型:</label>
+                        <div v-if="item.problemTypes ===1">业务问题</div>
+                        <div v-if="item.problemTypes ===2">系统问题</div>
+                        <div v-if="item.problemTypes ===3">投诉建议</div>
+                        <div v-if="item.problemTypes ===4">其他</div>
+                    </div>
+                    <div class="listDiv"><label> 内容:</label>
+                        <div v-text="item.content"></div>
+                    </div>
+                    <div class="listDiv" v-if="item.memo"><label> 备注:</label>
+                        <div v-text="item.memo"></div>
+                    </div>
+                    <div class="listDiv" v-if="item.filePaths.length">
+                        <label> 反馈图片:</label>
+                        <div>
+                            <img :src="imgcrs" @click="lookImgFn(imgcrs)" v-for="imgcrs in  item.filePaths">
+                        </div>
+                    </div>
+                    <div class="listDiv" v-if="item.fallback"><label> 回复内容:</label>
+                        <div v-text="item.fallback"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footerDiv">
+                <!-- <div class=" BottonDiv bottonDiv"> 修改</div> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                listData: [],
+                page: 0,
+            },
+            created: function () {
+                var that = this;
+                api.addEventListener({
+                    name: 'addFeedback_frame'
+                }, function (ret, err) {
+                    that.page = 0;
+                    that.listData = [];
+                    that.getIsnodata();
+                });
+                //监听下拉加载数据
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    that.getIsnodata();
+                });
+                //监听下拉刷新数据
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    loadingImg: 'widget://image/refresh.png',
+                    bgColor: '#ccc',
+                    textColor: '#fff',
+                    textDown: '下拉刷新...',
+                    textUp: '松开刷新...',
+                    showTime: true
+                }, function (ret, err) {
+                    that.page = 0;
+                    that.listData = [];
+                    that.getIsnodata();
+                });
+                this.getIsnodata();
+            },
+            methods: {
+                lookImgFn: function (itemImgs) {
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        showList: false,
+                        imageUrls: [itemImgs]
+                    });
+                },
+                getIsnodata: function () {
+                    $("#page").val(1);
+                    api.showProgress({
+                        title: '加载中...',
+                        modal: false
+                    });
+                    var that = this;
+                    var parm = {
+                        "page": that.page,
+                        "size": 10,
+                        "sort": "id,desc",
+                        "searchParms": {
+                            EQ_waybillId: api.pageParam.id
+                        }
+                    };
+                    console.log("请求参数：" + JSON.stringify(parm));
+                    dealData("driver/feedbackinfo/query", 'POST', JSON.stringify(parm), function (ret) {
+                        console.log("历史申报：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            if (ret.data.resultList.length === 0) {
+                                api.toast({
+                                    msg: "无更多数据",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                                if (that.page === 0) {
+
+                                }
+                            } else {
+                                ret.data.resultList.map((item) => {
+                                    item.exceptionDate = timeStampTurnTime(item.exceptionDate);
+                                });
+                                that.listData = that.listData.concat(ret.data.resultList);
+                                that.page++;
+                            }
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });;
+                            console.log(JSON.stringify(ret));
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+
+            }
+        })
+    };
+
+</script>
+
+</html>

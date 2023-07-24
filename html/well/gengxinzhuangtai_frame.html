@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>运单详情-普通</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../css/plugcss/validate.css"
+    />
+    <script
+      language="javascript"
+      src="http://webapi.amap.com/maps?v=1.3&key=7e2cbc797bd32062fbd3c2be61afc600"
+    ></script>
+  </head>
+  <style>
+    .amountStyle {
+      font-size: 0.4rem !important;
+    }
+
+    .widthStyle {
+      width: 70px;
+      font-size: 0.25rem !important;
+    }
+
+    .color_ec {
+      color: #ec4031;
+      font-size: 25px;
+    }
+
+    .textRed {
+      color: red;
+    }
+
+    .imgStyle {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .img2 {
+      display: none;
+    }
+
+    .flageImg {
+      font-size: 12px;
+      line-height: 30px;
+    }
+
+    .imgText {
+      margin-top: 0 !important;
+      padding-top: 7px !important;
+    }
+
+    .imgTitleStyle {
+      font-size: 15px !important;
+      display: flex;
+      height: 25px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .fontWight {
+      font-weight: bold;
+    }
+  </style>
+
+  <body>
+    <div class="updatestate">
+      <div class="state">
+        <div class="id">
+          <p>运单号：<span class="fontWight" id="waybillSerial"></span></p>
+          <div class="box">
+            <div class="yundanstate">
+              <span class="qiyun_icon status1">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#iconqiyun"></use>
+                </svg>
+              </span>
+              <span class="qiyun status1">立即起运</span>
+              <span class="success">
+                <svg class="icon status1" aria-hidden="true">
+                  <use xlink:href="#icongouxuan-1"></use>
+                </svg>
+              </span>
+            </div>
+            <p class="hair">
+              货物准备从 <span class="startProvince"></span> 装车完成，起运至
+              <span class="endProvince"></span>
+            </p>
+            <div class="jiantou">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icondianjiantou"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="box">
+            <div class="yundanstate">
+              <span class="qiyun_icon status3">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icondaoda"></use>
+                </svg>
+              </span>
+              <span class="qiyun status3">我已到达</span>
+              <span class="success">
+                <svg class="icon status3" aria-hidden="true">
+                  <use xlink:href="#icongouxuan-1"></use>
+                </svg>
+              </span>
+            </div>
+            <p class="hair">
+              货物已到达目的地 <span class="endProvince"></span>
+            </p>
+            <div class="jiantou">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icondianjiantou"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="box">
+            <div class="yundanstate">
+              <span class="qiyun_icon status4">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#iconhuidan"></use>
+                </svg>
+              </span>
+              <span class="qiyun status4">报送回单</span>
+              <span class="success">
+                <svg class="icon status4" aria-hidden="true">
+                  <use xlink:href="#icongouxuan-1"></use>
+                </svg>
+              </span>
+            </div>
+            <p class="hair">货物已送到并签收</p>
+          </div>
+        </div>
+        <div class="weight">
+          <table border="1" width="100%" id="table1">
+            <thead>
+              <tr>
+                <th class="widthStyle">序号</th>
+                <th class="widthStyle">货物名称</th>
+                <th class="widthStyle">运量<span class="Company"></span></th>
+                <th class="widthStyle">起运量<span class="Company"></span></th>
+                <th class="endShipmentAmount widthStyle">
+                  到达量<span class="Company"></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <table border="1" width="100%" id="table2">
+            <thead>
+              <tr>
+                <th class="widthStyle">序号</th>
+                <th class="widthStyle">货物名称</th>
+                <th class="widthStyle">
+                  运量
+                  <span class="Company"></span>
+                </th>
+                <th class="widthStyle">起运量<span class="Company"></span></th>
+                <th class="widthStyle">到达量<span class="Company"></span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody2"></tbody>
+          </table>
+        </div>
+        <div class="img imgText">
+          <p class="imgTitleStyle">
+            <span class="color_ec">*</span
+            ><span id="stateFlage"
+              >请上传清晰的<span class="textRed">出库单</span>照片</span
+            >
+          </p>
+          <div>
+            <div class="file" id="addImgBtn" onclick="fnShowAction()">十</div>
+          </div>
+        </div>
+        <div class="img2 imgText" id="imgid">
+          <p class="imgTitleStyle">
+            <span class="color_ec">*</span>请上传清晰的<span class="textRed"
+              >货物装车车头</span
+            >照片
+          </p>
+          <div>
+            <div class="file" id="addImgBtn2" onclick="fnShowAction2()">十</div>
+          </div>
+        </div>
+        <div class="button">
+          <button id="submit">状态上报</button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/html" id="listTemplate">
+    {{each tData as val k}}
+    <tr data-id="{{val.id}}" data-way="{{val.waybillId}}">
+      <td>{{k+1}}</td>
+      <td>{{val.productName}}</td>
+      <td>{{val.count}}</td>
+      <td id="begin">{{val.beginShipmentAmount}}</td>
+      <td class="shipmentAmount">
+        <input
+          type="text"
+          onblur="arriveAmountFn()"
+          value="{{val.beginShipmentAmount}}"
+          id="arriveAmount"
+          onclick="arriveFn()"
+          class="amount amountStyle"
+        />
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+  <script type="text/html" id="listTemplate2">
+    {{each tDatas as val k}}
+    <tr data-id="{{val.id}}" data-way="{{val.waybillId}}">
+      <td>{{k+1}}</td>
+      <td>{{val.productName}}</td>
+      <td>{{val.count}}</td>
+      <td>{{val.beginShipmentAmount}}</td>
+      <td>{{val.endShipmentAmount}}</td>
+    </tr>
+    {{/each}}
+  </script>
+  <script type="text/javascript" src="../../script/jquery.min.js"></script>
+  <script type="text/javascript" src="../../script/rem.js"></script>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script
+    type="text/javascript"
+    src="../../script/plugscript/artTemplate.js"
+  ></script>
+  <script
+    type="text/javascript"
+    src="../../script/plugscript/jquery-mvalidate.js"
+  ></script>
+  <script type="text/javascript" src="../../script/common.js"></script>
+  <script type="text/javascript" src="../../script/iconfont.js"></script>
+  <script type="text/javascript">
+    var status,
+      shippingNoteNumber,
+      serialNumber,
+      loadingPlaceCode,
+      unloadingPlaceCode;
+    var orderUnit = null;
+    var aMap;
+    var sys;
+    var waybillData = {};
+    var mainId;
+    var localinfo = {
+      address: "",
+      lon: 0,
+      lat: 0,
+      province: "",
+      city: "",
+      district: "",
+    };
+    apiready = function () {
+      //状态上报前要获取定位状态
+      resultlocation();
+      //开启权限
+      confirmPer("camera,storage", function () {});
+      mainId = api.pageParam.id;
+
+      //设置文案
+      if (api.pageParam.status === 10) {
+        document.getElementById("submit").innerHTML = "立即起运";
+      } else if (api.pageParam.status === 15) {
+        document.getElementById("submit").innerHTML = "立即起运";
+      } else if (api.pageParam.status === 20) {
+        document.getElementById("submit").innerHTML = "我已到达";
+      } else if (api.pageParam.status === 40) {
+        document.getElementById("submit").innerHTML = "报送回单";
+      }
+
+      aMap = api.require("aMap");
+      aMap.updateMapViewPrivacy({
+        privacyAgree: "didAgree",
+        privacyShow: "didShow",
+        containStatus: "didContain",
+      });
+      aMap.updateSearchPrivacy({
+        privacyAgree: "didAgree",
+        privacyShow: "didShow",
+        containStatus: "didContain",
+      });
+
+      sys = api.systemType;
+
+      //定义图片地址
+      fnReady();
+      reload();
+      getPhoneLocation(1);
+
+      function reload() {
+        dealData(
+          "tswaybill/" + mainId,
+          "GET",
+          {},
+          function (ret) {
+            if (ret.code === 0) {
+              waybillData = ret.data;
+              shippingNoteNumber = ret.data.shippingNoteNumber;
+              serialNumber = ret.data.serialNumber;
+              loadingPlaceCode = ret.data.loadingPlaceCode;
+              unloadingPlaceCode = ret.data.unloadingPlaceCode;
+              var tsWaybillDetails = ret.data.tsWaybillDetails;
+              $("#waybillSerial").html(ret.data.waybillSerial);
+              $(".endProvince").html("[" + ret.data.endProvince + "]");
+              // 单位
+              for (var i = 0; i < $(".Company").length; i++) {
+                if (ret.data.orderUnit) {
+                  $(".Company").eq(i).html(`(${ret.data.orderUnit})`);
+                  orderUnit = ret.data.orderUnit;
+                }
+              }
+
+              //判断当前运单状态 显示对应的UI
+              status = ret.data.status;
+              if (status == 10 || status == 15) {
+                $("#table1").show();
+                $("#table2").hide();
+                var htmlContent = template("listTemplate", {
+                  tData: tsWaybillDetails,
+                });
+                $("#tbody").html(htmlContent);
+                for (var i = 0; i < $("#tbody #begin").length; i++) {
+                  $("#tbody #begin")
+                    .eq(i)
+                    .html(
+                      `<input calss="" type="text" value=${tsWaybillDetails[i].count} onclick="arriveFn()"  onblur="amountFn()" id="amount" class="amount amountStyle">`
+                    );
+                }
+                $(".endShipmentAmount").hide();
+                $(".shipmentAmount").hide();
+                $(".status1").addClass("def");
+                $(".status3").addClass("def");
+                $(".status4").addClass("def");
+                document.getElementById("imgid").style.display = "block";
+                document.getElementById("stateFlage").innerHTML =
+                  "请上传<span class='textRed'>出库单</span>清晰照片 <span class='flageImg'> </span></span>";
+              } else if (status == 20) {
+                $("#table1").show();
+                $("#table2").hide();
+                var htmlContent = template("listTemplate", {
+                  tData: tsWaybillDetails,
+                });
+                $("#tbody").html(htmlContent);
+                $(".status1").addClass("active");
+                $(".status3").addClass("def");
+                $(".status4").addClass("def");
+                document.getElementById("stateFlage").innerHTML =
+                  "请上传清晰的<span class='textRed'>卸货车头车牌</span>照片";
+              } else if (status == 40) {
+                $("#table1").hide();
+                $("#table2").show();
+                var htmlContent = template("listTemplate2", {
+                  tDatas: tsWaybillDetails,
+                });
+                $("#tbody2").html(htmlContent);
+                $(".status1").addClass("active");
+                $(".status3").addClass("active");
+                $(".status4").addClass("def");
+                document.getElementById("stateFlage").innerHTML =
+                  "请上传清晰的<span class='textRed'>签收单</span>照片";
+                imgNum = 20;
+              }
+            } else {
+              api.toast({
+                msg: ret.msg,
+                duration: 5000,
+                location: "middle",
+              });
+            }
+          },
+          function (err) {
+            console.log(JSON.stringify(err));
+            api.toast({
+              msg: err.body.msg,
+              duration: 5000,
+              location: "middle",
+            });
+          }
+        );
+      }
+    };
+    function amountFn() {
+      if (!$("#amount").val()) {
+        return;
+      }
+      api.confirm(
+        {
+          title: "确认起运量",
+          msg:
+            `请确认起运量是否为：${$("#amount").val()}` +
+            `${orderUnit ? orderUnit : ""}`,
+          buttons: ["是", "否"],
+        },
+        function (ret, err) {
+          var index = ret.buttonIndex;
+          $("#submit").attr("disabled", false);
+          if (ret.buttonIndex === 1) {
+          } else {
+            $("#amount").val(null);
+          }
+        }
+      );
+    }
+
+    //控制状态上报
+    function arriveFn() {
+      $("#submit").attr("disabled", true);
+    }
+
+    //到达量确认
+    function arriveAmountFn() {
+      if (!$("#arriveAmount").val()) {
+        return;
+      }
+      api.confirm(
+        {
+          title: "确认到达量",
+          msg:
+            `请确认到达量是否为：${$("#arriveAmount").val()}` + `${orderUnit}`,
+          buttons: ["是", "否"],
+        },
+        function (ret, err) {
+          var index = ret.buttonIndex;
+          $("#submit").attr("disabled", false);
+          if (ret.buttonIndex === 1) {
+          } else {
+            $("#arriveAmount").val(null);
+          }
+        }
+      );
+    }
+
+    //图片压缩
+    var imgArr = [];
+    var imgArr2 = [];
+    var httpimgArr = [];
+    var signImg = ""; //上传图片标识
+    var carHeadImg = [];
+    var imgNum = 6;
+
+    function fnShowAction2() {
+      //上传图片标识
+      signImg = "carHeadImg";
+      var resultList = api.hasPermission({
+        list: ["camera"],
+      });
+      if (!resultList[0].granted) {
+        api.requestPermission(
+          {
+            list: ["camera"],
+          },
+          function (res) {
+            if (res.list[0].granted) {
+            }
+          }
+        );
+      }
+      api.actionSheet(
+        {
+          cancelTitle: "取消",
+          buttons: ["拍照"],
+        },
+        function (ret, err) {
+          if (ret.buttonIndex != 2) {
+            api.getPicture(
+              {
+                sourceType: "camera",
+                allowEdit: false,
+                saveToPhotoAlbum: false,
+              },
+              function (ret, err) {
+                if (ret) {
+                  var path = ret.data;
+                  if (path != "") {
+                    photograph(0, path);
+                  }
+                }
+                if (err) {
+                  console.log(JSON.stringify(err));
+                }
+              }
+            );
+          }
+          if (err) {
+            console.log(JSON.stringify(err));
+          }
+        }
+      );
+    }
+    //图片上传
+    function fnShowAction() {
+      signImg = "";
+      //上传图片标识
+      //判断权限
+      var resultList = api.hasPermission({
+        list: ["camera"],
+      });
+      if (!resultList[0].granted) {
+        api.requestPermission(
+          {
+            list: ["camera"],
+          },
+          function (res) {
+            if (res.list[0].granted) {
+            }
+          }
+        );
+      }
+      if (status == 40) {
+        api.actionSheet(
+          {
+            cancelTitle: "取消",
+            buttons: ["拍照", "相册"],
+          },
+          function (ret, err) {
+            if (ret.buttonIndex === 1) {
+              api.getPicture(
+                {
+                  sourceType: "camera",
+                  allowEdit: false,
+                  saveToPhotoAlbum: false,
+                },
+                function (ret, err) {
+                  if (ret) {
+                    var path = ret.data;
+                    if (path != "") {
+                      photograph(0, path);
+                    }
+                  }
+                  if (err) {
+                    console.log(JSON.stringify(err));
+                  }
+                }
+              );
+            }
+            if (ret.buttonIndex === 2) {
+              api.getPicture(
+                {
+                  sourceType: "album",
+                  allowEdit: false,
+                  saveToPhotoAlbum: false,
+                },
+                function (ret, err) {
+                  if (ret) {
+                    var path = ret.data;
+                    if (path != "") {
+                      photograph(0, path);
+                    }
+                  }
+                  if (err) {
+                    console.log(JSON.stringify(err));
+                  }
+                }
+              );
+            }
+            if (err) {
+              console.log(JSON.stringify(err));
+            }
+          }
+        );
+      } else {
+        api.actionSheet(
+          {
+            cancelTitle: "取消",
+            buttons: ["拍照"],
+          },
+          function (ret, err) {
+            if (ret.buttonIndex === 1) {
+              api.getPicture(
+                {
+                  sourceType: "camera",
+                  allowEdit: false,
+                  saveToPhotoAlbum: false,
+                },
+                function (ret, err) {
+                  if (ret) {
+                    var path = ret.data;
+                    if (path != "") {
+                      photograph(0, path);
+                    }
+                  }
+                  if (err) {
+                    console.log(JSON.stringify(err));
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+    }
+    //图片压缩
+    //i ->压缩次数 0开始
+    //path ->图片路径
+    function photograph(i, path) {
+      var minSize = 50 * 1024;
+      //鉴于税务接口的限制 图片不能大于400kb
+      var maxSize = 400 * 1024;
+      var imageCachePath = api.cacheDir;
+
+      var quality = 1;
+      var scale = 1;
+
+      if (i >= 2) {
+        quality = quality / i;
+      }
+      if (i > 5) {
+        scale = 0.9;
+      }
+      var imageFilter = api.require("imageFilter");
+      imageFilter.getAttr(
+        {
+          path: path,
+        },
+        function (ret, err) {
+          if (ret.size < minSize) {
+            alert("图片大小小于50kb，请重新上传图片！");
+            return;
+          }
+          if (ret.size > maxSize) {
+            //如果图片大于1M就进行压缩处理
+            var imgName = new Date().getTime() + ".jpg";
+            imageFilter.compress(
+              {
+                img: path,
+                quality: quality,
+                //压缩比例,
+                scale: scale,
+                save: {
+                  imgPath: imageCachePath,
+                  imgName: imgName,
+                },
+              },
+              function (ret, err) {
+                var compressedImgPath = imageCachePath + "/" + imgName;
+                imageFilter.getAttr(
+                  {
+                    path: compressedImgPath,
+                  },
+                  function (ret1, err) {
+                    if (ret1.size > maxSize) {
+                      //如果图片大于1M就进行压缩处理
+                      //循环压缩
+                      i++;
+                      photograph(i, compressedImgPath);
+                    } else {
+                      // console.log("fina:" + ret1.size);
+                      //选择图片预览
+                      if (signImg === "carHeadImg") {
+                        var addImg =
+                          "<div class='img2'><span >-</span><img calss='imgStyle' src='" +
+                          compressedImgPath +
+                          "' /></div>";
+                        $("#addImgBtn2").before(addImg);
+                        imgArr2.push(compressedImgPath);
+                        upImg(compressedImgPath);
+                      } else {
+                        var addImg =
+                          "<div class='img'><span >-</span><img calss='imgStyle' src='" +
+                          compressedImgPath +
+                          "' /></div>";
+                        $("#addImgBtn").before(addImg);
+                        imgArr.push(compressedImgPath);
+                        upImg(compressedImgPath);
+                      }
+                      // 上传图片
+                      //如果超过6张图片禁止上传图片
+                      if ($(".img .img").length === imgNum) {
+                        $("#addImgBtn").css("display", "none");
+                      }
+                      if ($(".img2 .img2").length === 1) {
+                        $("#addImgBtn2").css("display", "none");
+                      }
+                    }
+                  }
+                );
+              }
+            );
+          } else {
+            //选择图片预览
+            if (signImg === "carHeadImg") {
+              var addImg =
+                "<div class='img2'><span >-</span><img src='" +
+                path +
+                "' /></div>";
+              $("#addImgBtn2").before(addImg);
+              imgArr2.push(path);
+              upImg(path);
+            } else {
+              var addImg =
+                "<div class='img'><span >-</span><img src='" +
+                path +
+                "' /></div>";
+              $("#addImgBtn").before(addImg);
+              imgArr.push(path);
+              upImg(path);
+            }
+            // 上传图片
+            //如果超过6张图片禁止上传图片
+            if ($(".img .img").length == imgNum) {
+              $("#addImgBtn").css("display", "none");
+            }
+            if ($(".img2 .img2").length === 1) {
+              $("#addImgBtn2").css("display", "none");
+            }
+          }
+        }
+      );
+    }
+
+    //提交图片
+    function upImg(imgArr) {
+      //方法
+      api.showProgress({
+        title: "上传中...",
+        modal: false,
+      });
+      var accessToken = $api.getStorage("accessToken");
+      api.ajax(
+        {
+          url: getBaseRootPath() + "/app/tswaybill/importequery",
+          method: "post",
+          dataType: "json",
+          headers: {
+            Authorization: "bearer " + accessToken,
+          },
+          data: {
+            files: {
+              imgFiles: imgArr,
+            },
+          },
+        },
+        function (ret, err) {
+          if (ret.code === 0) {
+            if (signImg === "carHeadImg") {
+              carHeadImg.push(ret.data[0]);
+            } else {
+              httpimgArr.push(ret.data[0]);
+            }
+          } else {
+            $.mvalidateTip(ret.msg);
+          }
+          if (err) {
+            $.mvalidateTip("图片上传失败");
+            // alert(JSON.stringify(err));
+          }
+          api.hideProgress();
+        }
+      );
+    }
+    // 删除图片
+    $(".img").on("click", ".img  span", function () {
+      api.confirm(
+        {
+          title: "删除图片",
+          msg: "您确定要删除当前图片吗？",
+          buttons: ["确定", "取消"],
+        },
+        function (ret, err) {
+          var index = ret.buttonIndex;
+          if (index == 1) {
+            var index = $(".img span").index($(this));
+            imgArr.splice(index, 1);
+            $(".img span").eq(index).parent().remove();
+            httpimgArr.splice(index, 1);
+            if (imgArr.length < imgNum) {
+              $("#addImgBtn").css("display", "block");
+            }
+          }
+        }
+      );
+    });
+
+    // 删除图片
+    $(".img2").on("click", ".img2  span", function () {
+      api.confirm(
+        {
+          title: "删除图片",
+          msg: "您确定要删除当前图片吗？",
+          buttons: ["确定", "取消"],
+        },
+        function (ret, err) {
+          var index = ret.buttonIndex;
+          if (index == 1) {
+            var index = $(".img2 span").index($(this));
+            imgArr.splice(index, 1);
+            $(".img2 span").eq(index).parent().remove();
+            carHeadImg.splice(index, 1);
+            if (imgArr.length < 1) {
+              $("#addImgBtn2").css("display", "block");
+            }
+          }
+        }
+      );
+    });
+
+    //发送事件监听
+    function fnSendEvent(name, obj) {
+      api.sendEvent({
+        name: name,
+        extra: obj,
+      });
+    }
+    // 获取经纬度及相对应的地址
+    function getPhoneLocation(isFisrt) {
+      // 获取经纬度
+      aMap.open(
+        {
+          rect: {
+            x: 0,
+            y: 0,
+            w: 0,
+            h: 0,
+          },
+        },
+        function (ret, err) {
+          if (ret.status) {
+            aMap.getLocation(function (ret, err) {
+              if (ret) {
+                if (isFisrt == 1) {
+                  if (ret.lon == 0 || ret.lat == 0) {
+                    alert(
+                      "未获取到定位信息\r\n可能信号较弱或未打开手机定位功能"
+                    );
+                  }
+                }
+                localinfo.lon = ret.lon;
+                localinfo.lat = ret.lat;
+                // aMap.getNameFromCoords({
+                //     lon: localinfo.lon,
+                //     lat: localinfo.lat
+                // }, function (ret, err) {
+                //     console.log("反解析地址：" + JSON.stringify(ret));
+                //     if (ret.status) {
+                //         localinfo.address = ret.address
+                //         localinfo.province = ret.state;
+                //         localinfo.district = ret.district;
+                //         localinfo.city = ret.city;
+                //     } else {
+                //         api.toast({
+                //             msg: '地址反解析失败',
+                //             duration: 5000,
+                //             location: 'middle'
+                //         });
+                //     }
+                // });
+                // // 获取地址
+                if (ret.status) {
+                  var location = ret.lon.toString() + "," + ret.lat.toString();
+                } else {
+                  var location = "";
+                }
+                var webApiPath =
+                  "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=" +
+                  location +
+                  "&key=7e2cbc797bd32062fbd3c2be61afc600&radius=0&extensions=base";
+                outDealData(
+                  webApiPath,
+                  function (ret) {
+                    console.log("web反解析:", JSON.stringify(ret));
+                    if (ret && ret.status == "1") {
+                      var address = ret.regeocode.formatted_address;
+                      localinfo.address = address;
+                      localinfo.province =
+                        ret.regeocode.addressComponent.province;
+                      localinfo.district =
+                        ret.regeocode.addressComponent.district;
+                      var city = ret.regeocode.addressComponent.city;
+                      if (Array.isArray(city)) {
+                        if (city.length == 0) {
+                          localinfo.city =
+                            ret.regeocode.addressComponent.province;
+                        } else {
+                          localinfo.city = city[0];
+                        }
+                      } else {
+                        localinfo.city = city;
+                      }
+                    } else {
+                      api.toast({
+                        msg: "地址反解析失败",
+                        duration: 5000,
+                        location: "middle",
+                      });
+                    }
+                  },
+                  function (err) {
+                    api.toast({
+                      msg: "地址反解析失败",
+                      duration: 5000,
+                      location: "middle",
+                    });
+                  }
+                );
+              } else {
+                // alert(JSON.stringify(err.locationDetail));
+                console.log("err:" + JSON.stringify(err));
+                api.toast({
+                  msg: "定位失败,请查看定位权限是否为[始终允许]",
+                  duration: 5000,
+                  location: "middle",
+                });
+              }
+            });
+          } else {
+            api.toast({
+              msg: "定位失败,请查看定位权限是否为[始终允许]",
+              duration: 5000,
+              location: "middle",
+            });
+          }
+        }
+      );
+      api.hideProgress();
+    }
+    //状态上报
+    $(document).on("click", "#submit", function () {
+      getPhoneLocation();
+      //未开启定位禁止起运
+      if (!locationStatueFn()) {
+        resultlocation();
+        return true;
+      }
+      if (status == 10 || status == 15) {
+        // 起运
+        var tsWaybillDetails = [];
+        var reg = /^\d+$|^\d*\.\d+$/g;
+        var tbody = $("#tbody tr");
+        for (var i = 0; i < tbody.length; i++) {
+          const element = tbody[i];
+          if (
+            !element.children[element.children.length - 2].lastElementChild
+              .value &&
+            !reg.test(
+              element.children[element.children.length - 2].lastElementChild
+                .value
+            )
+          ) {
+            $.mvalidateTip("第" + (i + 1) + "明细起运量有误，请重新输入!");
+            return;
+          }
+          var number =
+            element.children[element.children.length - 2].lastElementChild
+              .value;
+          reg.lastIndex = 0;
+          if (!reg.test(number)) {
+            $.mvalidateTip("请输入数字");
+            return;
+          }
+          tsWaybillDetails.push({
+            id: element.dataset.id,
+            waybillId: element.dataset.way,
+            beginShipmentAmount:
+              element.children[element.children.length - 2].lastElementChild
+                .value,
+          });
+        }
+        api.confirm(
+          {
+            title: "确认起运",
+            msg: "是否确认起运",
+            buttons: ["是", "否"],
+          },
+          function (ret, err) {
+            if (ret.buttonIndex === 1) {
+              var longitude = localinfo.lon;
+              var latitude = localinfo.lat;
+              var address = localinfo.address;
+              var parm = {
+                tsWaybillDetails: tsWaybillDetails,
+                img: httpimgArr ? httpimgArr : [],
+                carHeadImg: carHeadImg,
+                longitude: longitude ? longitude : "",
+                latitude: latitude ? latitude : "",
+                address: address.length === 0 ? "" : address,
+                province:
+                  localinfo.province.length === 0 ? "" : localinfo.province,
+                city: localinfo.city.length === 0 ? "" : localinfo.city,
+                district:
+                  localinfo.district.length === 0 ? "" : localinfo.district,
+              };
+              if (!parm.province) {
+                var aMap = api.require("aMap");
+                aMap.getNameFromCoords(
+                  {
+                    lon: parm.longitude,
+                    lat: parm.latitude,
+                  },
+                  function (ret, err) {
+                    if (ret.status) {
+                      console.log(
+                        "------反解析-------：" + JSON.stringify(ret)
+                      );
+                      parm.province = ret.state;
+                      parm.city = ret.city;
+                      parm.district = ret.district;
+                    } else {
+                      api.alert({
+                        msg: JSON.stringify(err),
+                      });
+                    }
+                  }
+                );
+              }
+              if (parm.longitude === "" || parm.latitude === "") {
+                api.toast({
+                  msg: "经纬度不能为空！请开启定位功能！",
+                  duration: 5000,
+                  location: "middle",
+                });
+                resultlocation();
+                return false;
+              }
+
+              if (parm.img.length === 0) {
+                api.toast({
+                  msg: "出库单照片不能为空！",
+                  duration: 5000,
+                  location: "middle",
+                });
+                return false;
+              }
+              if (carHeadImg.length === 0) {
+                api.toast({
+                  msg: "货物装车车头照片不能为空！",
+                  duration: 5000,
+                  location: "middle",
+                });
+                return false;
+              }
+              //定位启运的位置
+              api.showProgress({
+                title: "状态上报中...",
+                modal: false,
+              });
+              dealData(
+                "tswaybilldetails/start",
+                "PUT",
+                JSON.stringify(parm),
+                function (ret) {
+                  if (ret.code === 0) {
+                    // console.log(JSON.stringify(ret))
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                    //上传省平台 开始定位
+                    startLocation(waybillData);
+                    //运单上报成后续操作  --- 返回运单页面 刷新页面
+                    //TODO
+                    fnSendEvent("qiyun", { key: 1 });
+                    // setTimeout(function () {
+                    api.closeWin();
+                    // }, 1500)
+                    //启运定位
+                    //起运处理弹框
+                    api.sendEvent({
+                      name: "orderReceivingAfter",
+                      extra: {},
+                    });
+                  } else {
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                    // console.log(JSON.stringify(ret));
+                  }
+                },
+                function (err) {
+                  // console.log(JSON.stringify(err));
+                  api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: "middle",
+                  });
+                }
+              );
+              setTimeout("api.refreshHeaderLoadDone()", "500");
+            }
+          }
+        );
+      } else if (status == 20) {
+        // 到达
+        var tsWaybillDetails = [];
+        var reg = /^\d+$|^\d*\.\d+$/g;
+        var tbody = $("#tbody tr");
+        for (var i = 0; i < tbody.length; i++) {
+          const element = tbody[i];
+          if (
+            !element.lastElementChild.lastElementChild.value &&
+            !reg.test(element.lastElementChild.lastElementChild.value)
+          ) {
+            $.mvalidateTip("第" + (i + 1) + "明细到达量有误，请重新输入!");
+            api.hideProgress();
+            return;
+          }
+          var number = element.lastElementChild.lastElementChild.value;
+          reg.lastIndex = 0;
+          if (!reg.test(number)) {
+            $.mvalidateTip("请输入数字");
+            api.hideProgress();
+            return;
+          }
+          // 获取起运量
+          // console.log(element.children[element.children.length - 2].innerHTML)
+          tsWaybillDetails.push({
+            id: element.dataset.id,
+            waybillId: element.dataset.way,
+            endShipmentAmount: element.lastElementChild.lastElementChild.value,
+          });
+        }
+        api.confirm(
+          {
+            title: "确认到达",
+            msg: "是否确认到达",
+            buttons: ["是", "否"],
+          },
+          function (ret, err) {
+            if (ret.buttonIndex === 1) {
+              var longitude = localinfo.lon;
+              var latitude = localinfo.lat;
+              var address = localinfo.address;
+              var parm = {
+                tsWaybillDetails: tsWaybillDetails,
+                img: httpimgArr,
+                longitude: longitude ? longitude : "",
+                latitude: latitude ? latitude : "",
+                address: address.length === 0 ? "" : address,
+                province:
+                  localinfo.province.length === 0 ? "" : localinfo.province,
+                city: localinfo.city.length === 0 ? "" : localinfo.city,
+                district:
+                  localinfo.district.length === 0 ? "" : localinfo.district,
+              };
+              if (!parm.province) {
+                var aMap = api.require("aMap");
+                aMap.getNameFromCoords(
+                  {
+                    lon: parm.longitude,
+                    lat: parm.latitude,
+                  },
+                  function (ret, err) {
+                    if (ret.status) {
+                      console.log(
+                        "------反解析--------：" + JSON.stringify(ret)
+                      );
+                      parm.province = ret.state;
+                      parm.city = ret.city;
+                      parm.district = ret.district;
+                    } else {
+                      api.alert({
+                        msg: JSON.stringify(err),
+                      });
+                    }
+                  }
+                );
+              }
+              if (parm.longitude === "" || parm.latitude === "") {
+                api.toast({
+                  msg: "经纬度不能为空！请开启定位功能！",
+                  duration: 5000,
+                  location: "middle",
+                });
+                resultlocation();
+                return false;
+              }
+              api.showProgress({
+                title: "状态上报中...",
+                modal: false,
+              });
+              console.log("------参数-------：" + JSON.stringify(parm));
+              dealData(
+                "tswaybilldetails/arrive",
+                "PUT",
+                JSON.stringify(parm),
+                function (ret) {
+                  if (ret.code === 0) {
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                    // console.log(JSON.stringify(ret));
+                    //上传省平台 结束定位
+                    //TODO
+                    //stoploction(shippingNoteNumber, serialNumber, loadingPlaceCode, unloadingPlaceCode);
+                    //运单上报成后续操作  --- 返回运单页面 刷新页面
+                    //sdk2.0到达结束定位
+                    stoploction(waybillData);
+                    fnSendEvent("daoda", { key: 1 });
+                    api.closeWin();
+                    //起运处理弹框
+                    api.sendEvent({
+                      name: "reachAfter",
+                      extra: {},
+                    });
+                  } else {
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                    // console.log(JSON.stringify(ret));
+                  }
+                },
+                function (err) {
+                  console.log(JSON.stringify(err));
+                  api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: "middle",
+                  });
+                }
+              );
+              setTimeout("api.refreshHeaderLoadDone()", "500");
+            }
+          }
+        );
+      } else if (status == 40) {
+        // 回单
+        var tsWaybillDetails = [];
+        var tbody = $("#tbody2 tr");
+        for (var i = 0; i < tbody.length; i++) {
+          const element = tbody[i];
+          tsWaybillDetails.push({
+            id: element.dataset.id,
+            waybillId: element.dataset.way,
+          });
+        }
+        var longitude = localinfo.lon;
+        var latitude = localinfo.lat;
+        var address = localinfo.address;
+        api.confirm(
+          {
+            title: "确认回单",
+            msg: "是否确认回单",
+            buttons: ["是", "否"],
+          },
+          function (ret, err) {
+            if (ret.buttonIndex === 1) {
+              var parm = {
+                tsWaybillDetails: tsWaybillDetails,
+                img: httpimgArr,
+                longitude: longitude ? longitude : "",
+                latitude: latitude ? latitude : "",
+                address: address.length === 0 ? "" : address,
+              };
+              if (parm.longitude === "" || parm.latitude === "") {
+                api.toast({
+                  msg: "经纬度不能为空！请开启定位功能！",
+                  duration: 5000,
+                  location: "middle",
+                });
+                resultlocation();
+                return false;
+              }
+              api.showProgress({
+                title: "状态上报中...",
+                modal: false,
+              });
+              console.log("------参数-------：" + JSON.stringify(parm));
+              dealData(
+                "tswaybilldetails/receipt",
+                "PUT",
+                JSON.stringify(parm),
+                function (ret) {
+                  if (ret.code === 0) {
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                    // console.log(JSON.stringify(ret));
+                    $(".status4").removeClass("def");
+                    $(".status4").addClass("active");
+                    //运单上报成后续操作  --- 返回运单页面 刷新页面
+                    fnSendEvent("huidan", { key: 1 });
+                    api.closeWin();
+                    api.sendEvent({
+                      name: "orderEnd",
+                      extra: {},
+                    });
+                  } else {
+                    api.toast({
+                      msg: ret.msg,
+                      duration: 5000,
+                      location: "middle",
+                    });
+                  }
+                },
+                function (err) {
+                  api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: "middle",
+                  });
+                }
+              );
+              setTimeout("api.refreshHeaderLoadDone()", "500");
+            }
+          }
+        );
+      }
+    });
+  </script>
+</html>

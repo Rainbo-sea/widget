@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>状态Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .aui-btn-right {
+        position: absolute;
+        top: 7px;
+        right: 12px;
+        width: 50px;
+        height: 38px;
+    }
+
+    .img_h {
+        width: 18px;
+        height: 18px;
+    }
+
+    .searchStyle {
+        color: #1890D5;
+        font-size: 20px;
+    }
+
+    .searchImg {
+        width: 30px;
+        height: 30px;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWin();"><svg class="icon"
+                aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title">我的报价</div>
+        <div class="aui-pull-right aui-btn-right" onclick="search()">
+            <img class="searchImg" src="../../image/serch.png" />
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    var prames = {
+        deliveryDatestartTime: null,//筛选开始时间
+        deliveryDateendTime: null,//筛选结束时间
+        receiptDatestartTime: null,//筛选开始时间
+        receiptDateendTime: null,//筛选结束时间
+        startCity: null,
+        endCity: null,
+        carType: null,
+        myStatus: null,
+    }
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+            name: 'offerList_frame',
+            url: 'offerList_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+            },
+        });
+
+        api.addEventListener({
+            name: 'screenOfferList'
+        }, function (ret, err) {
+            prames = ret.value;
+        })
+    };
+    function search() {
+        api.openFrame({
+            name: 'screenOfferList',
+            url: './screenOfferList.html',
+            pageParam: {},
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: true,
+            hScrollBarEnabled: true,
+            pageParam: {
+                prames: prames
+            }
+        });
+    }
+</script>
+
+</html>

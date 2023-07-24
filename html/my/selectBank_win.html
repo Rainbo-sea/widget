@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>状态Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .aui-btn-right {
+        position: absolute;
+        top: 7px;
+        right: 12px;
+        width: 50px;
+        height: 38px;
+    }
+
+    .img_h {
+        width: 18px;
+        height: 18px;
+    }
+
+    .searchStyle {
+        color: #1890D5;
+        font-size: 20px;
+    }
+</style>
+
+<body class='fgay'>
+    <header class="aui-bar-header clearfix"><a class="aui-btn fl" onclick="closeWin();"><svg class="icon"
+                aria-hidden="true">
+                <use xlink:href="#iconzuojiantou"></use>
+            </svg></a>
+        <div class="aui-title">选择开户行 </div>
+        <div class="aui-pull-right aui-btn-right" onclick="search()">
+            <a class="searchStyle">筛选</a>
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        fnReady();
+        //侵入式状态栏
+        $api.dom('header').style.marginTop = api.safeArea.top + 'px';
+        api.openFrame({
+            name: 'selectBank_frame',
+            url: 'selectBank_frame.html',
+            rect: {
+                x: 0,
+                y: headerHeight + api.safeArea.top + 5,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+            },
+        });
+    };
+    function search() {
+
+        var dialogBox = api.require('dialogBox');
+        dialogBox.sendMessage({
+            texts: {
+                title: '开户银行：',
+                hintText: '请输入你的开户行',
+                leftBtnTitle: '取消',
+                rightBtnTitle: '确认'
+            },
+            styles: {
+                bg: '#fff',
+                w: 300,
+                corner: 2,
+                title: {
+                    h: 60,
+                    show: {
+                        marginL: 6,
+                        marginT: 20,
+                        titleSize: 18,
+                        titleColor: '#000'
+                    },
+                    input: {
+                        marginL: 6,
+                        marginT: 20,
+                        textSize: 18,
+                        textColor: '#000'
+                    }
+                },
+                left: {
+                    marginB: 7,
+                    marginL: 10,
+                    w: 130,
+                    h: 35,
+                    corner: 2,
+                    bg: '#fff',
+                    size: 18
+                },
+                right: {
+                    marginB: 7,
+                    marginL: 10,
+                    w: 130,
+                    h: 35,
+                    corner: 2,
+                    bg: '#fff',
+                    size: 18
+                }
+            }
+        }, function (ret) {
+            if (ret.eventType == 'right') {
+                var dialogBox = api.require('dialogBox');
+                dialogBox.close({
+                    dialogName: 'sendMessage'
+                });
+                api.sendEvent({
+                    name: 'searchBank',
+                    extra: {
+                        bankName: ret.text,
+                    }
+                });
+            }
+            if (ret.eventType == 'left') {
+                var dialogBox = api.require('dialogBox');
+                dialogBox.close({
+                    dialogName: 'sendMessage'
+                });
+            }
+        });
+    }
+</script>
+
+</html>

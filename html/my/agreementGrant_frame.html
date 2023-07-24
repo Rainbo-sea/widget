@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+</head>
+<style>
+    .textRight {
+        text-align: right;
+    }
+
+    .xieyiDiv {
+        margin: 10px;
+        background: #fff;
+        padding: 10px;
+    }
+</style>
+
+<body class='wrap'>
+    <div class="my" id="app">
+        <div class="xieyiDiv">
+            <div class="my_box">
+                <!-- <p class="textRight"> 版本生效时间：2022年4月1日</p> -->
+                <p id="contentDiv"></p>
+            </div>
+        </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        var headerHeight = $(".aui-bar-header").height();
+        initFn();
+        //侵入式状态栏
+        function initFn() {
+            api.ajax({
+                url: getBaseRootPath() + "/app/platform/cmssafetywarning/get/3",
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+            }, function (ret, err) {
+                if (ret) {
+                    if (ret && ret.code === 0) {
+                        document.getElementById("contentDiv").innerHTML = ret.data.content
+                    }
+                } else {
+                    api.hideProgress();
+                }
+                if (err) {
+                    console.log(JSON.stringify(err))
+                    return;
+                }
+
+            });
+        }
+
+    };
+
+    function closeWins() {
+        api.closeWin();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#007ef5',
+        });
+    }
+</script>
+
+</html>

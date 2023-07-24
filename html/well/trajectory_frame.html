@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>货车路线1</title>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+        }
+
+        .container {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src="../../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../../script/rem.js"></script>
+    <script type="text/javascript" src="../../script/api.js"></script>
+    <script type="text/javascript" src="../../script/iconfont.js"></script>
+    <script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+    <script type="text/javascript" src="../../script/iconfont.js"></script>
+    <script type="text/javascript"
+        src='https://webapi.amap.com/maps?v=2.0&key=d537012102833d56607407d0e7a7db72'></script>
+    <!-- UI组件库 1.0 -->
+    <script src="https://webapi.amap.com/ui/1.1/main.js?v=1.1.1"></script>
+    <script type="text/javascript" src="../../script/common.js"></script>
+    <script>
+        apiready = function () {
+            var tswaybillData = {
+                locators: []
+            };
+            getLinkFn();
+            //获取轨迹函数
+            function getLinkFn() {
+                api.showProgress({
+                    title: '加载中...',
+                    modal: false
+                });
+                dealData('/platform/tswaybilllocator/tswaybill/' + api.pageParam.id, 'get', {}, function (ret) {
+                    console.log("请求返回结果:" + JSON.stringify(ret));
+                    if (ret.code === 0) {
+                        if (ret.data.locators) {
+                            tswaybillData = ret.data
+                        }
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    }
+                }, function (err) {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: err.body.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                })
+                setTimeout('api.refreshHeaderLoadDone()', '500');
+            };
+            //创建地图
+            var map = new AMap.Map('container', {
+                zoom: 12
+            });
+
+
+            AMapUI.load(['ui/misc/PathSimplifier', 'lib/$'], function (PathSimplifier, $) {
+                if (!PathSimplifier.supportCanvas) {
+                    alert('当前环境不支持 Canvas！');
+                    return;
+                }
+                var pathSimplifierIns = new PathSimplifier({
+                    zIndex: 100,
+                    //autoSetFitView:false,
+                    map: map, //所属的地图实例
+
+                    getPath: function (pathData, pathIndex) {
+
+                        return pathData.path;
+                    },
+                    getHoverTitle: function (pathData, pathIndex, pointIndex) {
+
+                        if (pointIndex >= 0) {
+                            //point 
+                            return pathData.name + '，点：' + pointIndex + '/' + pathData.path.length;
+                        }
+
+                        return pathData.name + '，点数量' + pathData.path.length;
+                    },
+                    renderOptions: {
+
+                        renderAllPointsIfNumberBelow: 100 //绘制路线节点，如不需要可设置为-1
+                    }
+                });
+
+                window.pathSimplifierIns = pathSimplifierIns;
+
+                if (tswaybillData.locators.length != 0) {
+                    //设置数据
+                    pathSimplifierIns.setData([{
+                        name: '路线0',
+                        path: tswaybillData.locators
+                    }]);
+                    // 对第一条线路（即索引 0）创建一个巡航器
+                    var navg1 = pathSimplifierIns.createPathNavigator(0, {
+                        loop: false, //循环播放
+                        speed: 10000 //巡航速度，单位千米/小时
+                    });
+                    navg1.start();
+                    // navg1.pause();
+                }
+
+
+
+            });
+            AMapUI.loadUI(['overlay/SimpleMarker'], function (SimpleMarker) {
+
+                console.log("数据：" + JSON.stringify(tswaybillData.locators));
+                if (tswaybillData.locators.length !== 0) {
+                    new SimpleMarker({
+                        iconLabel:
+                        {
+                            innerHTML: '起',
+                            style: {
+                                fontSize: "15px",
+                                color: "#ffffff",
+                                lineHeight: " 15px",
+                                marginTop: "5px",
+                            }
+                        },
+                        //自定义图标节点(img)的属性
+                        iconStyle: {
+                            src: '../../image/lonctionImg.png',
+                            style: {
+                                width: '40px',
+                                height: '40px',
+                            }
+                        },
+                        //设置基点偏移
+                        offset: new AMap.Pixel(-20, -35),
+                        map: map,
+                        showPositionPoint: true,
+                        position: tswaybillData.locators[0],
+                        zIndex: 200
+                    });
+                    new SimpleMarker({
+                        iconLabel:
+                        {
+                            innerHTML: '止',
+                            style: {
+                                fontSize: "15px",
+                                color: "#ffffff",
+                                lineHeight: " 15px",
+                                marginTop: "5px",
+                            }
+                        },
+                        //自定义图标节点(img)的属性
+                        iconStyle: {
+                            src: '../../image/lonctionImg.png',
+                            style: {
+                                width: '40px',
+                                height: '40px',
+                                fontSize: "16px"
+                            }
+                        },
+                        //设置基点偏移
+                        offset: new AMap.Pixel(-20, -35),
+                        map: map,
+                        showPositionPoint: true,
+                        position: tswaybillData.locators[tswaybillData.locators.length - 1],
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

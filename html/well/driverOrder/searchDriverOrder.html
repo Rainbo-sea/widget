@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpomaskcontent" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <style>
+        .content {
+            min-height: 96vh;
+            width: 100%;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .maskBg {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            background: rgba(135, 137, 142, 1);
+            opacity: 0.2;
+        }
+
+        .maskcontent {
+            position: absolute;
+            height: 210px;
+            min-width: 300px;
+            top: 47%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background-color: #fafafc;
+            text-align: center;
+            background: #fafafc;
+            border-radius: 14px;
+        }
+
+        .titileText {
+            font-size: 20px;
+            padding: 10px 10px 0px 10px;
+        }
+
+        .textContent {
+            padding: 14px;
+            height: 66px;
+            overflow: auto;
+            overflow-y: scroll;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: left;
+        }
+
+        .footerDiv {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+
+        }
+
+        .footerButton {
+            color: #fff;
+            background: #1890FF;
+            border: 0;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .relativeDiv {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .marginRight {
+            margin-right: 20px;
+        }
+
+        .inputLable {
+            width: 100px;
+            display: block;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .inputLi {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            box-sizing: border-box;
+            margin: 0;
+            font-variant: tabular-nums;
+            list-style: none;
+            font-feature-settings: "tnum";
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            min-width: 0;
+            padding: 4px 11px;
+            color: #000000d9;
+            font-size: 14px;
+            line-height: 1.5715;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            transition: all .3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" id="app">
+        <div class="maskBg" @click="closeMaskmodel()"></div>
+        <div class="maskcontent">
+            <div class="relativeDiv">
+                <div class="titileText">查询车辆</div>
+                <div class="textContent">
+                    <li class="inputLi">
+                        <label class="inputLable">车牌号 :</label>
+                        <input v-model="number" placeholder="请输入完整车牌号"></span>
+                    </li>
+                    <!-- <li class="inputLi">
+                        <label class="inputLable">所属单位 :</label>
+                        <input v-model="owner" placeholder="请输入所属单位">
+                    </li> -->
+                </div>
+                <div class="footerDiv">
+                    <button class="footerButton marginRight" @click="closeMaskmodel()">取消</button>
+                    <button class="footerButton" @click="submit()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script>
+
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                number: "",
+                owner: ""
+            },
+            created: function () {
+
+            },
+            methods: {
+                closeMaskmodel: function () {
+                    api.closeFrame({
+                        name: 'searchDriverOrder'
+                    });
+                },
+                submit: function () {
+                    var driverInfo = {
+                        number: this.number,
+                        owner: this.owner,
+                    }
+                    api.sendEvent({
+                        name: 'searchDriverOrder',
+                        extra: {
+                            driverInfo: driverInfo
+                        }
+                    });
+                    setTimeout(function () {
+                        api.closeFrame({
+                            name: 'searchDriverOrder'
+                        });
+                    }, 500)
+                },
+            },
+        })
+    };
+
+</script>
+
+</html>

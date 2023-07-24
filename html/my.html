@@ -1,0 +1,837 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的信息</title>
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/plugcss/validate.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+<style>
+    .successStyle {
+        width: 0.4rem;
+        height: 0.4rem;
+        margin-top: 0.25rem;
+        margin-left: 0.2rem;
+    }
+
+    .padingTop {
+        padding-top: 50px;
+    }
+
+    .fontStyle {
+        font-size: 0.35rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.3rem !important;
+    }
+
+    .tel {
+        padding-left: 20px;
+    }
+
+    .myInfo {
+        border: 1px #fff solid;
+        padding: 0 8px;
+        font-size: 15px !important;
+        line-height: 32px !important;
+        border-radius: 6px;
+    }
+
+    .carImg {
+        width: 0.35rem !important;
+        height: 0.35rem !important;
+    }
+
+    .flaetRight {
+        float: right;
+        font-weight: bold;
+    }
+
+    .clolor1 {
+        color: #1890FF;
+    }
+
+    .clolor2 {
+        color: #1890FF;
+    }
+
+    .clolor3 {
+        color: #55af08;
+    }
+
+    .clolor4 {
+        color: red;
+    }
+
+    .disnlayNone {
+        display: none;
+    }
+
+    .disnlayBlock {
+        display: block;
+    }
+
+    .positionRelative {
+        position: relative;
+    }
+
+    .noticeDiv {
+        padding: 5px;
+        border-radius: 50%;
+        text-align: center;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        height: 16px;
+        min-width: 16px;
+        font-size: 16px;
+        line-height: 16px;
+        background: red;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0px 1px 10px red;
+    }
+</style>
+
+<body class="wrap">
+    <div class="my" id="app">
+        <div class="my_name padingTop">
+            <!-- <div class="pic">
+                <img src="../image/user.png" alt="">
+            </div> -->
+            <div class="tel">
+                <p class="fontStyle" id="name"></p>
+                <p class="tel_tel fontStyle"></p>
+                <p class="truckNumber fontStyle"></p>
+            </div>
+            <div class="right myInfo" @click="openMsg()">
+                我的信息
+            </div>
+        </div>
+
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="bk" @click="myCarListFn()">
+                    <span class="icon1">
+                        <img src="../image/myCarImg.png" alt="" class="img carImg">
+                    </span>
+                    <span class="password fontSize1">运力信息</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="kh disnlayNone" @click="realNameFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/sfzz.png" alt="" class="img">
+                    </span>
+                    <!-- -->
+                    <span id="smzzText" class="password fontSize1">实名认证</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                    <span class="flaetRight clolor2" v-show="userInfoStatus.isReal == 0"
+                        v-text="userInfoStatus.isReal == 0?'未认证':''"></span>
+                    <span class="flaetRight clolor3" v-show="userInfoStatus.isReal == 1"
+                        v-text="userInfoStatus.isReal == 1?'已认证':''"></span>
+                </div>
+                <div class="pwd " @click="myMoneyFn()">
+                    <span class="icon1">
+                        <img src="../image/walletImg.png" alt="" class="img carImg">
+                    </span>
+                    <span class="password fontSize1">我的钱包</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd disnlayNone positionRelative" @click="openNotice()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/noticeImg.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">通知列表</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                    <div class="noticeDiv disnlayNone" v-text="userInfoStatus.noticeCount"> </div>
+                </div>
+                <div class="pwd disnlayNone" @click="openWaybillMsgList()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/yichang.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">运单异常管理</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <!-- <div class="pwd disnlayNone" @click="openSafeFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/safeImg.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">安全教育</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div> -->
+                <div class="pwd disnlayNone" @click="openfeedbackFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/consulting.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">咨询反馈</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd " @click="openWinPwd()">
+                    <span class="icon1">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconmima"></use>
+                        </svg>
+                    </span>
+                    <span class="password fontSize1">修改密码</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd disnlayNone" @click="openjiaoc()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/courseImg.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">操作教程</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd disnlayNone" @click="openNoticeFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/notion.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台公告</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd disnlayNone" @click="openPlatformFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/xieyi.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">平台协议</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd disnlayNone" @click="updateFn()">
+                    <span class="icon1">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconshuaxin"></use>
+                        </svg>
+                    </span>
+                    <span class="password fontSize1">检查更新</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="pwd" @click="openCustomerFn()">
+                    <span class="icon1">
+                        <img id="sfzz" src="../image/customer.png" alt="" class="img">
+                    </span>
+                    <span class="password fontSize1">联系客服</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="button" @click="quit()">
+            <button id="btn">退出当前用户</button>
+        </div>
+        <!-- <div class="button" @click="logoff()">
+            <button id="btn">删除当前用户</button>
+        </div> -->
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script type="text/javascript" src="../script/rem.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/iconfont.js"></script>
+<script src="../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        //侵入式状态栏
+        $api.fixStatusBar($api.dom('header'));
+        fnReady();
+        $('#name').html($api.getStorage('username') ? $api.getStorage('username') : "待完善");
+        $('.tel_tel').html($api.getStorage('phone') ? $api.getStorage('phone') : "待完善");
+        $('.truckNumber').html($api.getStorage('truckNumber') ? $api.getStorage('truckNumber') : "待完善");
+        var app = new Vue({
+            el: '#app',
+            data: {
+                //定义定时器
+                timerStatus: null,
+                timerStatusNum: 0,
+                isDriver: 0,
+                isReal: 0,
+                userInfoStatus: {
+                    isReal: 0,
+                    isBankAccount: 0,
+                    isESign: 0,
+                    isBind: 1,
+                },
+            },
+            created: function () {
+                this.getStatusFn();
+                //监听运单结束
+                var that = this;
+                api.addEventListener({
+                    name: 'getStatusFn'
+                }, function (ret, err) {
+                    that.getStatusFn();
+                    that.userInfo();
+                });
+                api.addEventListener({
+                    name: 'noticeInfo_frame'
+                }, function (ret, err) {
+                    that.getStatusFn();
+                });
+            },
+            methods: {
+                // 获取用户信息
+                userInfo: function () {
+                    dealData("user/membermsg", 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            if (ret.data) {
+                                $api.setStorage('username', ret.data.username ? ret.data.username : "暂无姓名");
+                                $api.setStorage('account', ret.data.account ? ret.data.account : null);
+                                $api.setStorage('phone', ret.data.phone ? ret.data.phone : "暂无手机号");
+                                $api.setStorage('truckNumber', ret.data.truckNumber ? ret.data.truckNumber : "暂无车牌号");
+                                $('.truckNumber').html($api.getStorage('truckNumber'));
+                            }
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                openNotice: function () {
+                    api.openWin({
+                        name: 'noticeList_win',
+                        url: './my/noticeList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                openWaybillMsgList: function () {
+                    api.openWin({
+                        name: 'waybillMsgList',
+                        url: './my/waybillMsgList/waybillMsgList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //获取状态
+                getStatusFn: function () {
+                    var that = this;
+                    dealData("platform/esign/status", 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            if (ret.data) {
+                                console.log("获取实名认证状态：" + JSON.stringify(ret.data));
+                                that.userInfoStatus = ret.data;
+                                that.isDriver = ret.data.isDriver;
+                                that.isReal = ret.data.isReal;
+                                //关闭定时器
+                                if (ret.data.isReal || that.timerStatusNum > 50) {
+                                    clearInterval(that.timerStatus);
+                                }
+                                if (ret.data.isDriver === 1) {
+                                    var domArr = document.getElementsByClassName("disnlayNone");
+                                    for (var i = 0; i < domArr.length; i++) {
+                                        domArr[i].style.display = "block";
+                                    }
+                                }
+                                if (that.userInfoStatus.noticeCount !== 0) {
+                                    document.getElementsByClassName("noticeDiv")[0].style.display = "block";
+                                } else {
+                                    document.getElementsByClassName("noticeDiv")[0].style.display = "none";
+                                }
+                            }
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                //实名认证函数
+                realNameFn: function () {
+                    var that = this;
+                    dealData('platform/esign/auth', 'get', {}, function (ret) {
+                        console.log(JSON.stringify(ret))
+                        console.log("实名认证返回值：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            api.openWin({
+                                name: 'realName_win',
+                                url: './my/realName_win.html',
+                                animation: {
+                                    type: "movein", //动画类型（详见动画类型常量）
+                                    subType: "from_right", //动画子类型（详见动画子类型常量）
+                                    duration: 300 //动画过渡时间，默认300毫秒
+                                },
+                                pageParam: {
+                                    data: ret.data
+                                },
+                            });
+                            //开起定时器
+                            that.timerStatus = setInterval(function () {
+                                that.getStatusFn();
+                                that.timerStatusNum++;
+                                // console.log("开始刷新数据了：");
+                            }, 1000);
+                        }
+                        if (ret.code !== 0) {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                // 开户
+                kh: function () {
+                    var that = this;
+                    if (that.userInfoStatus.isDriver != 1) {
+                        api.toast({
+                            msg: "你的资料未提供平台审核，请点击运力信息菜单填写资料！",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    console.log("点击开户:" + this.userInfoStatus.isBankAccount);
+                    if (this.userInfoStatus.isBankAccount) {
+                        dealData('platform/finbankcardbind/bymember', 'get', {}, function (ret) {
+                            console.log("开户账户信息" + JSON.stringify(ret))
+                            if (ret.code === 0) {
+                                api.alert({
+                                    title: '开户信息',
+                                    msg: `开户名称： ${ret.data.createMemberName ? ret.data.createMemberName : "无"}
+开户账户： ${ret.data.childAcctNo ? ret.data.childAcctNo : "无"}
+账户银行:  浦发银行重庆分行营业部
+                             `,
+                                }, function (ret, err) {
+                                    return;
+                                });
+                            } else {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            }
+                        }, function (err) {
+                            console.log(JSON.stringify(err));
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        })
+                        return;
+                    }
+                    //先实名认证在绑卡
+                    if (!this.userInfoStatus.isReal) {
+                        $.mvalidateTip("请先实名认证,在开户!");
+                        return;
+                    }
+                    api.confirm({
+                        title: '司机开户',
+                        msg: '您确定要开户吗？',
+                        buttons: ['确定', '取消']
+                    }, function (ret, err) {
+                        var index = ret.buttonIndex;
+                        if (index == 1) {
+                            dealData('finance/careateaccount', 'post', {}, function (ret) {
+                                // console.log(JSON.stringify(ret))
+                                if (ret.code === 0) {
+                                    api.toast({
+                                        msg: ret.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                                if (ret.code !== 0) {
+                                    api.toast({
+                                        msg: ret.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                }
+                            }, function (err) {
+                                console.log(JSON.stringify(err));
+                                api.toast({
+                                    msg: err.body.msg,
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            })
+                            that.getStatusFn();
+                        }
+                    });
+                },
+                //补全资料函数
+                completeDataFn: function () {
+                    if (this.isDriver === -1 || this.isDriver === 2) {
+                        api.openWin({
+                            name: 'completeDataFn_win',
+                            url: './my/completeData_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                    } else {
+                        api.openWin({
+                            name: 'driverInfo_win',
+                            url: './my/driverInfo_win.html',
+                            animation: {
+                                type: "movein", //动画类型（详见动画类型常量）
+                                subType: "from_right", //动画子类型（详见动画子类型常量）
+                                duration: 300 //动画过渡时间，默认300毫秒
+                            }
+                        });
+                    }
+                },
+                //运单异常类别
+                openyundanFn: function () {
+                    api.openWin({
+                        name: 'waybillError_win',
+                        url: './my/waybillErrorList/waybillError_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //退出登录
+                quit: function () {
+                    api.confirm({
+                        title: '退出登录',
+                        msg: '您确定要退出登录吗？',
+                        buttons: ['确定', '取消']
+                    }, function (ret, err) {
+                        var index = ret.buttonIndex;
+                        if (index == 1) {
+                            $api.rmStorage('isautologin');
+                            $api.rmStorage('accessToken');
+                            $api.rmStorage('refreshToken');
+                            $api.rmStorage('username');
+                            $api.rmStorage('phone');
+                            $api.rmStorage('truckNumber');
+                            api.openWin({
+                                name: 'login',
+                                slidBackEnabled: false,
+                                url: 'login/login.html'
+                            });
+                            api.sendEvent({
+                                name: 'isLogin',
+                                extra: {
+                                    key: 1
+                                }
+                            });
+                            api.closeWin();
+                        }
+                    });
+                },
+                //我的报价
+                myOfferFn: function () {
+                    api.openWin({
+                        name: 'offerList_win',
+                        url: './goods/offerList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                // 我的钱包
+                myMoneyFn: function () {
+                    api.openWin({
+                        name: 'myMoney',
+                        url: './my/myMoney.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                // 客服电话
+                // function tel() {
+                //     api.call({
+                //         type: 'tel_prompt',
+                //         number: '0722-3526258'
+                //     });
+                // }
+                // 检测更新
+                updateFn: function () {
+                    var mam = api.require('mam');
+                    mam.checkUpdate(function (ret, err) {
+                        if (ret) {
+                            // if (!ret.result) {
+                            //     api.alert({
+                            //         msg: "已是最新版本 版本号: " + api.appVersion
+                            //     });
+                            //     return false;
+                            // }
+                            var result = ret.result;
+                            if (result.update == true && result.closed == false) {
+                                var str = '新版本型号:' + result.version + ';\r\n更新提示语:' + result.updateTip + ';\r\n下载地址:' + result.source + ';\r\n发布时间:' + result.time;
+                                api.confirm({
+                                    title: '有新的版本,是否下载并安装 ',
+                                    msg: str,
+                                    buttons: ['确定', '取消']
+                                }, function (ret, err) {
+                                    if (ret.buttonIndex == 1) {
+                                        if (api.systemType == "android") {
+                                            api.download({
+                                                url: result.source,
+                                                report: true
+                                            }, function (ret, err) {
+                                                if (ret && 0 == ret.state) {/* 下载进度 */
+                                                    api.toast({
+                                                        msg: "正在下载应用" + ret.percent + "%",
+                                                        duration: 2000
+                                                    });
+                                                }
+                                                if (ret && 1 == ret.state) {/* 下载完成 */
+                                                    var savePath = ret.savePath;
+                                                    api.installApp({
+                                                        appUri: savePath
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        if (api.systemType == "ios") {
+                                            api.installApp({
+                                                appUri: result.source
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                api.alert({
+                                    msg: "已是最新版本 版本号: " + api.appVersion
+                                });
+                            }
+                        } else {
+                            api.alert({
+                                msg: err.msg
+                            });
+                        }
+                    });
+                },
+                // 车辆管理
+                myCarListFn: function () {
+                    api.openWin({
+                        name: 'carmsg',
+                        url: './my/carmsg.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                // 司机信息
+                openMsg: function () {
+                    var that = this;
+                    api.openWin({
+                        name: 'sijixinxi_win',
+                        url: './well/sijixinxi_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        },
+                        pageParam: {
+                            isReal: that.userInfoStatus.isReal
+                        }
+                    });
+                },
+                // 卡包
+                // bk: function () {
+                //     api.openWin({
+                //         name: 'cardBag_win',
+                //         url: './my/cardBag_win.html',
+                //         animation: {
+                //             type: "movein", //动画类型（详见动画类型常量）
+                //             subType: "from_right", //动画子类型（详见动画子类型常量）
+                //             duration: 300 //动画过渡时间，默认300毫秒
+                //         }
+                //     });
+                // },
+                //平台公告
+                openNoticeFn: function () {
+                    api.openWin({
+                        name: 'notice_win',
+                        url: './my/notice/notice_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //平台协议
+                openPlatformFn: function () {
+                    api.openWin({
+                        name: 'platform_win',
+                        url: './my/platform_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                // 修改密码
+                openWinPwd: function () {
+                    api.openWin({
+                        name: 'myPassWord',
+                        url: './my/myPassWord.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        },
+                    });
+                },
+                //客服链接
+                openCustomerFn: function () {
+                    api.openWin({
+                        name: 'customer_win',
+                        url: './my/customer_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                openjiaoc: function () {
+                    api.openWin({
+                        name: 'courseList_win',
+                        url: './my/course/courseList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //安全教育
+                openSafeFn: function () {
+                    api.openWin({
+                        name: 'safeEduList_win',
+                        url: './my/safeEdu/safeEduList_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                },
+                //咨询
+                openfeedbackFn: function () {
+                    api.openWin({
+                        name: 'feedback_win',
+                        url: './my/feedback/feedback_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>
+
+</html>

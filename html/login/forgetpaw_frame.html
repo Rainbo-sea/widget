@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .verification {
+        position: relative;
+    }
+
+    .getCode {
+        border: none;
+        padding: 2px 4px;
+        height: 30px;
+        width: 88px;
+        background: rgba(5, 143, 253, 1);
+        border-radius: 3px;
+        position: absolute;
+        top: 17%;
+        right: 0px;
+        bottom: 20px;
+        line-height: 30px;
+        font-size: 13px;
+        font-weight: 400;
+        color: rgba(254, 254, 254, 1);
+    }
+
+    .passwordDiv {
+        position: relative;
+    }
+
+    .passwordImg {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: 31%;
+        right: 20px;
+    }
+
+    .displayNone {
+        display: none;
+    }
+</style>
+
+<body class='fgay'>
+    <div id="app">
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="confirmNewPwd">
+                    <span class="password">手机号 :</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入手机号" v-model="phone">
+                    </span>
+                </div>
+                <div class="confirmNewPwd verification">
+                    <span class="password">输入验证码 :</span>
+                    <span class="right ">
+                        <input type="text" v-model="code" placeholder="请输入验证码">
+                        <button v-show="showFlage" class="getCode" tapmode @click="sendSms()"
+                            id="getCode">获取验证码</button>
+                        <button v-show="!showFlage" class="getCode" id="getCode" v-cloak>重新发送{{count}}</button>
+                    </span>
+                </div>
+                <div class="confirmNewPwd passwordDiv">
+                    <span class="password">新密码 :</span>
+                    <span class="right">
+                        <input id="password1" class="fontSize" type="password" placeholder="请输入新密码" value=""
+                            v-model="passWord">
+                        <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(0)" />
+                        <img class="passwordImg displayNone" src="../../image/passwordOn.png"
+                            onclick="passwordOnFn(0)" />
+                    </span>
+                </div>
+                <div class="confirmNewPwd passwordDiv">
+                    <span class="password">确认新密码 :</span>
+                    <span class="right">
+                        <input id="password2" class="fontSize" type="password" placeholder="请输入新密码" value=""
+                            v-model="confirmPwd">
+                        <img class="passwordImg" src="../../image/passwordOff.png" onclick="passwordOffFn(1)" />
+                        <img class="passwordImg displayNone" src="../../image/passwordOn.png"
+                            onclick="passwordOnFn(1)" />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="button">
+            <button id="submit" @click="confirmFn()">确认</button>
+            <div>
+                已有账号<span class="login" onclick="closeWin();">去登陆</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script src="../../script/vue.js"></script>
+<script type="text/javascript">apiready = function () {
+        fnReady();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+
+        api.addEventListener({
+            name: 'swipeleft'
+        }, function (ret, err) {
+            if (ret) {
+
+            }
+        });
+        // 注册
+        $('#submit').on('click', function () {
+            var name = $('.oldPwd input').val();
+            var phone = $('.passWord input').val();
+            var card = $('.confirmNewPwd input').val();
+            // console.log(name, phone, card)
+            var parm = {
+                name,
+                phone,
+                card
+            }
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                iconFlag: 1, //密码是否可见
+                phone: '', //手机号
+                code: '', //短信验证码
+                passWord: '', //new密码
+                confirmPwd: '', //验证密码
+                showFlage: true,
+                count: '',
+                timer: null
+            },
+            created: function () {
+            },
+            methods: {
+                //获取验证码
+                sendSms: function () { //发送验证码
+                    var that = this;
+                    if (!that.phone) {
+                        api.toast({
+                            msg: '手机号不能为空...',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    // // 手机号验证
+                    var reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+                    if (!reg.test(that.phone)) {
+                        api.toast({
+                            msg: "请输入正确的手机号！",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+
+                    api.ajax({
+                        url: getBaseRootPath() + "/member/platform/account/appsendmsg/" + that.phone,
+                        method: 'get',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        data: {
+                            body: {}
+                        }
+                    }, function (ret, err) {
+                        console.log(JSON.stringify(ret));
+                        console.log(JSON.stringify(err));
+                        if (ret.code === 0) {
+                            that.getCod();
+                            that.showFlage = false;
+                            api.toast({
+                                msg: ret.data,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                    api.hideProgress();
+                },
+                getCod: function () { //点击验证码倒计时
+                    const TIME_COUNT = 60;
+                    var that = this;
+                    if (!that.timer) {
+                        that.count = TIME_COUNT;
+                        that.showFlage = false;
+                        that.timer = setInterval(function () {
+                            if (that.count > 0 && that.count <= TIME_COUNT) {
+                                that.count--;
+                            } else {
+                                that.showFlage = true;
+                                clearInterval(that.timer);
+                                that.timer = null;
+                                that.count = null;
+                            }
+                        }, 1000)
+                    }
+                },
+                //确认函数
+                confirmFn: function () {
+                    var prame = {
+                        phone: this.phone,
+                        code: this.code,
+                        password: this.passWord,
+                        confirmPwd: this.confirmPwd,
+                    };
+                    if (!this.phone) {
+                        api.toast({
+                            msg: '手机号不能为空！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    var reg = /^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,20}$/
+                    if (!reg.test(this.passWord)) {
+                        api.toast({
+                            msg: '请输入8-20位的数字或者字母的密码！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    if (this.passWord !== this.confirmPwd) {
+                        api.toast({
+                            msg: '两次输入密码不相同！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return;
+                    }
+                    console.log("参数:", JSON.stringify(prame));
+                    api.ajax({
+                        url: getBaseRootPath() + "/member/platform/account/driverappreset",
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        data: {
+                            body: JSON.stringify(prame)
+                        }
+                    }, function (ret, err) {
+                        if (ret.code === 0) {
+                            api.toast({
+                                msg: "密码修改成功！",
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                            setTimeout(function () {
+                                console.log("主动返回");
+                                api.closeWin();
+                            }, 1000)
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                        if (err) {
+                            api.toast({
+                                msg: err.body.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                    api.hideProgress();
+                }
+            },
+        })
+    };
+
+    //密码关闭
+    function passwordOffFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[0].style.display = "none";
+            document.getElementsByClassName("passwordImg")[1].style.display = "block";
+            document.getElementById("password1").type = "text";
+        } else {
+            document.getElementsByClassName("passwordImg")[2].style.display = "none";
+            document.getElementsByClassName("passwordImg")[3].style.display = "block";
+            document.getElementById("password2").type = "text";
+        }
+    }
+    //密码打开
+    function passwordOnFn(flag) {
+        if (flag === 0) {
+            document.getElementsByClassName("passwordImg")[1].style.display = "none";
+            document.getElementsByClassName("passwordImg")[0].style.display = "block";
+            document.getElementById("password1").type = "password";
+        } else {
+            document.getElementsByClassName("passwordImg")[3].style.display = "none";
+            document.getElementsByClassName("passwordImg")[2].style.display = "block";
+            document.getElementById("password2").type = "password";
+        }
+    }
+</script>
+
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>接驳运单</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/plugcss/validate.css">
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+
+</head>
+<style>
+    .fontSize {
+        font-size: 0.26rem !important;
+    }
+
+    .fontSize1 {
+        font-size: 0.4rem !important;
+    }
+
+    .fontSize2 {
+        font-size: 0.3rem !important;
+    }
+
+    .marginTopLine {
+        margin-top: -10px !important;
+    }
+
+    .stateList {
+        padding-left: 21px;
+        font-size: 0.3rem !important;
+    }
+
+    .typeImgStyle {
+        width: 20px;
+        height: 20px;
+    }
+
+    .connectType {
+        font-size: 15px;
+        display: flex;
+    }
+
+    .fontSizewaybill {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .checkLink {
+        color: #1f529a;
+        font-size: 15px;
+        margin-right: 15px;
+    }
+
+    .footerBotton {
+        display: flex;
+        padding-bottom: 10px;
+    }
+
+    /* 卡片style */
+</style>
+
+<body>
+    <!--隐藏值 -->
+    <input type="hidden" value="1" id="page" />
+
+    <!-- 运单模块 -->
+    <div class="jinxingzhong">
+        <div class='wrap'>
+
+        </div>
+        <div class="pullUp">
+            <span class="pullUpLabel">正在加载...</span>
+        </div>
+    </div>
+</body>
+<script type="text/html" id="listTemplate">
+    {{each tData as val k}}
+   <div class="box waybillDetails" data-id="{{val.id}}">
+        <div class="waybillCardHeader">
+            <div class="headerLeft"  onclick= "copyFn('{{val.waybillSerial}}')">
+                <img src="../../image/cardImg.png" />
+                <div class="headerText">{{val.waybillSerial}}</div>
+            </div>
+            <div class="headerRight"  onClick="openWinDetails({{val.id}})">
+                {{if val.payStatus === true}}
+                    已支付
+                {{/if}}
+                {{if val.payStatus === false}}
+                    {{if val.status == 10}}
+                        待起运
+                    {{/if}}
+                    {{if val.status == 15}}
+                        已超时
+                    {{/if}}
+                    {{if val.status == 20}}
+                        已起运
+                    {{/if}}
+                    {{if val.status == 30}}
+                        已到达
+                    {{/if}}
+                    {{if val.status == 50}}
+                        未支付
+                    {{/if}}
+                {{/if}}
+                <img src="../../image/rightImg.png" />
+            </div>
+        </div>
+        <div class="timeText">接单时间：{{val.createDate}}</div>
+        <div class="addreText">
+            {{if val.startCity === "市辖区" }}
+            {{val.startProvince}} 
+        {{else if val.startCity === "县" }}
+           {{val.startProvince}}  
+        {{else}}
+           {{val.startCity}}  
+        {{/if}}
+        &nbsp;→&nbsp; 
+        {{if val.endCity === "市辖区" }}
+            {{val.endProvince}} 
+        {{else if val.endCity === "县" }}
+           {{val.endProvince}}  
+        {{else}}
+           {{val.endCity}}  
+        {{/if}}
+        <span>
+            {{if val.modeType === 51 || val.modeType ===52 }}
+            <span>￥ {{val.amount}}  元</span>
+            {{else}}
+                <span>￥{{if val.payStatus === true}} {{val.ratioAmount}} {{else}}{{val.balancePriceCount}}  {{/if}}元</span>
+            {{/if}}
+        </span>
+        </div>
+        <div class="addressDiv">
+            <div class="addressDiv_span"></div>
+            <div class="addressText">{{val.startProvince}}{{val.startCity}}{{val.startDistrict?val.startDistrict:""}} </div>
+        </div>
+        <div class="addressDiv">
+            <div class="addressDiv_span bg2"></div>
+            <div class="addressText">{{val.endProvince}}{{val.endCity}}{{val.endDistrict?val.endDistrict:""}}</div>
+        </div>
+        <div class="footerBottonDiv">
+            {{if val.status == 10}}
+            {{if val.modeType == 50 ||val.modeType == 51||val.modeType == 52 }} 
+                    {{if val.eSignFlowUrl }}
+                    <div class="BottonDiv" onclick="operationFn({{val}})">
+                        立即起运
+                    </div>
+                    {{/if}} 
+                {{/if}}
+                {{if val.modeType != 50 && val.modeType != 51 && val.modeType != 52 }}  
+                <div class="BottonDiv" onclick="operationFn({{val}})">
+                    立即起运
+                </div>
+                {{/if}}
+            {{/if}}
+            {{if val.status == 15}}
+            {{if val.modeType == 50 ||val.modeType == 51|| val.modeType == 52}} 
+                    {{if val.eSignFlowUrl }}
+                    <div class="BottonDiv" onclick="operationFn({{val}})">
+                        立即起运
+                    </div>
+                    {{/if}} 
+                {{/if}}
+                {{if val.modeType != 50 && val.modeType != 51 && val.modeType != 52 }}
+                <div class="BottonDiv" onclick="operationFn({{val}})">
+                    立即起运
+                </div>
+                {{/if}}
+            {{/if}}
+            {{if val.status == 20}}
+                <div class="BottonDiv " onclick="operationFn({{val}})">
+                    我已到达
+                </div>
+            {{/if}}
+            {{if val.status == 40}}
+                <div class="BottonDiv "  onclick="operationFn({{val}})" >
+                    报送回单
+                </div>
+            {{/if}}
+            <div class="BottonDiv  BottonDivColor" onClick="openWinDetails({{val.id}})">查看详情</div>
+            <!-- {{if val.modeType == 70}} 
+                <div class="BottonDiv" onClick="checkWaybillFn({{val.groupId}})">     
+                    接驳运单
+                </div>
+            {{/if}} -->
+            <div class="mostBotton" onClick="mostBottonFn({{val.id}})">更多</div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    //1时表示当前无数据可以加载了
+    var isnodata = 0;
+    //当前页面的每次加载条目数
+    var size = 10;
+    var searchNum, searchID;
+    apiready = function () {
+        fnReady();
+        // userInfo();
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#fff',
+        });
+        //监听更新状态页面 是否完成 起运 达到 回单
+
+        //达到
+        api.addEventListener({
+            name: 'daoda'
+        }, function (ret, err) {
+            if (ret.value.key == 1) {
+                reload();
+            }
+        });
+        //回单
+        api.addEventListener({
+            name: 'huidan'
+        }, function (ret, err) {
+            if (ret.value.key == 1) {
+                reload();
+            }
+        });
+        //搜索
+        api.addEventListener({
+            name: 'search'
+        }, function (ret, err) {
+            if (ret) {
+                searchNum = ret.value.key.status;
+                searchID = ret.value.key.orderId;
+                reload();
+            }
+        });
+
+        reload();
+
+        //刷新页面数据
+        function reload() {
+
+            isnodata = 0;
+            $("#page").val(1);
+            api.showProgress({
+                title: '加载中...',
+                modal: false
+            });
+            var parm = {
+                "page": 0,
+                "size": size,
+                "searchParms": {
+                    "ID": api.pageParam.id,
+                }
+            };
+            console.log("接驳列表参数：" + JSON.stringify(parm));
+            dealData("tstransportordergroup/detail", 'POST', JSON.stringify(parm), function (ret) {
+                console.log("接驳列表返回：" + JSON.stringify(ret));
+                if (ret.code === 0) {
+                    console.log(JSON.stringify(ret))
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                        item.ratioAmount = format(item.ratioAmount);
+                        item.balancePriceCount = format(item.balancePriceCount);
+                    });
+                    for (var i = 0; i < list.length; i++) {
+                        var timer = timeStampTurnTime(transformationDate(list[i].createDate)).slice(0, 16);
+                        // list[i].createDate = timer;
+                    }
+
+                    if (list == '') {
+                        var html = '<div class="aui-tips-title">暂无数据</div>';
+                        $('.wrap').html(html);
+                    } else {
+                        var htmlContent = template('listTemplate', {
+                            tData: list
+                        });
+                        // $('.wrap').html(htmlContent);
+                        if (list.length > 0) {
+                            api.sendEvent({
+                                name: 'orderRefresh',
+                                extra: {}
+                            });
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+            }, function (err) {
+                api.toast({
+                    msg: err.body.msg,
+                    duration: 5000,
+                    location: 'middle'
+                });
+                console.log(JSON.stringify(err));
+            })
+            setTimeout('api.refreshHeaderLoadDone()', '500');
+        };
+
+
+        //上拉加载下一页数据
+        function jumpPage() {
+            if (isnodata == 1) {
+                return;
+            }
+            var page = parseInt($("#page").val());
+            var parm = {
+                "page": page,
+                "size": size,
+                "sort": "id,desc",
+                "searchParms": {
+                    "ID": api.pageParam.id,
+                }
+            };
+            $(".pullUp").show();
+            dealData("tstransportordergroup/detail", 'POST', JSON.stringify(parm), function (ret) {
+                if (ret.code === 0) {
+                    var list = ret.data.resultList;
+                    list.map((item) => {
+                        item.createDate = timeStampTurnTime(item.createDate).slice(0, 16);
+                    });
+                    var htmlContent = template('listTemplate', {
+                        tData: list
+                    });
+                    if (list.length == 0) {
+                        api.toast({
+                            msg: "无更多数据",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        $(".pullUp").hide();
+                        isnodata = 1;
+                        return;
+                    }
+                    $("#page").val(page + 1);
+                    // $('.wrap').html($('.wrap').html() + htmlContent);
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });;
+                    console.log(JSON.stringify(ret));
+                }
+                setTimeout('api.refreshHeaderLoadDone()', '500');
+            },
+                function (err) {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: err.body.msg,
+                        duration: 5000,
+                        location: 'middle'
+                    });
+                })
+        };
+
+        //监听下拉加载数据
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function (ret, err) {
+            jumpPage();
+        });
+        //监听下拉刷新数据
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            searchNum = '';
+            searchID = '';
+            reload();
+        });
+        // 时间转换
+        function transformationDate(date) {
+            var time = new Date(date)
+            var M = datetime(time.getMonth(time))
+            var D = datetime(time.getDay(time))
+            var H = datetime(time.getHours(time))
+            var Minutes = datetime(time.getMinutes(time))
+            var S = datetime(time.getSeconds(time))
+            return `${M}月${D}日 ${M}:${Minutes}:${S}`;
+        }
+        // 时间补0
+        function datetime(num) {
+            if (num < 10) {
+                return '0' + num;
+            }
+            return num;
+        }
+    };
+    //运单详情
+    function openWinDetails(id) {
+        api.openWin({
+            name: 'yundanxiangqing_win',
+            url: './yundanxiangqing_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+            allowEdit: true
+        });
+    }
+    function copyFn(data) {
+        var clipBoard = api.require('clipBoard');
+        clipBoard.set({
+            value: data
+        }, function (ret, err) {
+            if (ret) {
+                api.toast({
+                    msg: "复制成功：" + data,
+                    duration: 5000,
+                    location: 'middle'
+                });
+            }
+        });
+    }
+    //点击 起运 达到  回单
+    function operationFn(data) {
+        //未开启定位禁止起运
+        if (!locationStatueFn()) {
+            resultlocation();
+            return true;
+        }
+        var status = data.status;
+        if (status == 10 || status == 15 || status == 20 || status == 40) {
+            api.openWin({
+                name: 'connectStateSubmit_win',
+                url: './connectStateSubmit_win.html',
+                animation: {
+                    type: "movein", //动画类型（详见动画类型常量）
+                    subType: "from_right", //动画子类型（详见动画子类型常量）
+                    duration: 300 //动画过渡时间，默认300毫秒
+                },
+                pageParam: {
+                    id: data.id,
+                    status: data.status
+                },
+            });
+        } else {
+            $.mvalidateTip('该运单已回单！');
+        }
+    }
+
+    // 获取用户信息
+    function userInfo() {
+        var phone
+        var rootPath = getRootPath();
+        var accessToken = $api.getStorage('accessToken');
+        var headers = {
+            "Authorization": 'bearer ' + accessToken
+        };
+        $.ajax({
+            url: rootPath + 'user/membermsg',
+            async: false,
+            headers: headers,
+            method: 'get',
+            success: function (ret) {
+                phone = ret.data.phone;
+            }
+        }
+        )
+        // console.log(phone)
+        return phone;
+    };
+
+    //查看轨迹
+    function checkLinkFn(id) {
+        api.openWin({
+            name: 'trajectory_win',
+            url: './trajectory_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+            allowEdit: true
+        });
+    }
+    //异常上报
+    function addAbnormalFn(id) {
+        api.openWin({
+            name: 'addAbnormal_win',
+            url: './addAbnormal_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+            allowEdit: true
+        });
+    }
+
+    //异常上报列表
+    function openWillList(id) {
+        api.openWin({
+            name: 'waybillError_win',
+            url: './waybillErrorList/waybillError_win.html',
+            animation: {
+                type: "movein", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+                id: id
+            },
+            allowEdit: true
+        });
+    }
+    //更多按钮函数
+    function mostBottonFn(id) {
+        var arrInfo = ['查看轨迹', '异常申报', "历史申报"];
+        if (!this.readonlyFalge) {
+            api.actionSheet({
+                cancelTitle: '取消',
+                buttons: arrInfo
+            }, function (ret, err) {
+                if (ret.buttonIndex === 1) {
+                    checkLinkFn(id);
+                } else if (ret.buttonIndex === 2) {
+                    addAbnormalFn(id);
+                } else if (ret.buttonIndex === 3) {
+                    openWillList(id);
+                }
+            });
+        }
+    }
+
+</script>
+
+</html>

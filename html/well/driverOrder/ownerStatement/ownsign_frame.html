@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机详情</title>
+    <link rel="stylesheet" type="text/css" href="../../../../css/plugcss/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../css/plugcss/aui.css" />
+    <style>
+        .wrapDiv {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .maruto1r {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .savebtn {
+            background-color: #007ef5;
+            color: #fff;
+            width: 50%;
+            font-size: 17px;
+            font-weight: 400;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        .cententText {
+            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 16px;
+            padding: 10px 20px;
+            height: 68vh;
+            text-indent: 32px;
+            color: black;
+        }
+
+        .contentDiv {
+            margin-top: 20px;
+        }
+
+        .footerDiv {
+            margin-top: 40px;
+        }
+
+        .liDiv {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .relativeStyle {
+            position: relative;
+        }
+
+        #zknight_h5autograph_canvas {
+            border: 1px solid #333;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .qianmingImg {
+            transform: rotate(-90deg);
+            width: 40px;
+            height: 85px;
+            position: absolute;
+            top: -21px;
+            left: 136px;
+        }
+
+        .qianmingText {
+            color: #007EF5;
+            position: absolute;
+            top: 0;
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='wrapDiv' id="app">
+        <div class='orderdetail pr'>
+            <div class='orderbody plrr20 fcolor6' id="capture">
+                <ul class="aui-list aui-form-list aui-list-item">
+                    <h2>车主声明</h2>
+                    <div class="cententText">
+                        <span>本人(姓名:<span v-text="paramsInfo.name"></span>，身份证:<span
+                                v-text="paramsInfo.iccard"></span>)在此申明，车号:<span
+                                v-text="paramsInfo.truckNumber"></span>为本人所有，为符合当地运营要求，挂靠在<span
+                                v-text="paramsInfo.owner"></span>。</span>
+                        <div class="contentDiv">特此说明。</div>
+                        <div class="footerDiv">
+                            <div class="liDiv relativeStyle">
+                                <div>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</div>
+                                <div class="qianmingText" @click="openQingmin()">点击签名</div>
+                                <img class="qianmingImg" v-if="imgSrc" :src="imgSrc" />
+                            </div>
+                            <div class="liDiv">
+                                <div>身份证号：</div>
+                                <div v-text="paramsInfo.iccard"></div>
+                            </div>
+                            <div class="liDiv">
+                                <div>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</div>
+                                <div v-text="timeData"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class='w95 maruto1r pb20'>
+            <div class="aui-btn aui-btn-block backblue fwhite savebtn" v-if="isclick" @click="screenClipFn()">保存声明</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../../script/plugscript/api.js"></script>
+<script type="text/javascript" src="../../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../../script/common.js"></script>
+<script src="./h5autograph/image/libs/html2canvas.min.js"></script>
+<script src="../../../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        fnReady();
+        var app = new Vue({
+            el: '#app',
+            data: {
+                imgSrc: "",
+                paramsInfo: api.pageParam.paramsInfo,
+                timeData: (new Date()).toLocaleDateString(),
+                isclick: false
+            },
+            created: function () {
+                var that = this;
+                api.addEventListener({
+                    name: 'ownsignFrame'
+                }, function (ret, err) {
+                    that.imgSrc = ret.value.data;
+                })
+            },
+            methods: {
+                screenClipFn: function () {
+                    var that = this;
+                    if (this.imgSrc === '') {
+                        api.toast({
+                            msg: '请先完成签名，再保存声明！',
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    html2canvas(document.querySelector("#capture")).then(canvas => {
+                        document.body.appendChild(canvas);
+                        api.sendEvent({
+                            name: 'ownsignWin',
+                            extra: {
+                                data: canvas.toDataURL("image/png")
+                            }
+                        });
+                        api.closeWin();
+                    });
+                },
+                openQingmin: function () {
+                    var that = this;
+                    that.isclick = true
+
+                    api.openWin({
+                        name: 'qianming_win',
+                        url: './qianming_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        }
+                    });
+                }
+            },
+        })
+    }
+</script>
+
+</html>

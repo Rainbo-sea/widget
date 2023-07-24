@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>运单详情Win</title>
+    <link rel="stylesheet" type="text/css" href="../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css">
+</head>
+<style>
+    .jiantou {
+        position: absolute;
+        top: 1rem !important;
+        left: 0rem !important
+    }
+
+    .padding0 {
+        padding: 0 !important;
+    }
+
+    .jinxingzhong_xiangqing {
+        overflow: auto !important;
+        background: #F7F8FA !important;
+    }
+
+    .fgay {
+        overflow: auto !important;
+        background: #F7F8FA !important;
+    }
+
+    .flageLeft {
+        float: left;
+        font-size: 16px;
+        /* font-weight: bold; */
+    }
+
+    .imgDiv {
+        margin-left: 0.86rem;
+        margin-top: 0.1rem;
+        width: 80%;
+        display: flex;
+        flex-flow: wrap;
+    }
+
+    .imgDiv img {
+        width: 30px;
+        height: 30px;
+        margin-left: 0.1rem;
+    }
+
+    .cardList {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        line-height: 40px;
+        margin-top: 15px;
+        padding-left: 15px;
+    }
+
+    .margintop {
+        margin-top: 0px;
+    }
+
+    .cardList img {
+        width: 20px;
+        margin-right: 2px;
+    }
+
+    .marginRghrtico {
+        margin-left: 8px;
+    }
+
+    .colorText1 {
+        color: #8cc540;
+    }
+
+    .jinxingzhong_xiangqing {
+        background: #FFFFFF;
+    }
+
+    .headerInfo {
+        padding: 0.32rem 0.28rem 0 0.36rem;
+    }
+
+    .headerInfoDiv {
+        width: 100%;
+        background: #fff;
+    }
+
+    .headerLeft img {
+        width: 25px;
+        height: 26px;
+        margin-right: 8px;
+    }
+
+    .waybillCardHeader {
+        width: 95%;
+        height: 29px;
+        padding-left: 6px;
+        padding-top: 10px;
+    }
+
+    .headerText {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .headerRight {
+        width: 20%;
+        float: right;
+        text-align: right;
+        font-size: 16px;
+        font-weight: 400;
+        padding-right: 10px;
+        color: #007EF5;
+    }
+
+    .timeText {
+        color: #BFBFBF;
+        font-size: 14px;
+        margin-top: 2px;
+        padding-left: 9px;
+    }
+
+    .topBg {
+        background: #F7F8FA !important;
+        padding: 12px 24px 12px 12px !important;
+    }
+
+    .paddingStyle {
+        padding-top: 10px !important;
+        font-weight: bold;
+        font-size: 15px !important;
+        color: #969799 !important;
+    }
+
+    .address {
+        margin-top: 5px !important;
+        padding-bottom: 10px !important;
+        font-size: 14px !important;
+        color: #969799 !important;
+        border-bottom: 1px solid #f0f2f5 !important;
+    }
+
+    .ordermsg {
+        padding: 0 0.28rem 0 0.36rem !important;
+        font-size: 15px !important;
+    }
+
+    .moneyStyle {
+        font-size: 14px;
+    }
+
+    .calssAmountStyle {
+        color: #FA4141 !important;
+    }
+
+    .calssAmount {
+        font-size: 16px !important;
+        float: none !important;
+        color: #FA4141 !important;
+    }
+
+    .floatStyle {
+        float: right;
+    }
+
+    .radorStyle {
+        width: 0.5rem !important;
+        height: 0.5rem !important;
+    }
+
+    .borderRadius {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .bangkaStyle {
+        background: #007EF5 !important;
+    }
+
+    .widthStyle {
+        width: 25%;
+    }
+
+    .headerIocn {
+        width: 66px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        font-size: 15px;
+        background: rgba(0, 126, 245, 0.16);
+        border-radius: 4px;
+        color: #007EF5;
+    }
+
+    .coloramount {
+        color: #007EF5 !important;
+    }
+
+    .boderStyle {
+        border: 1px #007EF5 solid;
+    }
+
+    .headerIocnColor {
+        color: #FA8C16;
+        background: rgba(250, 140, 22, 0.16);
+    }
+
+    .waybillSerial {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .paddingLeft {
+        padding-left: 0.4rem;
+    }
+
+    .red {
+        color: red;
+    }
+</style>
+
+<body class='fgay'>
+    <div class="jinxingzhong_xiangqing" id="app">
+        <div class="headerInfo">
+            <div class="headerInfoDiv">
+                <div class="waybillCardHeader">
+                    <div class="headerLeft">
+                        <!-- <img src="../../image/cardImg.png" /> -->
+                        <div class="headerText waybillSerial">
+                            <!-- <span v-text="goods.memberName"></span> -->
+                            <span>长安民生物流</span>
+                        </div>
+                    </div>
+                    <div class="headerRight status">
+                        <div v-if="goods.type === 0 " class="headerIocn headerIocnColor">秒杀单</div>
+                        <div v-if="goods.type === 1" class="headerIocn">竞价单</div>
+                    </div>
+                </div>
+                <div class="timeText" @click="copyFn(goods.goodsCode)">订单号：<span v-text="goods.goodsCode"></span></div>
+                <div class="timeText">发布时间：<span v-text="goods.createDate"></span></div>
+                <div class="box">
+                    <div class="top topBg">
+                        <div><i class="startProvince" v-text="goods.startProvince"></i> → <i class="endProvince"
+                                v-text="goods.endProvince"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="message">
+            <div>
+                <div class="tel">
+                    <div class="tel_top">
+                        <span class="hair flageLeft">
+                            <svg class="icon radorStyle borderRadius" aria-hidden="true">
+                                <use xlink:href="#iconfahuo"></use>
+                            </svg>
+                        </span>
+                        <span class="hair flageLeft" v-text="goods.deliveryName">姓名</span>
+                        <span class="telicon">
+                            <!-- <svg class="icon borderRadius" aria-hidden="true">
+                                <use xlink:href="#icondianhua"></use>
+                            </svg> -->
+                        </span>
+                        <span class="phone deliveryPhone" v-text="deliveryPhone"></span>
+                    </div>
+                    <!-- <div class="company deliveryCompany"></div> -->
+                    <div class="address"
+                        @click="copyreceiptAddressFn(goods.startProvince+goods.startCity+goods.startDistrict+goods.deliveryAddress)">
+                        <span class="startAddress"
+                            v-text="goods.startProvince+goods.startCity+goods.startDistrict+goods.deliveryAddress">
+                        </span>
+                    </div>
+                </div>
+                <div class="tel">
+                    <div class="tel_top">
+                        <span class="hair flageLeft">
+                            <svg class="icon radorStyle borderRadius" aria-hidden="true">
+                                <use xlink:href="#iconshouhuo"></use>
+                            </svg>
+                        </span>
+                        <span class="hair flageLeft" v-text="goods.receiptName">姓名</span>
+                        <span class="telicon">
+                            <!-- <svg class="icon borderRadius" aria-hidden="true">
+                                <use xlink:href="#icondianhua"></use>
+                            </svg> -->
+                        </span>
+                        <span class="phone receiverPhone" v-text="receiptPhone"></span>
+                    </div>
+                    <!-- <div class="company  receiptCompany"></div> -->
+                    <div class="address"
+                        @click="copyreceiptAddressFn(goods.endProvince+goods.endCity+goods.endDistrict+goods.receiptAddress)">
+                        <span class="endAddress"
+                            v-text="goods.endProvince+goods.endCity+goods.endDistrict+goods.receiptAddress"> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ordermsg">
+            <div class="my_box paddingLeft" v-if="goods.type === 1">
+                <p class="paddingStyle">我的报价：</p>
+                <div v-if="countInfo">
+                    <div v-if="goods.balanceMode != 0">
+                        <div class="timeText">单价：<span v-text="countInfo.amount"></span><span
+                                class="calssAmountStyle">￥</span></div>
+                        <div class="timeText">总金额：<span v-text="countInfo.amountCount"></span><span
+                                class="calssAmountStyle">￥</span>
+                        </div>
+                    </div>
+                    <div v-if="goods.balanceMode === 0" class="timeText">包车价：<span
+                            v-text="countInfo.amount"></span><span class="calssAmountStyle">￥</span></div>
+                </div>
+                <div v-if="!countInfo">
+                    未参与报价
+                </div>
+            </div>
+            <div class="my_box paddingLeft">
+                <p class="paddingStyle">运输要求：</p>
+                <div class="timeText">运输距离：<span v-text="goods.howFar"></span> 公里</div>
+                <div class="timeText">要求起运时间：<span v-text="goods.shipmentTime"></span></div>
+                <div class="timeText">期望收货时间：<span v-text="goods.receiptDate"></span></div>
+                <div class="timeText">货源截止时间：<span class="red" v-text="goods.endDate"></span></div>
+                <div class="timeText">车厢类型：<span class="red" v-if="goods.carRiage" v-text="goods.carRiage"></span> <span
+                        v-if="!goods.carRiage">无</span></div>
+                <div class="timeText">车长(米)：<span class="red" v-if="goods.carLength" v-text="goods.carLength"></span>
+                    <span v-if="!goods.carLength">无</span>
+                </div>
+                <div class="timeText">建议车型：<span class="red" v-if="goods.carType" v-text="goods.carType"></span> <span
+                        v-if="!goods.carType">无</span></div>
+                <div class="timeText">物资描述：<span class="red" v-if="goods.goodsDesc" v-text="goods.goodsDesc"></span>
+                    <span v-if="!goods.goodsDesc">无</span>
+                </div>
+            </div>
+            <div>
+                <div class="detailed">
+                    <div class="orderid">
+                        <p class="paddingStyle">物资明细：</p>
+                        <div>
+                            <table border="1" width="100%" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th class="widthStyle">序号</th>
+                                        <th class="widthStyle">货物名称</th>
+                                        <th class="widthStyle">运量(<span class="Company"
+                                                v-text="goods.orderUnit"></span>)
+                                        </th>
+                                        <th class="widthStyle">备注<span class="Company"></span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item,i) in goods.tsGoodsDetailDTOS">
+                                        <td v-text="i+1"></td>
+                                        <td v-text="item.productName"></td>
+                                        <td v-text="item.count"></td>
+                                        <td class='shipmentAmount' v-text="item.memo"></td>
+                                        <td class='endShipmentAmount' v-text="item.endShipmentAmount"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my_msg boderStyle" v-if="myStatus ===0">
+            <div class="my_box">
+                <p class="paddingStyle coloramount">报价区间：</p>
+                <div class="confirmNewPwd">
+                    <span v-if="goods.balanceMode ===0" class="password">包车价(元):</span>
+                    <span v-if="goods.balanceMode !=0" class="password">单价(元):</span>
+                    <span class="right">
+                        {{goods.minPrice}} <span v-if="goods.minPrice === null">0</span>~{{goods.maxPrice}} <span
+                            v-if="!goods.maxPrice">无</span>
+                    </span>
+                </div>
+            </div>
+            <div class="my_box">
+                <p class="paddingStyle coloramount">我的报价：</p>
+                <div class="confirmNewPwd">
+                    <span v-if="goods.balanceMode ===0" class="password">包车价(元):</span>
+                    <span v-if="goods.balanceMode !=0" class="password">单价(元):</span>
+                    <span class="right">
+                        <input type="text" placeholder="请输入报价" v-model="amount" @change="changeamountFn()"
+                            onkeyup="value=value.replace(/[^\d.]/g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3').replace(/^\./g, '')">
+                    </span>
+                </div>
+                <div class="confirmNewPwd" v-if="goods.balanceMode !=0">
+                    <span class="password">总金额(元):</span>
+                    <span class="right">
+                        <input class="fontSize" type="text" disabled value="" v-model="amountCount">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="button" v-if="myStatus ===0">
+            <button class="bangkaStyle" @click="offerFn()">我要报价</button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/rem.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript" src="../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../script/plugscript/artTemplate.js"></script>
+<script type="text/javascript" src="../../script/iconfont.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        //vue对象
+        var app = new Vue({
+            el: '#app',
+            data: {
+                id: api.pageParam.id,  //货源id
+                myStatus: api.pageParam.myStatus,
+                goods: {},
+                countInfo: null,
+                deliveryPhone: "",
+                receiptPhone: "",
+                amount: "",
+                amountCount: "",
+            },
+            created: function () {
+                this.getInfo();
+                this.getCountInfo();
+            },
+            methods: {
+                copyFn: function (data) {
+                    var clipBoard = api.require('clipBoard');
+                    clipBoard.set({
+                        value: data
+                    }, function (ret, err) {
+                        if (ret) {
+                            api.toast({
+                                msg: "复制成功：" + data,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                },
+                copyreceiptAddressFn: function (data) {
+                    var clipBoard = api.require('clipBoard');
+                    clipBoard.set({
+                        value: data
+                    }, function (ret, err) {
+                        if (ret) {
+                            api.toast({
+                                msg: "地址复制成功：" + data,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    });
+                },
+                //获取最新报价
+                getCountInfo: function () {
+                    var that = this;
+                    dealData("/driver/tsaution/" + that.id, 'GET', {}, function (ret) {
+                        console.log("报价信息：" + JSON.stringify(ret));
+                        if (ret.code === 0) {
+                            that.countInfo = ret.data;
+                        } else {
+                            // api.toast({
+                            //     msg: ret.msg,
+                            //     duration: 5000,
+                            //     location: 'middle'
+                            // });
+                        }
+                    }, function (err) {
+                        console.log("报价信息：" + JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                //获取货源信息
+                getInfo: function () {
+                    var that = this;
+                    dealData("/driver/tsgoodssource/" + that.id, 'GET', {}, function (ret) {
+                        if (ret.code === 0) {
+                            console.log("货源信息：" + JSON.stringify(ret));
+                            that.goods = ret.data;
+                            that.goods.endDate = timeStampTurnTime(that.goods.endDate).slice(0, 16);
+                            that.goods.createDate = timeStampTurnTime(that.goods.createDate).slice(0, 16);
+                            that.goods.deliveryDate = timeStampTurnTime(that.goods.deliveryDate).slice(0, 16);
+                            that.goods.receiptDate = timeStampTurnTime(that.goods.receiptDate).slice(0, 16);
+                            that.goods.shipmentTime = timeStampTurnTime(that.goods.shipmentTime).slice(0, 16);
+                            that.deliveryPhone = geTel(that.goods.deliveryPhone)
+                            that.receiptPhone = geTel(that.goods.receiptPhone)
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                },
+                //报价接口
+                offerFn: function () {
+                    var that = this;
+                    if (!that.amount) {
+                        api.toast({
+                            msg: "金额不能为空!",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                        return false;
+                    }
+                    var carNumber = $api.getStorage('truckNumber') ? $api.getStorage('truckNumber') : "无";
+                    api.confirm({
+                        title: `确认报价车牌号：${carNumber}`,
+                        msg: "是否确认报价",
+                        buttons: ["设置常用车辆", "取消", '确定']
+                    }, function (ret, err) {
+                        if (ret.buttonIndex == 3) {
+                            if (that.goods.type === 1) {
+                                if (that.goods.maxPrice) {
+                                    if (that.goods.maxPrice < that.amount) {
+                                        api.toast({
+                                            msg: "价格不能高于最高限价：" + that.goods.maxPrice + "元",
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                        return false;
+                                    }
+                                }
+                                if (that.goods.minPrice) {
+                                    if (that.goods.minPrice > that.amount) {
+                                        api.toast({
+                                            msg: "价格不能低于最低限价：" + that.goods.minPrice + "元",
+                                            duration: 5000,
+                                            location: 'middle'
+                                        });
+                                        return false;
+                                    }
+                                }
+                            }
+                            var parm = {
+                                goodsId: that.id,
+                                amount: parseInt((parseFloat(that.amount) * 100)) / 100 //金额
+                            };
+                            api.showProgress({
+                                title: '加载中...',
+                                modal: true
+                            });
+                            console.log("JSON.stringify(parm):" + JSON.stringify(parm));
+                            dealData("driver/tsaution/add/bidding", 'POST', JSON.stringify(parm), function (ret) {
+                                if (ret.code === 0) {
+                                    setTimeout(function () {
+                                        api.closeWin();
+                                    }, 1000)
+                                    api.toast({
+                                        msg: "报价成功！",
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                } else {
+                                    api.toast({
+                                        msg: ret.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                    console.log(JSON.stringify(ret));
+                                }
+                            },
+                                function (err) {
+                                    api.toast({
+                                        msg: err.body.msg,
+                                        duration: 5000,
+                                        location: 'middle'
+                                    });
+                                })
+                            setTimeout('api.refreshHeaderLoadDone()', '500');
+                        } else if (ret.buttonIndex == 1) {
+                            api.openWin({
+                                name: 'addCarFn_win',
+                                url: '../well/driverOrder/addCarFn_win.html',
+                                bounces: false,
+                            });
+                        }
+                    });
+                },
+                changeamountFn: function () {
+                    if (this.goods.type === 1) {
+                        if (this.goods.maxPrice) {
+                            if (this.goods.maxPrice < this.amount) {
+                                api.toast({
+                                    msg: "价格不能高于最高限价：" + this.goods.maxPrice + "元",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                                return false;
+                            }
+                        }
+                        if (this.goods.minPrice) {
+                            if (this.goods.minPrice > this.amount) {
+                                api.toast({
+                                    msg: "价格不能低于最低限价：" + this.goods.minPrice + "元",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                                return false;
+                            }
+                        }
+                    }
+                    if (this.amount < 0) {
+                        api.toast({
+                            msg: "价格不能低于0元",
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    }
+                    if (this.goods.balanceMode === 0) {
+                        this.amountCount = this.amount;
+                    } else {
+                        this.amountCount = this.goods.count * this.amount;
+                    }
+                }
+            },
+        });
+    };
+
+
+</script>
+
+</html>

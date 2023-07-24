@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/plugcss/validate.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css">
+    <style>
+        .centent {
+            width: 100%;
+            height: 100%;
+        }
+
+        .list {
+            /* height: 145px; */
+            background: #ffffff;
+            margin: 2%;
+            /* height: 28px; */
+            padding: 2%;
+            padding-left: 3%;
+            width: 90%;
+            display: flex;
+            position: relative;
+        }
+
+        .divLeft {
+            font-size: 16px;
+            width: 80%;
+            position: relative;
+            text-align: left;
+        }
+
+        .flaetRight {
+            position: absolute;
+            font-size: 16px;
+            right: 10%;
+            top: 10px;
+        }
+
+        .clolor2 {
+            color: red;
+        }
+
+        .clolor3 {
+            color: #55af08;
+        }
+
+        .noticeDiv {
+            padding: 5px;
+            border-radius: 50%;
+            text-align: center;
+            position: absolute;
+            top: 7px;
+            right: 20px;
+            height: 16px;
+            min-width: 16px;
+            font-size: 16px;
+            line-height: 16px;
+            background: red;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0px 1px 10px red;
+        }
+
+        .positionRelative {
+            position: relative;
+        }
+
+        .rightabsolute {
+            position: absolute;
+            top: 31%;
+            right: 11px;
+        }
+    </style>
+</head>
+
+<body class='wrap'>
+    <div class="my" id="app">
+        <div v-if="listData.length === 0" class="aui-tips-title marginTips">暂无数据</div>
+        <div class="my_msg">
+            <div class="my_box">
+                <div class="pwd"v-for="(item,i) in listData" @click="openDataFn(item.content)">
+                    <span class="icon1">
+                        <!-- <img id="sfzz" src="../../image/zhanghu.png" alt="" class="img"> -->
+                    </span>
+                    <span class="password fontSize1">{{item.title}}</span>
+                    <span class="right">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#iconyoujiantou"></use>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/rem.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/plugscript/jquery-mvalidate.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/iconfont.js"></script>
+<script src="../../../script/vue.js"></script>
+<script type="text/javascript">
+
+    apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                listData: [],
+                page: 0,
+            },
+            created: function () {
+                var that = this;
+                //监听下拉加载数据
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    that.getIsnodata();
+                });
+                //监听下拉刷新数据
+                api.setRefreshHeaderInfo({
+                    visible: true,
+                    loadingImg: 'widget://image/refresh.png',
+                    bgColor: '#ccc',
+                    textColor: '#fff',
+                    textDown: '下拉刷新...',
+                    textUp: '松开刷新...',
+                    showTime: true
+                }, function (ret, err) {
+                    that.page = 0;
+                    that.listData = [];
+                    that.getIsnodata();
+                });
+                this.getIsnodata();
+            },
+            methods: {
+                openDataFn: function (content) {
+                    api.openWin({
+                        name: 'noticeInfo_win',
+                        url: './noticeInfo_win.html',
+                        animation: {
+                            type: "movein", //动画类型（详见动画类型常量）
+                            subType: "from_right", //动画子类型（详见动画子类型常量）
+                            duration: 300 //动画过渡时间，默认300毫秒
+                        },
+                        pageParam: {
+                            content: content
+                        }
+                    });
+                },
+                getIsnodata: function () {
+                    $("#page").val(1);
+                    api.showProgress({
+                        title: '加载中...',
+                        modal: false
+                    });
+                    var that = this;
+                    var parm = {
+                        "page": that.page,
+                        "size": 10,
+                        "sort": "id,desc",
+                        "searchParms": {
+                        }
+                    };
+                    console.log("请求参数：" + JSON.stringify(parm));
+                    dealData("/driver/drivercmsnotice/app/query", 'POST', JSON.stringify(parm), function (ret) {
+                        if (ret.code === 0) {
+                            console.log("ret.data.resultList:", JSON.stringify(ret.data.resultList));
+                            if (ret.data.resultList.length === 0) {
+                                api.toast({
+                                    msg: "无更多数据",
+                                    duration: 5000,
+                                    location: 'middle'
+                                });
+                            } else {
+                                that.listData = that.listData.concat(ret.data.resultList);
+                                that.page++;
+                            }
+                        } else {
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 5000,
+                                location: 'middle'
+                            });;
+                            console.log(JSON.stringify(ret));
+                        }
+                    }, function (err) {
+                        console.log(JSON.stringify(err));
+                        api.toast({
+                            msg: err.body.msg,
+                            duration: 5000,
+                            location: 'middle'
+                        });
+                    })
+                    setTimeout('api.refreshHeaderLoadDone()', '500');
+                },
+
+            }
+        })
+    };
+
+</script>
+
+</html>

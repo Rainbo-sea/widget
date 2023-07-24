@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+        .container {
+            display: flex;
+        }
+        .user_sign {
+            width: 800px;
+            height: 600px;
+            background-image: url("./assets/fsux.png");
+        }
+        .contact {
+            width: 800px;
+            height: 600px;
+        }
+        img {
+            border: 1px solid black;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="operator">
+        <button onclick="clean('#user_sign')">清空</button>
+        <button onclick="sign('#user_sign')">签名</button>
+		<button onclick="saveImg('#contact')">保存</button>
+    </div>
+    <div class="container">
+        <div class="user_sign">
+            <canvas width="800" height="600" id="user_sign"></canvas>
+        </div>
+        <div class="contact">
+            <canvas width="800" height="600" id="contact"></canvas>
+        </div>
+    </div>
+    <div>
+        <img id='result' alt="签名" />
+    </div>
+    <script src="./sign.js"></script>
+</body>
+</html>
